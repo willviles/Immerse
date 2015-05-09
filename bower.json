@@ -1,0 +1,26 @@
+{
+  "name": "immerse",
+  "version": "0.0.1",
+  "homepage": "https://github.com/willviles/Immerse",
+  "authors": [
+    "willviles <will@willviles.com>"
+  ],
+  "description": "Does awesome stuff",
+  "keywords": [
+    "Stuff"
+  ],
+  "license": "MIT",
+  "private": false,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "gsap": "*",
+    "scrollmagic": "*",
+    "jquery": "*"
+  }
+}
