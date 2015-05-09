@@ -7,9 +7,12 @@
     <script src="../../bower_components/gsap/src/minified/TweenMax.min.js"></script>
     <!-- iScroll probe required -->
     <script src="../../bower_components/scrollmagic/scrollmagic/minified/ScrollMagic.min.js"></script>
-    <!-- Include Stack Swipe -->
-    <script src="../../dist/immerse.js"></script>
+    <!-- Include Immerse.js -->
+    <script src="../../dist/min/immerse.min.js"></script>
 
+    <!-- Sections -->
+    <script src="js/immerse-setup.js"></script>
+    <script src="js/immerse-sections.js"></script>
 <!--
     <link rel="stylesheet" type="text/css" href="../style/stack-swipe.css">
     <link rel="stylesheet" type="text/css" href="../style/examples/basic/style.css">
@@ -17,11 +20,81 @@
 
     <meta name="viewport" content="user-scalable=no,width=device-width" />
   </head>
+
   <body>
 
+    <div class="immerse-scroll-container">
+
+      <header id="sections-header" class="immerse-fullscreen">
+        <div class="container-fluid">
+          <div class="row"> </div>
+        </div>
+      </header>
+
+      <section id="sections-section-1" class="immerse-fullscreen">
+        <div class="container-fluid">
+          <div class="row"> </div>
+        </div>
+      </section>
+
+      <section id="sections-section-2" class="immerse-fullscreen">
+        <div class="container-fluid">
+          <div class="row"></div>
+        </div>
+      </section>
+
+      <section id="sections-section-3" class="immerse-fullscreen">
+        <div class="container-fluid">
+          <div class="row"></div>
+        </div>
+      </section>
+
+      <section id="sections-section-4" class="immerse-fullscreen">
+        <div class="container-fluid">
+          <div class="row"></div>
+        </div>
+      </section>
+
+    </div>
+
     <script type="text/javascript">
+
+
+
       $(document).ready(function() {
-        console.log('INIT');
+
+        var page = $.Immerse.setup({
+
+          // Options
+          options: {
+            // Set a default for the fixedScroll value. Any section can change or disable it.
+            fixedScroll: $(window).height(),
+            // Set a default for the updateNav value. Any section can change it.
+            updateNav: true
+          },
+
+          // Assets to preload
+          assets: {
+            audioName: { type: 'audio', path: 'filepath', wait: true },
+            audioName2: { type: 'audio', path: 'filepath', wait: true },
+            video: { type: 'video', path: 'filepath', wait: true },
+            video2: { type: 'video', path: 'filepath', wait: false }
+          }
+        });
+
+        console.log(page);
+
+        // Equivalent of doing ImmerseSetup.section.extend
+        // Want to add content of extend class to current instance of plugin
+
+        var section1 = $.Immerse.section.extend(page, {
+          uid: 'section1'
+        });
+
+        console.log(section1);
+
+//         var pageName = $('.immerse-scroll-container').Immerse.init(pageSetup);
+
       });
     </script>
   </body>
