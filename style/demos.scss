@@ -1,0 +1,8 @@
+$grey: #43433b;
+
+body.imm-demo-sections {
+
+  background-color: $grey;
+
+  @import 'demos/sections';
+}
