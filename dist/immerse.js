@@ -20,6 +20,8 @@
         options: {
           // Set a default for the section selector
           sectionSelector: '.imm-section',
+          // Transition
+          transition: 'default',
           // Set a default for the updateNav value. Any section can change it.
           updateNav: true,
           // Set breakpoints
@@ -91,9 +93,11 @@
         var $allSectionElems = $(this.setup.options.sectionSelector);
 
         $.each($allSectionElems, function(i, $s) {
-          var s = {};
-          s.updateNav = that.setup.options.updateNav;
-          s.element = $($s);
+          var s = {
+            element: $($s),
+            updateNav: that.setup.options.updateNav,
+            transition: that.setup.options.transition
+          };
           that.sections.push(s);
         });
 
@@ -136,8 +140,6 @@
         this.sections.sort(function(obj1, obj2) {
         	return obj1.scrollOffset - obj2.scrollOffset;
         });
-
-        console.log(this.sections);
 
       },
 
@@ -297,7 +299,7 @@
           }
         },
 
-        stickToSection: function() {
+        stickySection: function() {
           var t = this.controllers.scroll.currentSection.scrollOffset;
           this.scrollContainer.scrollTop(t);
         },
@@ -412,6 +414,7 @@
           this.utilities.deviceView.resize.call(this, this);
 
         },
+
         set: function(width) {
           var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|OperaMini/i.test(navigator.userAgent),
               isMobileWidth = width <= 480;
@@ -426,6 +429,7 @@
             this.isDesktop = true;
           }
         },
+
         resize: function(that) {
 
           this.windowWidth = $(window).width();
@@ -433,10 +437,10 @@
           $(window).on('resize', function() {
             that.utilities.deviceView.set.call(that, that.windowWidth);
             that.controllers.scroll.scrollOffset.update.call(that);
-            that.controllers.scroll.stickToSection.call(that);
+            that.controllers.scroll.stickySection.call(that);
           });
         }
-        // TODO: Add some method of sticking the resize to the top of the current section
+
       },
 
       // Asset management
@@ -499,7 +503,8 @@
           animations: {},
           actions: {},
           attributes: {},
-          updateNav: page.defaults.options.updateNav
+          updateNav: page.defaults.options.updateNav,
+          transition: page.defaults.options.transition
         }
 
         var section = $.extend(true, defaults, section);
