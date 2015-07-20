@@ -26,7 +26,7 @@
 
     <div id="shitty-stuff"></div>
 
-    <header id="header" class="imm-fullscreen">
+    <header id="header" class="imm-section">
       <div class="container-fluid">
         <div class="row text-center">
           <h1>HEADER</h1>
@@ -35,7 +35,7 @@
       </div>
     </header>
 
-    <section id="section-1" class="imm-fullscreen">
+    <section id="section-1" class="imm-section">
       <div class="container-fluid">
         <div class="row text-center">
           <h1>SECTION 1</h1>
@@ -44,7 +44,7 @@
       </div>
     </section>
 
-    <section id="section-2" class="imm-fullscreen">
+    <section id="section-2" class="imm-section">
       <div class="container-fluid">
         <div class="row text-center">
           <h1>SECTION 2</h1>
@@ -53,7 +53,7 @@
       </div>
     </section>
 
-    <section id="section-3" class="imm-fullscreen">
+    <section id="section-3" class="imm-section">
       <div class="container-fluid">
         <div class="row text-center">
           <h1>SECTION 3</h1>
@@ -62,7 +62,7 @@
       </div>
     </section>
 
-    <section id="section-4" class="imm-fullscreen">
+    <section id="section-4" class="imm-section">
       <div class="container-fluid">
         <div class="row text-center">
           <h1>SECTION 4</h1>
@@ -84,8 +84,6 @@
 
           // Options
           options: {
-            // Set a default for the fixedScroll value. Any section can change or disable it.
-            fixedScroll: $(window).height(),
             // Set a default for the updateNav value. Any section can change it.
             updateNav: true
           },
@@ -109,7 +107,7 @@
           // Unique id for the section
           uid: 'section1',
           // Set the element. Must be able to take either a string, javascript or jquery selector
-          element: '#section-1',
+          element: $('#section-1'),
           // Define audio
           audio: {
             gnossienne: { volume: 1, changeDuration: 1 } // Audio #1
@@ -163,7 +161,7 @@
           // Unique id for the section
           uid: 'section2',
           // Set the element. Must be able to take either a string, javascript or jquery selector
-          element: '#section-2',
+          element: $('#section-2'),
           // Define audio
           audio: {
             gnossienne: { volume: 1, changeDuration: 1 } // Audio #1
@@ -192,6 +190,57 @@
               action: function(s) {
                 // Execute custom action to occur at the runtime and on the device type selected
                 console.log('Section 2 action running!');
+              }
+            }
+
+          },
+          // Custom Attributes get changed in the custom attributes dictionary. Fires an observer
+          attributes: {
+            section2Attr: {
+              devices: ['desktop', 'mobile'], // default all
+              runtime: ['enteringDown', 'enteringUp'],
+              value: true
+            }
+          }
+        });
+
+        // Setup Header
+        ///////////////////////////////////////////
+
+        $.Immerse.section.setup(pageName, {
+
+          // Unique id for the section
+          uid: 'header',
+          // Set the element. Must be able to take either a string, javascript or jquery selector
+          element: $('#header'),
+          // Define audio
+          audio: {
+            gnossienne: { volume: 1, changeDuration: 1 } // Audio #1
+          },
+
+          // Define animations
+          animations: {
+            // Animation #1
+            headerAnimation: {
+              devices: ['desktop'], // default all
+              orientation: ['portrait', 'landscape'],
+              runtime: ['enteringDown', 'enteringUp'], // Default enteringDown, enteringUp
+              reset: ['exitedDown', 'exitedUp'], // Default exitedDown, exitedUp
+              timeline: function(s) {
+
+              }
+            }
+          },
+
+          // Define actions
+          actions: {
+            // Action #1
+            section2Attr: {
+              devices: ['mobile', 'desktop'], // default mobile tablet mdDesktop lgDesktop
+              runtime: ['enteringDown'], // enterDown, enterUp, leaveDown, leaveUp
+              action: function(s) {
+                // Execute custom action to occur at the runtime and on the device type selected
+                console.log('Header action running!');
               }
             }
 

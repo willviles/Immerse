@@ -14,11 +14,12 @@
     setup: function(setup) {
 
       this.setup = setup;
+
       this.defaults = {
         preload: {},
         options: {
-          // Set a default for the fixedScroll value. Any section can change or disable it.
-          fixedScroll: 0,
+          // Set a default for the section selector
+          sectionSelector: '.imm-section',
           // Set a default for the updateNav value. Any section can change it.
           updateNav: true,
           // Set breakpoints
@@ -31,7 +32,7 @@
         },
         sections: []
       };
-      this.setup = $.extend(this.defaults, this.setup);
+      this.setup = $.extend(this.setup, this.defaults);
 
       return this;
     },
@@ -47,7 +48,7 @@
       this.$elem = $(elem);
       this.setup = setup.setup;
       this.assets = this.setup.assets;
-      this.sections = this.setup.sections;
+      this.sections = [];
 
       var that = this;
 
@@ -62,11 +63,11 @@
         container: that.$elem.selector
       });
 
+      // Setup sections
+      this.controllers.section.call(this, this);
+
       // Setup the scroll controller
       this.controllers.scroll.init.call(this, elem);
-
-      // Call new sections
-      this.controllers.section.call(this, this);
 
       return this;
     },
@@ -85,18 +86,31 @@
 
       section: function(that) {
 
-        this.$elem.on('scroll', function() {
-          var scrollPos = that.controllers.scrollMagic.scrollPos();
+        // Add all sections by selector
+
+        var $allSectionElems = $(this.setup.options.sectionSelector);
+
+        $.each($allSectionElems, function(i, $s) {
+          var s = {};
+          s.updateNav = that.setup.options.updateNav;
+          s.element = $($s);
+          that.sections.push(s);
         });
 
-        $.each(this.sections, function(i, s) {
+        // Setup all defined sections
+        $.each(this.setup.sections, function(i, s) {
 
           // jQuerify section
           var $s = $(s.element);
+
+          // Replace selector created section
+          // E.g If $(s.element) matches $(this.sections[i].element), remove that record and replace with new one.
+          $.each(that.sections, function(i, _s) {
+            that.sections[i] = $(_s.element)[0] === $(s.element)[0] ? s : _s;
+          });
+
           // Register scenes
           that.utilities.scenes.register.call(that, $s);
-          // Set scroll triggers
-//           that.controllers.scroll.sectionTriggers.call(that, $s);
 
           // Animations
           $.each(s.animations, function(name, animation) {
@@ -112,6 +126,19 @@
           });
 
         });
+
+        $.each(this.sections, function(i, s) {
+          // Set scroll triggers on all sections
+          that.controllers.scroll.scrollOffset.set.call(that, s);
+        });
+
+        // Order sections by vertical order
+        this.sections.sort(function(obj1, obj2) {
+        	return obj1.scrollOffset - obj2.scrollOffset;
+        });
+
+        console.log(this.sections);
+
       },
 
       // Animation Controller
@@ -232,6 +259,7 @@
 
       scroll: {
 
+        isScrolling: false,
         canScroll: true,
 
         init: function(c) {
@@ -240,38 +268,105 @@
           this.scrollContainer = ($(c)[0] === $('body')[0]) ? $(window) : $(c);
           var that = this;
 
-          // Consider how we're going to
+          // Set current section
+          this.controllers.scroll.currentSection = this.sections[0];
 
-/*
-          this.scrollContainer.on('scroll touchmove mousewheel', function(e) {
+          this.scrollContainer.scrollTop(0);
 
-            var d = that.controllers.scrollMagic.info('scrollDirection');
-
-            console.log(d);
-
-            console.log(that.controllers.scroll.canScroll);
-
-            e.preventDefault(); e.stopPropagation();
-
-            if (that.controllers.scroll.canScroll === true) {
-              that.controllers.scroll.canScroll = false;
-              that.controllers.scroll.go.call(that, d, c);
-            }
-
-
-
+          // Bind to mousehweel
+          this.scrollContainer.bind('mousewheel wheel DOMMouseScroll', function(e) {
+            that.controllers.scroll.handler.call(that, e);
           });
-*/
+
         },
 
-        go: function(d, c) {
-          var t,
+        scrollOffset: {
+
+          set: function(s) {
+            s.scrollOffset = $(s.element).offset().top;
+          },
+
+          update: function() {
+
+            // Update on resize handler
+            var that = this;
+            $.each(this.sections, function(i, s) {
+              that.controllers.scroll.scrollOffset.set.call(that, s);
+            });
+
+          }
+        },
+
+        stickToSection: function() {
+          var t = this.controllers.scroll.currentSection.scrollOffset;
+          this.scrollContainer.scrollTop(t);
+        },
+
+        status: function(status, e) {
+          function preventDefaultScroll(e) {
+            e = e || window.event;
+            if (e.preventDefault) { e.preventDefault(); }
+            e.returnValue = false;
+          }
+
+          if (status === 'enable') {
+
+            if (window.removeEventListener) {
+              window.removeEventListener('DOMMouseScroll', preventDefaultScroll, false);
+            }
+            window.onmousewheel = document.onmousewheel = null;
+            window.onwheel = null;
+            window.ontouchmove = null;
+
+          } else if (status === 'disable') {
+
+            if (window.addEventListener) {
+              window.addEventListener('DOMMouseScroll', preventDefaultScroll, false);
+            }
+            window.onwheel = preventDefaultScroll; // modern standard
+            window.onmousewheel = document.onmousewheel = preventDefaultScroll; // older browsers, IE
+            window.ontouchmove  = preventDefaultScroll; // mobile
+
+          }
+        },
+
+        handler: function(e) {
+          this.controllers.scroll.status('disable', e);
+
+          if (this.controllers.scroll.isScrolling === false && this.controllers.scroll.canScroll === true) {
+            this.controllers.scroll.isScrolling = true;
+
+            if (e.originalEvent.wheelDelta >= 0) {
+              this.controllers.scroll.go.call(this, 'UP');
+            } else {
+              this.controllers.scroll.go.call(this, 'DOWN');
+            }
+          }
+        },
+
+        go: function(d) {
+          var t, ns,
+              i = this.sections.indexOf(this.controllers.scroll.currentSection);
               that = this;
 
-          if (d === 'REVERSE') { t = '-=500px'; } else if (d === 'FORWARD') { t = '+=500px' };
+          if (d === 'UP') {
+            ns = this.sections[i-1];
+          } else if (d === 'DOWN') {
+            ns = this.sections[i+1];
+          }
 
-          $(c).animate({scrollTop: t}, 500, function() {
+          if (ns === undefined) {
+            that.controllers.scroll.isScrolling = false;
+            that.controllers.scroll.canScroll = true;
+            return false;
+          }
+
+          t = ns.scrollOffset;
+
+          this.$elem.animate({scrollTop: t}, 500, function() {
             setTimeout(function() {
+              that.controllers.scroll.currentSection = ns;
+              that.controllers.scroll.isScrolling = false;
               that.controllers.scroll.canScroll = true;
             }, 1000);
 
@@ -336,7 +431,9 @@
           this.windowWidth = $(window).width();
           this.windowHeight = $(window).height();
           $(window).on('resize', function() {
-            that.utilities.deviceView.set(that, that.windowWidth);
+            that.utilities.deviceView.set.call(that, that.windowWidth);
+            that.controllers.scroll.scrollOffset.update.call(that);
+            that.controllers.scroll.stickToSection.call(that);
           });
         }
         // TODO: Add some method of sticking the resize to the top of the current section
@@ -402,7 +499,6 @@
           animations: {},
           actions: {},
           attributes: {},
-          fixedScroll: page.defaults.options.fixedScroll,
           updateNav: page.defaults.options.updateNav
         }
 
