@@ -24,8 +24,6 @@
 
   <body class="imm-demo-sections">
 
-    <div id="shitty-stuff"></div>
-
     <header id="header" class="imm-section">
       <div class="container-fluid">
         <div class="row text-center">
@@ -90,7 +88,11 @@
           // Options
           options: {
             // Set a default for the updateNav value. Any section can change it.
-            updateNav: true
+            updateNav: true,
+            muteButton: {
+              unmuted: '<i class="fa fa-volume-up"></i> On',
+              muted: '<i class="fa fa-volume-off"></i> Off',
+            }
           },
 
           // Assets to preload

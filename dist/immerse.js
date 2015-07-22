@@ -13,8 +13,6 @@
 
     setup: function(setup) {
 
-      this.setup = setup;
-
       this.defaults = {
         preload: {},
         options: {
@@ -38,7 +36,8 @@
         },
         sections: []
       };
-      this.setup = $.extend(this.setup, this.defaults);
+
+      this.setup = $.extend(true, this.defaults, setup);
 
       return this;
     },
@@ -341,10 +340,14 @@
               $cs = $(cs.element),
               that = this;
 
+          // If we've passed a jQuery object directly, use it as the next section
           if (o.jquery) {
-            var ns = $.grep(this.sections, function(s){ return o[0].id == s.element[0].id; })[0];
+            ns = $.grep(this.sections, function(s) { return o[0].id == s.element[0].id; })[0];
             // Determine direction
-            direction = cs.scrolloffset > ns.scrollOffset ? 'UP' : 'DOWN';
+            direction = cs.scrollOffset > ns.scrollOffset ? 'UP' : 'DOWN';
+            console.log(direction);
+
+          // Else if we've just passed the scroll direction, find the next section
           } else if (o === 'UP' || o === 'DOWN') {
             direction = o;
             ns = (direction === 'UP') ? this.sections[i-1] : this.sections[i+1];
@@ -355,6 +358,8 @@
           } else if (direction === 'DOWN') {
             tr = { exiting: 'exitingDown', entering: 'enteringDown', exited: 'exitedDown', entered: 'enteredDown' }
           }
+
+
 
           // If there's no new section, don't scroll!
           if (ns === undefined) {
@@ -395,6 +400,56 @@
           });
         }
 
+      },
+
+      // Navigation Controller
+      ///////////////////////////////////////////////////////
+      ///////////////////////////////////////////////////////
+      ///////////////////////////////////////////////////////
+
+      navigation: {
+        init: function(that) {
+          // Add nav items to do
+          this.controllers.navigation.addToDOM.call(this);
+          // Set current
+          var navItem = $('.imm-nav-list li a[data-imm-section="#' + this.controllers.scroll.currentSection.element[0].id + '"]');
+          that.controllers.navigation.update.call(that, navItem);
+          // On nav list click
+          $('.imm-nav-list li a').on('click', function() {
+            var $target = $($(this).data('imm-section'));
+            that.controllers.scroll.go.call(that, $target);
+            that.controllers.navigation.update.call(that, $(this));
+          });
+          // Handle on scroll
+          this.$elem.on('sectionChanged', function(e, d) {
+            var navItem = $('.imm-nav-list li a[data-imm-section="#' + d.current.element[0].id + '"]');
+            that.controllers.navigation.update.call(that, navItem);
+          });
+        },
+
+        addToDOM: function() {
+
+          var nav = $('.imm-nav-list');
+          if (nav.length === 0) { return false; }
+
+          var str = '';
+
+          $.each(this.sections, function(i, s) {
+            if (s.navigation.hideSection) { return false; }
+            str = str + '<li>
+                          <a class="imm-nav-link" data-imm-section="#' + s.element[0].id + '">
+                            <span>' + s.navigation.string + '</span>
+                          </a>
+                        </li>';
+          });
+          // Add list to any elem with .imm-nav-sections class
+          nav.html(str);
+        },
+
+        update: function($e) {
+          $('.imm-nav-list li a').removeClass('current');
+          if ($e !== undefined) { $e.addClass('current'); }
+        }
       },
 
       // Audio Controller
@@ -539,43 +594,6 @@
           });
         }
 
-      },
-
-      // Navigation Controller
-      ///////////////////////////////////////////////////////
-      ///////////////////////////////////////////////////////
-      ///////////////////////////////////////////////////////
-
-      navigation: {
-        init: function(that) {
-          // Add nav items to do
-          this.controllers.navigation.addToDOM.call(this);
-
-          // On nav list click
-          $('.imm-nav-list li a').on('click', function() {
-            var $target = $($(this).data('imm-section'));
-            that.controllers.scroll.go.call(that, $target);
-          });
-        },
-
-        addToDOM: function() {
-
-          var nav = $('.imm-nav-list');
-          if (nav.length === 0) { return false; }
-
-          var str = '';
-
-          $.each(this.sections, function(i, s) {
-            if (s.navigation.hideSection) { return false; }
-            str = str + '<li><a class="imm-nav-link" data-imm-section="#' + s.element[0].id + '">' + s.navigation.string + '</a></li>';
-          });
-          // Add list to any elem with .imm-nav-sections class
-          nav.html(str);
-        },
-
-        update: function() {
-
-        }
       }
     },
 

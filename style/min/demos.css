@@ -8,3 +8,25 @@ body.imm-demo-sections {
     background-color: #536DFE; }
   body.imm-demo-sections #section-3 {
     background-color: #673AB7; }
+  body.imm-demo-sections nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 50px; }
+    body.imm-demo-sections nav .imm-mute {
+      float: right;
+      height: 50px; }
+    body.imm-demo-sections nav ul {
+      float: right; }
+      body.imm-demo-sections nav ul li {
+        display: inline-block; }
+        body.imm-demo-sections nav ul li a {
+          display: inline-block;
+          cursor: pointer;
+          height: 50px;
+          line-height: 50px;
+          padding: 0 1em;
+          color: white; }
+          body.imm-demo-sections nav ul li a.current {
+            font-weight: bold; }
