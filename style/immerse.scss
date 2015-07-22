@@ -8,5 +8,12 @@
 }
 
 .imm-section {
-  height: 100vh; overflow: hidden;
+  height: 100vh; overflow: hidden; position: relative;
+}
+
+
+.imm-video {
+  @include stretch(0, 0, 0, 0); overflow: hidden;
+  @include background-size(cover);
+  background-repeat: no-repeat;
 }

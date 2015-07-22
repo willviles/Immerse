@@ -730,8 +730,15 @@
 
           // Audio
           audio: function(n, a) {
-            var l = a.loop == true ? 'loop' : '';
-            this.$elem.append('<audio id="' + n + '" class="imm-audio" src="' + a.path + '" ' + l + '></audio>');
+            var l = a.loop == true ? 'loop' : '',
+                fileTypes = ($.isArray(a.fileTypes)) ? a.fileTypes : ['mp3'],
+                sourceStr = '';
+
+            $.each(fileTypes, function(i, ft) {
+              sourceStr = sourceStr + '<source src="' + a.path + '.' + ft +'" type="audio/' + ft + '">';
+            });
+
+            this.$elem.append('<audio id="' + n + '" class="imm-audio" ' + l + '>' + sourceStr + '</audio>');
             this.controllers.audio.all.push(n);
             return true;
           },
@@ -750,7 +757,10 @@
               sourceStr = sourceStr + '<source src="' + o.path + '.' + ft +'" type="video/' + ft + '">';
             });
 
-            $wrapper.html('<video ' + loop + '>' + sourceStr + '</video>');
+            var $v = $('<video ' + loop + '>' + sourceStr + '</video>');
+
+            $wrapper.append($v);
+            $wrapper.css('background-image', 'url(' + o.path + '.jpg)');
           }
         }
       },
