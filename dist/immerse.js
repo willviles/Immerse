@@ -75,6 +75,9 @@
       // Init audio
       this.controllers.audio.init.call(this, this);
 
+      // Init video
+      this.controllers.video.init.call(this, this);
+
       return this;
     },
 
@@ -98,13 +101,11 @@
 
         $.each($allSectionElems, function(i, $s) {
           var s = {
+            name: $($s)[0].id,
             element: $($s),
             updateNav: that.setup.options.updateNav,
             transition: that.setup.options.transition,
-            navigation: {
-              hideSection: false,
-              string: $($s)[0].id
-            }
+            hideFromNav: false
           };
           that.sections.push(s);
         });
@@ -432,7 +433,7 @@
             that.controllers.scroll.go.call(that, $target);
             that.controllers.navigation.update.call(that, $(this));
           });
-          // Handle on scroll
+          // Handle on section change
           this.$elem.on('sectionChanged', function(e, d) {
             var navItem = $('.imm-nav-list li a[data-imm-section="#' + d.current.element[0].id + '"]');
             that.controllers.navigation.update.call(that, navItem);
@@ -447,12 +448,13 @@
           var str = '';
 
           $.each(this.sections, function(i, s) {
-            if (s.navigation.hideSection) { return false; }
-            str = str + '<li>
-                          <a class="imm-nav-link" data-imm-section="#' + s.element[0].id + '">
-                            <span>' + s.navigation.string + '</span>
-                          </a>
-                        </li>';
+            if (!s.hideFromNav) {
+              str = str + '<li>
+                            <a class="imm-nav-link" data-imm-section="#' + s.element[0].id + '">
+                              <span>' + s.name + '</span>
+                            </a>
+                          </li>';
+            }
           });
           // Add list to any elem with .imm-nav-sections class
           nav.html(str);
@@ -608,7 +610,17 @@
           });
         }
 
-      }
+      },
+
+      video: {
+        init: function(that) {
+          // Handle on scroll
+          this.$elem.on('sectionChanged', function(e, d) {
+            console.log('SECTION HAS CHANGED, NOW DO SOMETHING IF THE SECTION HAS ANY IMM-VIDEO ELEMS INSIDE');
+          });
+        }
+
+      },
     },
 
     // Utilities
@@ -707,17 +719,38 @@
             // Add audio to DOM
             if (a.type === 'audio') { that.utils.assets.addToDOM.audio.call(that, n, a); }
 
+            // Add video to DOM
+            if (a.type === 'video') { that.utils.assets.addToDOM.video.call(that, n, a); }
             // some method of loading & tracking load needs to go here
 
           });
         },
 
         addToDOM: {
+
+          // Audio
           audio: function(n, a) {
             var l = a.loop == true ? 'loop' : '';
             this.$elem.append('<audio id="' + n + '" class="imm-audio" src="' + a.path + '" ' + l + '></audio>');
             this.controllers.audio.all.push(n);
             return true;
+          },
+
+          // Video
+          video: function(n, o) {
+
+            if (o.path === undefined ) { console.log("Must define a path for video '" + n + "'"); return false };
+
+            var $wrapper = this.$elem.find('[data-imm-video="' + n + '"]'),
+                fileTypes = ($.isArray(o.fileTypes)) ? o.fileTypes : ['mp4', 'ogv', 'webm'],
+                loop = (o.loop === false) ? '' : 'loop="loop"',
+                sourceStr = '';
+
+            $.each(fileTypes, function(i, ft) {
+              sourceStr = sourceStr + '<source src="' + o.path + '.' + ft +'" type="video/' + ft + '">';
+            });
+
+            $wrapper.html('<video ' + loop + '>' + sourceStr + '</video>');
           }
         }
       },
@@ -728,15 +761,13 @@
       extendSection: function(page, section) {
 
         var defaults = {
+          name: section.element[0].id,
           animations: {},
           actions: {},
           attributes: {},
           updateNav: page.defaults.options.updateNav,
           transition: page.defaults.options.transition,
-          navigation: {
-            hideSection: false,
-            string: section.element[0].id
-          }
+          hideFromNav: false
         }
 
         var section = $.extend(true, defaults, section);

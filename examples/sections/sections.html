@@ -25,6 +25,8 @@
   <body class="imm-demo-sections">
 
     <header id="header" class="imm-section">
+      <div class="imm-video" data-imm-video="sun"></div>
+      </div>
       <div class="container-fluid">
         <div class="row text-center">
           <h1>HEADER</h1>
@@ -98,7 +100,8 @@
           // Assets to preload
           assets: {
             'gnossienne': { type: 'audio', path: 'assets/audio/gnossienne.mp3', loop: true, wait: true },
-            'city': { type: 'audio', path: 'assets/audio/city.mp3', loop: true }
+            'city': { type: 'audio', path: 'assets/audio/city.mp3', loop: true },
+            'sun': { type: 'video', path: 'assets/video/sun', loop: true, position: '50% 50%' }
 /*
             audioName2: { type: 'audio', path: 'filepath', wait: true },
             video: { type: 'video', path: 'filepath', wait: true },
@@ -112,13 +115,10 @@
 
         $.Immerse.section.setup(pageName, {
 
-          // Unique id for the section
-          uid: 'header',
+          // Unique name for the section
+          name: 'Header',
           // Name to be printed as a string
-          navigation: {
-            hideSection: false,
-            string: 'Header'
-          },
+          hideFromNav: true,
           // Set the element. Must be able to take either a string, javascript or jquery selector
           element: $('#header'),
           // Define starting audio
@@ -152,10 +152,8 @@
 
         $.Immerse.section.setup(pageName, {
 
-          // Unique id for the section
-          uid: 'section1',
-          // Name to be printed as a string
-          name: 'Header',
+          // Unique name for the section
+          name: 'Section 1',
           // Set the element. Must be able to take either a string, javascript or jquery selector
           element: $('#section-1'),
           // Define audio
@@ -210,8 +208,8 @@
 
         $.Immerse.section.setup(pageName, {
 
-          // Unique id for the section
-          uid: 'section2',
+          // Unique name for the section
+          uid: 'Section 2',
           // Set the element. Must be able to take either a string, javascript or jquery selector
           element: $('#section-2'),
           // Define audio
