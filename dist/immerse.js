@@ -75,8 +75,11 @@
       // Init audio
       this.controllers.audio.init.call(this, this);
 
-      // Init video
-      this.controllers.video.init.call(this, this);
+      // Run init on all sections
+      $.each(this.sections, function(i, s) {
+        $(s.element).trigger('init');
+      });
+
 
       return this;
     },
@@ -134,21 +137,22 @@
           $.each(s.attributes, function(name, attr) {
             that.controllers.attribute.call(that, $s, name, attr);
           });
-
+          // Videos
+          var sectionVideos = $s.find('[data-imm-video]');
+          $.each(sectionVideos, function(i, videoWrapper) {
+            that.controllers.video.init.call(that, s, $(videoWrapper));
+          });
         });
 
         $.each(this.sections, function(i, s) {
           // Set scroll triggers on all sections
           that.controllers.scroll.scrollOffset.set.call(that, s);
-          // Run init trigger
-          $(s.element).trigger('init');
         });
 
         // Order sections by vertical order
         this.sections.sort(function(obj1, obj2) {
         	return obj1.scrollOffset - obj2.scrollOffset;
         });
-
       },
 
       // Animation Controller
@@ -613,33 +617,41 @@
       },
 
       video: {
-        init: function(that) {
 
-          this.controllers.video.elems = this.$elem.find('[data-imm-video]');
+        init: function(s, $wrapper) {
 
-          // On load, resize the bitch
-          $.each(this.controllers.video.elems, function(i, wrapper) {
+          var $video = $wrapper.find('video'),
+              $s = $(s.element),
+              that = this;
 
-            var $wrapper = $(wrapper),
-                $video = $wrapper.find('video');
+          // On entering scene & resize the video
+          $s.on('init enteringDown enteringUp', function(e) {
+
+            if (e.type === 'init' && s.element !== that.controllers.scroll.currentSection.element) { return; };
 
             $video
-
               .css({visibility: 'hidden'})
-
               .one('canplaythrough', function() {
                 that.controllers.video.resize.call(that, $wrapper, $video);
               })
-
               .one('playing', function() {
                 $video.css('visibility', 'visible');
                 $wrapper.css('background-image', 'none');
               });
 
+            if ($video[0].paused) {
+              $video[0].play();
+              // Just ensure it's the right size once and for all
+              that.controllers.video.resize.call(that, $wrapper, $video);
+            }
+
           });
 
-          // Handle on scroll
-          this.$elem.on('sectionChanged', function(e, d) {
+          $s.on('exitedDown exitedUp', function() {
+            if (!$video[0].paused) {
+              $video[0].pause();
+              $video[0].currentTime = 0;
+            }
 
           });
 
@@ -649,7 +661,7 @@
 
           var that = this;
 
-          $.each(this.controllers.video.elems, function(i, wrapper) {
+          $.each(this.$elem.find('[data-imm-video]'), function(i, wrapper) {
             var $wrapper = $(wrapper),
                 $video = $wrapper.find('video');
             that.controllers.video.resize.call(that, $wrapper, $video);
@@ -806,15 +818,14 @@
 
             var $wrapper = this.$elem.find('[data-imm-video="' + n + '"]'),
                 fileTypes = ($.isArray(o.fileTypes)) ? o.fileTypes : ['mp4', 'ogv', 'webm'],
-                autoplay = (o.autoplay === false) ? '' : 'autoplay="true" ';
-                loop = (o.loop === false) ? '' : 'loop="loop" '
+                loop = (o.loop === false) ? '' : 'loop="loop" ',
                 sourceStr = '';
 
             $.each(fileTypes, function(i, ft) {
               sourceStr = sourceStr + '<source src="' + o.path + '.' + ft +'" type="video/' + ft + '">';
             });
 
-            var $v = $('<video ' + autoplay + loop + '>' + sourceStr + '</video>');
+            var $v = $('<video ' + loop + '>' + sourceStr + '</video>');
 
             $wrapper.append($v);
             $wrapper.css('background-image', 'url(' + o.path + '.jpg)');
