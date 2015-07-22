@@ -614,10 +614,65 @@
 
       video: {
         init: function(that) {
+
+          this.controllers.video.elems = this.$elem.find('[data-imm-video]');
+
+          // On load, resize the bitch
+          $.each(this.controllers.video.elems, function(i, wrapper) {
+
+            var $wrapper = $(wrapper),
+                $video = $wrapper.find('video');
+
+            $video
+
+              .css({visibility: 'hidden'})
+
+              .one('canplaythrough', function() {
+                that.controllers.video.resize.call(that, $wrapper, $video);
+              })
+
+              .one('playing', function() {
+                $video.css('visibility', 'visible');
+                $wrapper.css('background-image', 'none');
+              });
+
+          });
+
           // Handle on scroll
           this.$elem.on('sectionChanged', function(e, d) {
-            console.log('SECTION HAS CHANGED, NOW DO SOMETHING IF THE SECTION HAS ANY IMM-VIDEO ELEMS INSIDE');
+
           });
+
+        },
+
+        resizeAll: function() {
+
+          var that = this;
+
+          $.each(this.controllers.video.elems, function(i, wrapper) {
+            var $wrapper = $(wrapper),
+                $video = $wrapper.find('video');
+            that.controllers.video.resize.call(that, $wrapper, $video);
+          });
+
+        },
+
+        resize: function(wrapper, video) {
+
+          // Get video elem
+          var $wrapper = $(wrapper),
+              $video = $(video),
+              videoHeight = $video[0].videoHeight, // Get native video height
+              videoWidth = $video[0].videoWidth, // Get native video width
+              wrapperHeight = $wrapper.height(), // Wrapper height
+              wrapperWidth = $wrapper.width(); // Wrapper width
+
+          if (wrapperWidth / videoWidth > wrapperHeight / videoHeight) {
+            $video.css({ width: wrapperWidth + 2, height: 'auto'});
+          } else {
+            $video.css({ width: 'auto', height: wrapperHeight + 2 });
+          }
+
         }
 
       },
@@ -665,6 +720,7 @@
             that.utils.deviceView.set.call(that, that.windowWidth);
             that.controllers.scroll.scrollOffset.update.call(that);
             that.controllers.scroll.stickySection.call(that);
+            that.controllers.video.resizeAll.call(that);
           });
         },
 
@@ -750,14 +806,15 @@
 
             var $wrapper = this.$elem.find('[data-imm-video="' + n + '"]'),
                 fileTypes = ($.isArray(o.fileTypes)) ? o.fileTypes : ['mp4', 'ogv', 'webm'],
-                loop = (o.loop === false) ? '' : 'loop="loop"',
+                autoplay = (o.autoplay === false) ? '' : 'autoplay="true" ';
+                loop = (o.loop === false) ? '' : 'loop="loop" '
                 sourceStr = '';
 
             $.each(fileTypes, function(i, ft) {
               sourceStr = sourceStr + '<source src="' + o.path + '.' + ft +'" type="video/' + ft + '">';
             });
 
-            var $v = $('<video ' + loop + '>' + sourceStr + '</video>');
+            var $v = $('<video ' + autoplay + loop + '>' + sourceStr + '</video>');
 
             $wrapper.append($v);
             $wrapper.css('background-image', 'url(' + o.path + '.jpg)');
