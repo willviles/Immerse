@@ -345,7 +345,7 @@
             var ns = $.grep(this.sections, function(s){ return o[0].id == s.element[0].id; })[0];
             // Determine direction
             direction = cs.scrolloffset > ns.scrollOffset ? 'UP' : 'DOWN';
-          } else if (o === 'UP' || d === 'DOWN') {
+          } else if (o === 'UP' || o === 'DOWN') {
             direction = o;
             ns = (direction === 'UP') ? this.sections[i-1] : this.sections[i+1];
           }
