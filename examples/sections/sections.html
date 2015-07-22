@@ -71,6 +71,11 @@
       </div>
     </section>
 
+    <nav class="imm-nav">
+      <button class="imm-mute"></button>
+      <ul class="imm-nav-list"></ul>
+    </nav>
+
     <script type="text/javascript">
 
 
@@ -90,12 +95,53 @@
 
           // Assets to preload
           assets: {
-            gnossienne: { type: 'audio', path: 'assets/audio/gnossienne.mp3', loop: true, wait: true },
+            'gnossienne': { type: 'audio', path: 'assets/audio/gnossienne.mp3', loop: true, wait: true },
+            'city': { type: 'audio', path: 'assets/audio/city.mp3', loop: true }
 /*
             audioName2: { type: 'audio', path: 'filepath', wait: true },
             video: { type: 'video', path: 'filepath', wait: true },
             video2: { type: 'video', path: 'filepath', wait: false }
 */
+          }
+        });
+
+        // Setup Header
+        ///////////////////////////////////////////
+
+        $.Immerse.section.setup(pageName, {
+
+          // Unique id for the section
+          uid: 'header',
+          // Name to be printed as a string
+          navigation: {
+            hideSection: false,
+            string: 'Header'
+          },
+          // Set the element. Must be able to take either a string, javascript or jquery selector
+          element: $('#header'),
+          // Define starting audio
+          audio: {
+            'gnossienne': { volume: 1, changeDuration: 1 } // Audio #1
+          },
+          // Define animations
+          animations: {
+            // Animation #1
+            'headerInitAnimation': {
+              devices: ['desktop'], // default all
+              runtime: ['init', 'enteredUp'], // Default enteringDown, enteringUp
+              reset: ['exitedDown'], // Default exitedDown, exitedUp
+//               delay: 1,
+              timeline: function(s) {
+                return [
+                  TweenMax.from(s.find('h1'), 2, {
+                    opacity: 0, x: -70, delay: .5, ease: Elastic.easeOut.config(1, 0.3)
+                  }),
+                  TweenMax.from(s.find('p'), 2, {
+                    opacity: 0, x: -40, delay: 1, ease: Elastic.easeOut.config(1, 0.3)
+                  })
+                ]
+              }
+            }
           }
         });
 
@@ -106,34 +152,38 @@
 
           // Unique id for the section
           uid: 'section1',
+          // Name to be printed as a string
+          name: 'Header',
           // Set the element. Must be able to take either a string, javascript or jquery selector
           element: $('#section-1'),
           // Define audio
           audio: {
-            gnossienne: { volume: 1, changeDuration: 1 } // Audio #1
+            'gnossienne': { volume: 1, changeDuration: 1 } // Audio #1
           },
           // Define animations
           animations: {
             // Animation #1
-            section1Animation: {
+            'section1Animation': {
               devices: ['desktop'], // default all
               orientation: ['portrait', 'landscape'],
-              runtime: ['enteringDown', 'enteringUp'], // Default enteringDown, enteringUp
+              runtime: ['enteredDown', 'enteredUp'], // Default enteringDown, enteringUp
               reset: ['exitedDown', 'exitedUp'], // Default exitedDown, exitedUp
               timeline: function(s) {
-                TweenLite.from(s.find('h1'), 2, {
-                  opacity: 0, x: -70, delay: .5, ease: Elastic.easeOut.config(1, 0.3)
-                }),
-                TweenLite.from(s.find('p'), 2, {
-                  opacity: 0, x: -40, delay: 1, ease: Elastic.easeOut.config(1, 0.3)
-                })
+                return [
+                  TweenMax.from(s.find('h1'), 2, {
+                    opacity: 0, x: -70, delay: .5, ease: Elastic.easeOut.config(1, 0.3)
+                  }),
+                  TweenMax.from(s.find('p'), 2, {
+                    opacity: 0, x: -40, delay: 1, ease: Elastic.easeOut.config(1, 0.3)
+                  })
+                ]
               }
             }
           },
           // Define actions
           actions: {
             // Action #1
-            actionName: {
+            'actionName': {
               devices: ['mobile', 'desktop'], // default mobile tablet mdDesktop lgDesktop
               runtime: ['enteringDown'], // enterDown, enterUp, leaveDown, leaveUp
               action: function(s) {
@@ -145,7 +195,7 @@
           },
           // Custom Attributes get changed in the custom attributes dictionary. Fires an observer
           attributes: {
-            logoColor: {
+            'logoColor': {
               devices: ['desktop', 'mobile'], // default all
               runtime: ['enteringDown', 'enteringUp'],
               value: 'blue'
@@ -164,94 +214,8 @@
           element: $('#section-2'),
           // Define audio
           audio: {
-            gnossienne: { volume: 1, changeDuration: 1 } // Audio #1
-          },
-
-          // Define animations
-          animations: {
-            // Animation #1
-            section2Animation: {
-              devices: ['desktop'], // default all
-              orientation: ['portrait', 'landscape'],
-              runtime: ['enteringDown', 'enteringUp'], // Default enteringDown, enteringUp
-              reset: ['exitedDown', 'exitedUp'], // Default exitedDown, exitedUp
-              timeline: function(s) {
-
-              }
-            }
-          },
-
-          // Define actions
-          actions: {
-            // Action #1
-            section2Attr: {
-              devices: ['mobile', 'desktop'], // default mobile tablet mdDesktop lgDesktop
-              runtime: ['enteringDown'], // enterDown, enterUp, leaveDown, leaveUp
-              action: function(s) {
-                // Execute custom action to occur at the runtime and on the device type selected
-                console.log('Section 2 action running!');
-              }
-            }
-
-          },
-          // Custom Attributes get changed in the custom attributes dictionary. Fires an observer
-          attributes: {
-            section2Attr: {
-              devices: ['desktop', 'mobile'], // default all
-              runtime: ['enteringDown', 'enteringUp'],
-              value: true
-            }
-          }
-        });
-
-        // Setup Header
-        ///////////////////////////////////////////
-
-        $.Immerse.section.setup(pageName, {
-
-          // Unique id for the section
-          uid: 'header',
-          // Set the element. Must be able to take either a string, javascript or jquery selector
-          element: $('#header'),
-          // Define audio
-          audio: {
-            gnossienne: { volume: 1, changeDuration: 1 } // Audio #1
-          },
-
-          // Define animations
-          animations: {
-            // Animation #1
-            headerAnimation: {
-              devices: ['desktop'], // default all
-              orientation: ['portrait', 'landscape'],
-              runtime: ['enteringDown', 'enteringUp'], // Default enteringDown, enteringUp
-              reset: ['exitedDown', 'exitedUp'], // Default exitedDown, exitedUp
-              timeline: function(s) {
-
-              }
-            }
-          },
-
-          // Define actions
-          actions: {
-            // Action #1
-            section2Attr: {
-              devices: ['mobile', 'desktop'], // default mobile tablet mdDesktop lgDesktop
-              runtime: ['enteringDown'], // enterDown, enterUp, leaveDown, leaveUp
-              action: function(s) {
-                // Execute custom action to occur at the runtime and on the device type selected
-                console.log('Header action running!');
-              }
-            }
-
-          },
-          // Custom Attributes get changed in the custom attributes dictionary. Fires an observer
-          attributes: {
-            section2Attr: {
-              devices: ['desktop', 'mobile'], // default all
-              runtime: ['enteringDown', 'enteringUp'],
-              value: true
-            }
+            'gnossienne': { volume: .2, changeDuration: 1 }, // Audio #1
+            'city': { volume: .1, changeDuration: .5 }
           }
         });
 
@@ -261,11 +225,7 @@
         var pageImmerse = $.Immerse.init($('body'), pageName);
 
         $('body').on('logoColor', function(obj, value) {
-          console.log(value);
-        });
-
-        $('body').on('section2Attr', function(obj, value) {
-          console.log(value);
+          console.log('logoColor is ' + value);
         });
 
       });
