@@ -479,6 +479,8 @@
 
           // Ensure mute buttons are in correct state
           this.controllers.audio.muteBtns.init.call(this);
+          // Setup audio for initial section
+          this.controllers.audio.handleChange.call(this, this, this.controllers.scroll.currentSection.audio);
           // Setup audio change when a section changes
           this.$elem.on('sectionChanged', function(e, d) {
             that.controllers.audio.handleChange.call(that, that, d.current.audio);
