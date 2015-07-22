@@ -252,31 +252,48 @@
         canScroll: true,
 
         init: function(that) {
-
           // If element initiated on is body, set the scroll target to window
           this.scrollContainer = ($(this.elem)[0] === $('body')[0]) ? $(window) : $(this.elem);
-
           // Set current section
           this.controllers.scroll.currentSection = this.sections[0];
-
           // Ensure page always starts at the top
           this.scrollContainer.scrollTop(0);
-
           // Bind to mousehweel
           this.scrollContainer.bind('mousewheel wheel DOMMouseScroll', function(e) {
             that.controllers.scroll.handler.call(that, e);
+          });
+          // Bind to arrow keys
+          $(document).keydown(function(e) {
+            switch(e.which) {
+
+              case 38: // up
+                e.preventDefault();
+                if (that.controllers.scroll.isScrolling !== false && that.controllers.scroll.canScroll !== true) { return false; }
+                that.controllers.scroll.isScrolling = true;
+                that.controllers.scroll.go.call(that, 'UP');
+
+              break;
+
+              case 40: // down
+                e.preventDefault();
+                if (that.controllers.scroll.isScrolling !== false && that.controllers.scroll.canScroll !== true) { return false; }
+                that.controllers.scroll.isScrolling = true;
+                that.controllers.scroll.go.call(that, 'DOWN');
+
+              break;
+
+              default: return; // exit this handler for other keys
+            }
           });
 
         },
 
         scrollOffset: {
-
           set: function(s) {
             s.scrollOffset = $(s.element).offset().top;
           },
 
           update: function() {
-
             // Update on resize handler
             var that = this;
             $.each(this.sections, function(i, s) {
@@ -299,7 +316,6 @@
           }
 
           if (status === 'enable') {
-
             if (window.removeEventListener) {
               window.removeEventListener('DOMMouseScroll', preventDefaultScroll, false);
             }
@@ -308,7 +324,6 @@
             window.ontouchmove = null;
 
           } else if (status === 'disable') {
-
             if (window.addEventListener) {
               window.addEventListener('DOMMouseScroll', preventDefaultScroll, false);
             }
@@ -345,7 +360,6 @@
             ns = $.grep(this.sections, function(s) { return o[0].id == s.element[0].id; })[0];
             // Determine direction
             direction = cs.scrollOffset > ns.scrollOffset ? 'UP' : 'DOWN';
-            console.log(direction);
 
           // Else if we've just passed the scroll direction, find the next section
           } else if (o === 'UP' || o === 'DOWN') {
@@ -358,8 +372,6 @@
           } else if (direction === 'DOWN') {
             tr = { exiting: 'exitingDown', entering: 'enteringDown', exited: 'exitedDown', entered: 'enteredDown' }
           }
-
-
 
           // If there's no new section, don't scroll!
           if (ns === undefined) {
