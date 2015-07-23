@@ -103,12 +103,14 @@
         var $allSectionElems = $(this.setup.options.sectionSelector);
 
         $.each($allSectionElems, function(i, $s) {
+          var u = $($s).hasClass('imm-fullscreen') ? false : true;
           var s = {
             name: $($s)[0].id,
             element: $($s),
             updateNav: that.setup.options.updateNav,
             transition: that.setup.options.transition,
-            hideFromNav: false
+            hideFromNav: false,
+            unbound: u
           };
           that.sections.push(s);
         });
@@ -255,6 +257,7 @@
 
         isScrolling: false,
         canScroll: true,
+        unbound: false,
 
         init: function(that) {
           // If element initiated on is body, set the scroll target to window
@@ -269,27 +272,13 @@
           });
           // Bind to arrow keys
           $(document).keydown(function(e) {
-            switch(e.which) {
-
-              case 38: // up
-                e.preventDefault();
-                if (that.controllers.scroll.isScrolling !== false && that.controllers.scroll.canScroll !== true) { return false; }
-                that.controllers.scroll.isScrolling = true;
-                that.controllers.scroll.go.call(that, 'UP');
-
-              break;
-
-              case 40: // down
-                e.preventDefault();
-                if (that.controllers.scroll.isScrolling !== false && that.controllers.scroll.canScroll !== true) { return false; }
-                that.controllers.scroll.isScrolling = true;
-                that.controllers.scroll.go.call(that, 'DOWN');
-
-              break;
-
-              default: return; // exit this handler for other keys
-            }
+            that.controllers.scroll.keydownHandler.call(that, e);
           });
+          $(document).keyup(function(e) {
+            that.controllers.scroll.lastKey = null;
+          });
+          // Bind to touch events
+          this.controllers.touch.handler.call(this);
 
         },
 
@@ -350,6 +339,34 @@
             } else {
               this.controllers.scroll.go.call(this, 'DOWN');
             }
+          }
+        },
+
+        keydownHandler: function(e) {
+          if (this.controllers.scroll.lastKey && this.controllers.scroll.lastKey.which == e.which) {
+            e.preventDefault();
+            return;
+          }
+          this.controllers.scroll.lastKey = e;
+          switch(e.which) {
+
+            case 38: // up
+              e.preventDefault();
+              if (this.controllers.scroll.isScrolling === false && this.controllers.scroll.canScroll === true) {
+                this.controllers.scroll.isScrolling = true;
+                this.controllers.scroll.go.call(this, 'UP');
+              }
+            break;
+
+            case 40: // down
+              e.preventDefault();
+              if (this.controllers.scroll.isScrolling === false && this.controllers.scroll.canScroll === true) {
+                this.controllers.scroll.isScrolling = true;
+                this.controllers.scroll.go.call(this, 'DOWN');
+              }
+            break;
+
+            default: return; // exit this handler for other keys
           }
         },
 
@@ -417,6 +434,46 @@
           });
         }
 
+      },
+
+      // Touch Controller
+
+      touch: {
+
+        handler: function() {
+          var that = this;
+
+          $(document).on('touchstart touchmove touchend', function(e) {
+            switch(e.type) {
+              case 'touchstart':
+                that.controllers.touch.startY = e.originalEvent.touches ? e.originalEvent.touches[0].pageY : e.pageY;
+                that.controllers.touch.startTime = new Date();
+              break;
+
+              case 'touchmove':
+//                 e.preventDefault();
+              break;
+
+              case 'touchend':
+                that.controllers.touch.endY = e.originalEvent.touches ? e.originalEvent.touches[0].pageY : e.pageY;
+                that.controllers.touch.swipeDuration = new Date() - that.controllers.touch.startTime;
+                alert(that.controllers.touch.swipeDuration);
+
+                // Need to determine whether it's been a scroll up/down, the velocity of the swipe and then whether to register it as a swipe.
+/*
+                if (currentY > lastY) {
+                  alert('swipe down');
+                  this.controllers.scroll.go.call(this, 'DOWN');
+                } else {
+                  alert('swipe up');
+                  this.controllers.scroll.go.call(this, 'UP');
+                }
+*/
+              break;
+            }
+
+          });
+        }
       },
 
       // Navigation Controller
@@ -845,7 +902,8 @@
           attributes: {},
           updateNav: page.defaults.options.updateNav,
           transition: page.defaults.options.transition,
-          hideFromNav: false
+          hideFromNav: false,
+          unbound: false
         }
 
         var section = $.extend(true, defaults, section);

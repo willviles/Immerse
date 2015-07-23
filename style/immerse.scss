@@ -5,11 +5,11 @@
   @include stretch(0, 0, 0, 0);
   overflow-y: scroll;
   -webkit-overflow-scrolling: touch;
+  &::-webkit-scrollbar { width: 0 !important }
 }
 
-.imm-section {
-  height: 100vh; overflow: hidden; position: relative;
-}
+.imm-section { position: relative; overflow: hidden; }
+.imm-fullscreen { height: 100vh; }
 
 
 .imm-video {

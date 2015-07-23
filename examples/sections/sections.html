@@ -24,7 +24,7 @@
 
   <body class="imm-demo-sections">
 
-    <header id="header" class="imm-section">
+    <header id="header" class="imm-fullscreen imm-section">
       <div class="imm-video" data-imm-video="sun"></div>
       <div class="container-fluid">
         <div class="row text-center">
@@ -34,7 +34,7 @@
       </div>
     </header>
 
-    <section id="section-1" class="imm-section">
+    <section id="section-1" class="imm-fullscreen imm-section">
       <div class="container-fluid">
         <div class="row text-center">
           <h1>SECTION 1</h1>
@@ -43,7 +43,7 @@
       </div>
     </section>
 
-    <section id="section-2" class="imm-section">
+    <section id="section-2" class="imm-fullscreen imm-section">
       <div class="imm-video" data-imm-video="sun"></div>
       <div class="container-fluid">
         <div class="row text-center">
@@ -62,7 +62,7 @@
       </div>
     </section>
 
-    <section id="section-4" class="imm-section">
+    <section id="section-4" class="imm-fullscreen imm-section">
       <div class="container-fluid">
         <div class="row text-center">
           <h1>SECTION 4</h1>
@@ -211,6 +211,23 @@
           audio: {
             'gnossienne': { volume: .2, changeDuration: 1 }, // Audio #1
             'city': { volume: .1, changeDuration: .5 }
+          }
+        });
+
+        // Setup #section-2
+        ///////////////////////////////////////////
+
+        $.Immerse.section.setup(pageName, {
+
+          // Unique name for the section
+          uid: 'Section 3',
+          // Set the element. Must be able to take either a string, javascript or jquery selector
+          element: $('#section-3'),
+          // Make unbound
+          unbound: true,
+          // Define audio
+          audio: {
+            'gnossienne': { volume: .2, changeDuration: 1 }
           }
         });
 
