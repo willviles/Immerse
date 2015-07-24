@@ -477,8 +477,6 @@
                     coords: [ data.pageX, data.pageY ]
                   };
 
-                  console.log(Math.abs(start.coords[1] - stop.coords[1]));
-
                   // prevent scrolling
                   if (Math.abs(start.coords[1] - stop.coords[1]) > 10) {
                     event.preventDefault();
