@@ -54,6 +54,7 @@
       this.setup = setup.setup;
       this.assets = this.setup.assets;
       this.sections = [];
+      this._isScrolling = false; this._canScroll = true;
 
       var that = this;
 
@@ -254,20 +255,17 @@
       ///////////////////////////////////////////////////////
 
       scroll: {
-
-        isScrolling: false,
-        canScroll: true,
         unbound: false,
 
         init: function(that) {
           // If element initiated on is body, set the scroll target to window
-          this.scrollContainer = ($(this.elem)[0] === $('body')[0]) ? $(window) : $(this.elem);
+          this._scrollContainer = ($(this.elem)[0] === $('body')[0]) ? $(window) : $(this.elem);
           // Set current section
-          this.controllers.scroll.currentSection = this.sections[0];
+          this._currentSection = this.sections[0];
           // Ensure page always starts at the top
-          this.scrollContainer.scrollTop(0);
+          this._scrollContainer.scrollTop(0);
           // Bind to mousehweel
-          this.scrollContainer.bind('mousewheel wheel DOMMouseScroll', function(e) {
+          this._scrollContainer.bind('mousewheel wheel DOMMouseScroll', function(e) {
             that.controllers.scroll.handler.call(that, e);
           });
           // Bind to arrow keys
@@ -275,10 +273,10 @@
             that.controllers.scroll.keydownHandler.call(that, e);
           });
           $(document).keyup(function(e) {
-            that.controllers.scroll.lastKey = null;
+            that._lastKey = null;
           });
           // Bind to touch events
-          this.controllers.touch.handler.call(this);
+          this.controllers.touch.init.call(this);
 
         },
 
@@ -298,8 +296,8 @@
         },
 
         stickySection: function() {
-          var t = this.controllers.scroll.currentSection.scrollOffset;
-          this.scrollContainer.scrollTop(t);
+          var t = this._currentSection.scrollOffset;
+          this._scrollContainer.scrollTop(t);
         },
 
         status: function(status, e) {
@@ -331,8 +329,8 @@
         handler: function(e) {
           this.controllers.scroll.status('disable', e);
 
-          if (this.controllers.scroll.isScrolling === false && this.controllers.scroll.canScroll === true) {
-            this.controllers.scroll.isScrolling = true;
+          if (this._isScrolling === false && this._canScroll === true) {
+            this._isScrolling = true;
 
             if (e.originalEvent.wheelDelta >= 0) {
               this.controllers.scroll.go.call(this, 'UP');
@@ -343,25 +341,25 @@
         },
 
         keydownHandler: function(e) {
-          if (this.controllers.scroll.lastKey && this.controllers.scroll.lastKey.which == e.which) {
+          if (this._lastKey && this._lastKey.which == e.which) {
             e.preventDefault();
             return;
           }
-          this.controllers.scroll.lastKey = e;
+          this._lastKey = e;
           switch(e.which) {
 
             case 38: // up
               e.preventDefault();
-              if (this.controllers.scroll.isScrolling === false && this.controllers.scroll.canScroll === true) {
-                this.controllers.scroll.isScrolling = true;
+              if (this._isScrolling === false && this._canScroll === true) {
+                this._isScrolling = true;
                 this.controllers.scroll.go.call(this, 'UP');
               }
             break;
 
             case 40: // down
               e.preventDefault();
-              if (this.controllers.scroll.isScrolling === false && this.controllers.scroll.canScroll === true) {
-                this.controllers.scroll.isScrolling = true;
+              if (this._isScrolling === false && this._canScroll === true) {
+                this._isScrolling = true;
                 this.controllers.scroll.go.call(this, 'DOWN');
               }
             break;
@@ -372,7 +370,7 @@
 
         go: function(o) {
           var ns, tr, direction,
-              cs = this.controllers.scroll.currentSection,
+              cs = this._currentSection,
               i = this.sections.indexOf(cs),
               $cs = $(cs.element),
               that = this;
@@ -397,8 +395,8 @@
 
           // If there's no new section, don't scroll!
           if (ns === undefined) {
-            that.controllers.scroll.isScrolling = false;
-            that.controllers.scroll.canScroll = true;
+            that._isScrolling = false;
+            that._canScroll = true;
             return false;
           }
 
@@ -423,12 +421,12 @@
               prev: cs,
               current: ns,
             }]);
-            that.controllers.scroll.currentSection = ns;
+            that._currentSection = ns;
 
             setTimeout(function() {
               // Reset flags
-              that.controllers.scroll.isScrolling = false;
-              that.controllers.scroll.canScroll = true;
+              that._isScrolling = false;
+              that._canScroll = true;
             }, 500);
 
           });
@@ -440,39 +438,108 @@
 
       touch: {
 
+        init: function() {
+          this.controllers.touch.recognize.call(this);
+          this.controllers.touch.handler.call(this);
+        },
+
+        recognize: function() {
+          var supportTouch = $.support.touch,
+              scrollEvent = "touchmove scroll",
+              touchStartEvent = supportTouch ? "touchstart" : "mousedown",
+              touchStopEvent = supportTouch ? "touchend" : "mouseup",
+              touchMoveEvent = supportTouch ? "touchmove" : "mousemove";
+
+          $.event.special.swipeupdown = {
+            setup: function() {
+              var thisObject = this;
+              var $this = $(thisObject);
+              $this.bind(touchStartEvent, function(event) {
+                var data = event.originalEvent.touches ?
+                    event.originalEvent.touches[ 0 ] :
+                    event,
+                    start = {
+                      time: (new Date).getTime(),
+                      coords: [ data.pageX, data.pageY ],
+                      origin: $(event.target)
+                    },
+                    stop;
+
+                function moveHandler(event) {
+                  if (!start) {
+                    return;
+                  }
+                  var data = event.originalEvent.touches ?
+                      event.originalEvent.touches[0] :
+                      event;
+                  stop = {
+                    time: (new Date).getTime(),
+                    coords: [ data.pageX, data.pageY ]
+                  };
+
+                  console.log(Math.abs(start.coords[1] - stop.coords[1]));
+
+                  // prevent scrolling
+                  if (Math.abs(start.coords[1] - stop.coords[1]) > 10) {
+                    event.preventDefault();
+                  }
+                }
+
+                $this
+                  .bind(touchMoveEvent, moveHandler)
+                  .one(touchStopEvent, function(event) {
+                    $this.unbind(touchMoveEvent, moveHandler);
+                    if (start && stop) {
+                      if (stop.time - start.time < 1000 &&
+                          Math.abs(start.coords[1] - stop.coords[1]) > 30 &&
+                          Math.abs(start.coords[0] - stop.coords[0]) < 75) {
+                          start.origin
+                                .trigger("swipeupdown")
+                                .trigger(start.coords[1] > stop.coords[1] ? "swipeup" : "swipedown");
+                      }
+                    }
+                    start = stop = undefined;
+
+                  });
+              });
+            }
+          };
+          $.each({
+            swipedown: "swipeupdown",
+            swipeup: "swipeupdown"
+          }, function(event, sourceEvent){
+            $.event.special[event] = {
+              setup: function(){
+                $(this).bind(sourceEvent, $.noop);
+              }
+            };
+          });
+        },
+
         handler: function() {
           var that = this;
 
-          $(document).on('touchstart touchmove touchend', function(e) {
+          $(document).on('swipedown swipeup',function(e){
             switch(e.type) {
-              case 'touchstart':
-                that.controllers.touch.startY = e.originalEvent.touches ? e.originalEvent.touches[0].pageY : e.pageY;
-                that.controllers.touch.startTime = new Date();
-              break;
-
-              case 'touchmove':
-//                 e.preventDefault();
-              break;
-
-              case 'touchend':
-                that.controllers.touch.endY = e.originalEvent.touches ? e.originalEvent.touches[0].pageY : e.pageY;
-                that.controllers.touch.swipeDuration = new Date() - that.controllers.touch.startTime;
-                alert(that.controllers.touch.swipeDuration);
-
-                // Need to determine whether it's been a scroll up/down, the velocity of the swipe and then whether to register it as a swipe.
-/*
-                if (currentY > lastY) {
-                  alert('swipe down');
-                  this.controllers.scroll.go.call(this, 'DOWN');
-                } else {
-                  alert('swipe up');
-                  this.controllers.scroll.go.call(this, 'UP');
+              case 'swipedown':
+                if (that._isScrolling === false && that._canScroll === true) {
+                  that._isScrolling = true;
+                  that.controllers.scroll.go.call(that, 'UP');
                 }
-*/
               break;
+
+              case 'swipeup':
+                if (that._isScrolling === false && that._canScroll === true) {
+                  that._isScrolling = true;
+                  that.controllers.scroll.go.call(that, 'DOWN');
+                }
+              break;
+
+              default: return;
             }
 
           });
+
         }
       },
 
@@ -486,7 +553,7 @@
           // Add nav items to do
           this.controllers.navigation.addToDOM.call(this);
           // Set current
-          var navItem = $('.imm-nav-list li a[data-imm-section="#' + this.controllers.scroll.currentSection.element[0].id + '"]');
+          var navItem = $('.imm-nav-list li a[data-imm-section="#' + this._currentSection.element[0].id + '"]');
           that.controllers.navigation.update.call(that, navItem);
           // On nav list click
           $('.imm-nav-list li a').on('click', function() {
@@ -536,14 +603,13 @@
 
         all: [],
         playing: [],
-        muted: false,
 
         init: function(that) {
 
           // Ensure mute buttons are in correct state
           this.controllers.audio.muteBtns.init.call(this);
           // Setup audio for initial section
-          this.controllers.audio.handleChange.call(this, this, this.controllers.scroll.currentSection.audio);
+          this.controllers.audio.handleChange.call(this, this, this._currentSection.audio);
           // Setup audio change when a section changes
           this.$elem.on('sectionChanged', function(e, d) {
             that.controllers.audio.handleChange.call(that, that, d.current.audio);
@@ -554,7 +620,7 @@
 
         handleChange: function(that, audioObj) {
 
-          if (this.controllers.audio.muted) { return false; }
+          if (this._muted) { return false; }
 
           this.controllers.audio.playing = [];
 
@@ -631,18 +697,18 @@
             if (state === 'off') {
               s = this.setup.options.muteButton.muted;
               this.controllers.audio.$muteBtns.addClass('imm-muted').html(s);
-              this.controllers.audio.muted = true;
+              this._muted = true;
             } else {
               s = this.setup.options.muteButton.unmuted;
               this.controllers.audio.$muteBtns.removeClass('imm-muted').html(s);
-              this.controllers.audio.muted = false;
+              this._muted = false;
             }
           },
 
           click: function() {
             // If audio is muted, turn it on
-            if (this.controllers.audio.muted) {
-              var currentAudio = this.controllers.scroll.currentSection.audio;
+            if (this._muted) {
+              var currentAudio = this._currentSection.audio;
               this.controllers.audio.start.call(this, currentAudio);
               this.controllers.audio.muteBtns.change.call(this, 'on');
               this.utils.cookies.set.call(this, 'immAudioState', '', 3650);
@@ -662,12 +728,12 @@
 
           $(window).on('blur', function() {
             var audioToMute = that.controllers.audio.playing;
-            if (!that.controllers.audio.muted) { that.controllers.audio.mute.call(that, audioToMute); }
+            if (!that._muted) { that.controllers.audio.mute.call(that, audioToMute); }
           });
 
           $(window).on('focus', function() {
-            var currentAudio = that.controllers.scroll.currentSection.audio;
-            if (!that.controllers.audio.muted) { that.controllers.audio.start.call(that, currentAudio); }
+            var currentAudio = that._currentSection.audio;
+            if (!that._muted) { that.controllers.audio.start.call(that, currentAudio); }
           });
         }
 
@@ -677,6 +743,9 @@
 
         init: function(s, $wrapper) {
 
+          // If it's mobile, don't play background videos
+          if (this._isMobile) { return false; }
+
           var $video = $wrapper.find('video'),
               $s = $(s.element),
               that = this;
@@ -684,7 +753,7 @@
           // On entering scene & resize the video
           $s.on('init enteringDown enteringUp', function(e) {
 
-            if (e.type === 'init' && s.element !== that.controllers.scroll.currentSection.element) { return; };
+            if (e.type === 'init' && s.element !== that._currentSection.element) { return; };
 
             $video
               .css({visibility: 'hidden'})
@@ -771,13 +840,13 @@
               isMobileWidth = width <= 480;
 
           if (isMobile || isMobileWidth) {
-            this.device = 'mobile';
-            this.isMobile = true;
-            this.isDesktop = false;
+            this._device = 'mobile';
+            this._isMobile = true;
+            this._isDesktop = false;
           } else {
-            this.device = 'desktop';
-            this.isMobile = false;
-            this.isDesktop = true;
+            this._device = 'desktop';
+            this._isMobile = false;
+            this._isDesktop = true;
           }
         },
 
@@ -789,7 +858,8 @@
             that.utils.deviceView.set.call(that, that.windowWidth);
             that.controllers.scroll.scrollOffset.update.call(that);
             that.controllers.scroll.stickySection.call(that);
-            that.controllers.video.resizeAll.call(that);
+            // Resize background videos
+            if (!that._isMobile) { that.controllers.video.resizeAll.call(that); }
           });
         },
 
@@ -802,7 +872,7 @@
           // If animation is for mobile but not desktop and we're not in a mobile view
           // ...or...
           // If animation is for desktop but not mobile and we're not in a desktop view
-          if (mobile && !desktop && !this.isMobile || desktop && !mobile && !this.isDesktop) { return false; }
+          if (mobile && !desktop && !this._isMobile || desktop && !mobile && !this._isDesktop) { return false; }
         }
 
       },
@@ -878,6 +948,11 @@
                 loop = (o.loop === false) ? '' : 'loop="loop" ',
                 sourceStr = '';
 
+            $wrapper.css('background-image', 'url(' + o.path + '.jpg)');
+
+            // If we're on a mobile device, don't append video tags
+            if (this._isMobile) { return false; }
+
             $.each(fileTypes, function(i, ft) {
               sourceStr = sourceStr + '<source src="' + o.path + '.' + ft +'" type="video/' + ft + '">';
             });
@@ -885,7 +960,6 @@
             var $v = $('<video ' + loop + '>' + sourceStr + '</video>');
 
             $wrapper.append($v);
-            $wrapper.css('background-image', 'url(' + o.path + '.jpg)');
           }
         }
       },
