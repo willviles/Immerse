@@ -365,7 +365,7 @@
               e.preventDefault();
               this._scrollUnbound = false;
             }
-          } else if (this._scrollContainer.scrollTop() > this._sectionBelow.scrollOffset) {
+          } else if (this._scrollContainer.scrollTop() > this._sectionBelow.scrollOffset - this._windowHeight) {
             if (this._sectionBelow.unbindScroll) {
               // Just change section references. Otherwise, do a proper scroll.
             } else {
@@ -878,9 +878,9 @@
 
       deviceView: {
         init: function() {
-          this.windowWidth = $(window).width();
-          this.windowHeight = $(window).height();
-          this.utils.deviceView.set.call(this, this.windowWidth);
+          this._windowWidth = $(window).width();
+          this._windowHeight = $(window).height();
+          this.utils.deviceView.set.call(this, this._windowWidth);
           this.utils.deviceView.resize.call(this, this);
 
         },
@@ -902,10 +902,10 @@
 
         resize: function(that) {
 
-          this.windowWidth = $(window).width();
-          this.windowHeight = $(window).height();
+          this._windowWidth = $(window).width();
+          this._windowHeight = $(window).height();
           $(window).on('resize', function() {
-            that.utils.deviceView.set.call(that, that.windowWidth);
+            that.utils.deviceView.set.call(that, that._windowWidth);
             that.controllers.scroll.scrollOffset.update.call(that);
             that.controllers.scroll.stickySection.call(that);
             // Resize background videos
