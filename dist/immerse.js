@@ -345,9 +345,9 @@
           // If scrollTop is above current section
           if (isAbove) {
             // If it's a scroll event and we're not scrolling upwards (i.e, we're just at the top of the section)
-            if (this.utils.isScrollEvent(e) && e.originalEvent.wheelDelta < 0) { return false; };
+            if (this.utils.isScrollEvent(e) && e.originalEvent.wheelDelta < 0) { return; };
             // If it's a keydown event and we're not pressing upwards
-            if (this.utils.isKeydownEvent(e) && e.which !== 38) { return false; }
+            if (this.utils.isKeydownEvent(e) && e.which !== 38) { return; }
             // If above section is also unbound
             if (this._sectionAbove.unbindScroll) {
               // Just change section references.
@@ -364,9 +364,9 @@
           } else if (isBelow) {
 
             // If it's a scroll event and we're not scrolling download (i.e, we're just at the bottom end of the section)
-            if (this.utils.isScrollEvent(e) && e.originalEvent.wheelDelta >= 0) { return false; };
+            if (this.utils.isScrollEvent(e) && e.originalEvent.wheelDelta >= 0) { return; };
             // If it's a keydown event and we're not pressing upwards
-            if (this.utils.isKeydownEvent(e) && e.which !== 40) { return false; }
+            if (this.utils.isKeydownEvent(e) && e.which !== 40) { return; }
 
             // If below section is also unbound
             if (this._sectionBelow.unbindScroll) {
