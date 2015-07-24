@@ -382,6 +382,12 @@
           // If scrollTop is above current section
 
           } else if (isBelow) {
+
+            // If it's a scroll event and we're not scrolling download (i.e, we're just at the bottom end of the section)
+            if (this.utils.isScrollEvent(e) && e.originalEvent.wheelDelta >= 0) { return false; };
+            // If it's a keydown event and we're not pressing upwards
+            if (this.utils.isKeydownEvent(e) && e.which !== 40) { return false; }
+
             // If below section is also unbound
             if (this._sectionBelow.unbindScroll) {
               // Just change section references.
@@ -463,13 +469,13 @@
 
           // If there's no new section, don't scroll!
           if (ns === undefined) {
-            that._isScrolling = false;
-            that._canScroll = true;
+            this._isScrolling = false;
+            this._canScroll = true;
             return false;
           } else {
             nsIndex = that.sections.indexOf(ns);
-            that._sectionAbove = that.sections[nsIndex-1];
-            that._sectionBelow = that.sections[nsIndex+1];
+            this._sectionAbove = this.sections[nsIndex-1];
+            this._sectionBelow = this.sections[nsIndex+1];
           }
 
           // New section element
@@ -481,6 +487,11 @@
           $cs.trigger(tr.exiting);
           // Set new section to entering
           $ns.trigger(tr.entering);
+
+          // If direction is up and next section has scroll unbound, let's hijack that shit!
+          if (direction === 'UP' && ns.unbindScroll === true) {
+            t = "-=" + this._windowHeight;
+          }
 
           this.$elem.animate({scrollTop: t}, 1000, function() {
 
