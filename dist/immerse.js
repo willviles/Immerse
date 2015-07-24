@@ -355,27 +355,37 @@
 
           // !TO-DO: DETECT WHETHER IT'S A SCROLL CHANGE OR KEYBOARD CHANGE
 
-          var above = this._scrollContainer.scrollTop() <= this._currentSection.scrollOffset,
-              below = this._scrollContainer.scrollTop() >= this._sectionBelow.scrollOffset;
-
-          // If next section is not also unbound, ensure it scrolls to new section from a window height away
-          below = this._sectionBelow.unbindScroll === false ? below - this._windowHeight : below;
+          var isAbove = this._scrollContainer.scrollTop() <= this._currentSection.scrollOffset,
+              // If next section is not also unbound, ensure it scrolls to new section from a window height away
+              belowVal = this._sectionBelow.unbindScroll === false ?
+                         this._sectionBelow.scrollOffset - this._windowHeight :
+                         this._sectionBelow.scrollOffset,
+              isBelow = this._scrollContainer.scrollTop() >= belowVal;
 
           // If scrollTop is above current section
-          if (above && e.originalEvent.wheelDelta >= 0) {
+          if (isAbove) {
+            // If it's a scroll event and we're not scrolling upwards (i.e, we're just at the top of the section)
+            if (this.utils.isScrollEvent(e) && e.originalEvent.wheelDelta < 0) { return false; };
+            // If it's a keydown event and we're not pressing upwards
+            if (this.utils.isKeydownEvent(e) && e.which !== 38) { return false; }
             // If above section is also unbound
             if (this._sectionAbove.unbindScroll) {
-              // Just change section references. Otherwise, do a proper scroll.
+              // Just change section references.
 
-            // If above section is not unbound
+            // If above section is not unbound, do a scroll
             } else {
               e.preventDefault();
               this._scrollUnbound = false;
               this.controllers.scroll.ifCanThenGo.call(this, 'UP');
             }
-          } else if (below && e.originalEvent.wheelDelta < 0) {
+
+          // If scrollTop is above current section
+
+          } else if (isBelow) {
+            // If below section is also unbound
             if (this._sectionBelow.unbindScroll) {
-              // Just change section references. Otherwise, do a proper scroll.
+              // Just change section references.
+            // If below section is not unbound, do a scroll
             } else {
               e.preventDefault();
               this._scrollUnbound = false;
@@ -934,6 +944,14 @@
           if (mobile && !desktop && !this._isMobile || desktop && !mobile && !this._isDesktop) { return false; }
         }
 
+      },
+
+      isScrollEvent: function(e) {
+        return e.type === 'wheel' || e.type === 'DOMMouseScroll' || e.type === 'mousewheel';
+      },
+
+      isKeydownEvent: function(e) {
+        return e.type === 'keydown';
       },
 
       cookies: {
