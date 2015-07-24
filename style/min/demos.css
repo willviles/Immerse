@@ -9,6 +9,8 @@ body.imm-demo-sections {
   body.imm-demo-sections #section-3 {
     background-color: #673AB7;
     height: 5000px; }
+  body.imm-demo-sections #section-5 {
+    background-color: #fbe8c7; }
   body.imm-demo-sections nav {
     position: fixed;
     top: 0;

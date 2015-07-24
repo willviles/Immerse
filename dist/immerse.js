@@ -111,7 +111,7 @@
             updateNav: that.setup.options.updateNav,
             transition: that.setup.options.transition,
             hideFromNav: false,
-            unbound: u
+            unbindScroll: u
           };
           that.sections.push(s);
         });
@@ -255,28 +255,34 @@
       ///////////////////////////////////////////////////////
 
       scroll: {
-        unbound: false,
 
         init: function(that) {
           // If element initiated on is body, set the scroll target to window
           this._scrollContainer = ($(this.elem)[0] === $('body')[0]) ? $(window) : $(this.elem);
           // Set current section
           this._currentSection = this.sections[0];
+          this._sectionBelow = this.sections[1];
           // Ensure page always starts at the top
           this._scrollContainer.scrollTop(0);
-          // Bind to mousehweel
-          this._scrollContainer.bind('mousewheel wheel DOMMouseScroll', function(e) {
-            that.controllers.scroll.handler.call(that, e);
+          // Get bound/unbound status of first section
+          this._scrollUnbound = this._currentSection.unbindScroll ? true : false;
+          this.controllers.scroll.initHandlers.call(this);
+
+          // Manage binding or unbind of scroll on sectionChange
+          this.$elem.on('sectionChanged', function(e, d) {
+            that._scrollUnbound = d.current.unbindScroll ? true : false;
+            that.controllers.scroll.initHandlers.call(that);
           });
-          // Bind to arrow keys
-          $(document).keydown(function(e) {
-            that.controllers.scroll.keydownHandler.call(that, e);
-          });
-          $(document).keyup(function(e) {
-            that._lastKey = null;
-          });
+
           // Bind to touch events
           this.controllers.touch.init.call(this);
+
+        },
+
+        initHandlers: function() {
+          this._scrollContainer.on('mousewheel wheel DOMMouseScroll', this.controllers.scroll.handler.bind(this));
+          $(document).on('keydown', this.controllers.scroll.keydownHandler.bind(this));
+          $(document).on('keyup', this.controllers.scroll.keyupHandler.bind(this));
 
         },
 
@@ -300,7 +306,7 @@
           this._scrollContainer.scrollTop(t);
         },
 
-        status: function(status, e) {
+        browserScroll: function(status, e) {
           function preventDefaultScroll(e) {
             e = e || window.event;
             if (e.preventDefault) { e.preventDefault(); }
@@ -327,21 +333,52 @@
         },
 
         handler: function(e) {
-          this.controllers.scroll.status('disable', e);
 
-          if (this._isScrolling === false && this._canScroll === true) {
-            this._isScrolling = true;
+          if (this._scrollUnbound) {
+            // Enable browser scroll
+            this.controllers.scroll.browserScroll('enable', e);
+            this.controllers.scroll.detectUnboundSectionChange.call(this, e);
 
-            if (e.originalEvent.wheelDelta >= 0) {
-              this.controllers.scroll.go.call(this, 'UP');
-            } else {
-              this.controllers.scroll.go.call(this, 'DOWN');
+          } else {
+            // Disable browser scroll
+            this.controllers.scroll.browserScroll('disable', e);
+
+            if (this._isScrolling === false && this._canScroll === true) {
+              this._isScrolling = true;
+
+              if (e.originalEvent.wheelDelta >= 0) {
+                this.controllers.scroll.go.call(this, 'UP');
+              } else {
+                this.controllers.scroll.go.call(this, 'DOWN');
+              }
             }
           }
         },
 
+        detectUnboundSectionChange: function(e) {
+
+          // If scrollTop is above current section
+          if (this._scrollContainer.scrollTop() < this._currentSection.scrollOffset) {
+            if (this._sectionAbove.unbindScroll) {
+              // Just change section references. Otherwise, do a proper scroll.
+            } else {
+              e.preventDefault();
+              this._scrollUnbound = false;
+            }
+          } else if (this._scrollContainer.scrollTop() > this._sectionBelow.scrollOffset) {
+            if (this._sectionBelow.unbindScroll) {
+              // Just change section references. Otherwise, do a proper scroll.
+            } else {
+              e.preventDefault();
+              this._scrollUnbound = false;
+            }
+          }
+        },
+
+        keyupHandler: function(e) { this._lastKey = null; },
+
         keydownHandler: function(e) {
-          if (this._lastKey && this._lastKey.which == e.which) {
+          if (!this._scrollUnbound && this._lastKey && this._lastKey.which == e.which) {
             e.preventDefault();
             return;
           }
@@ -349,18 +386,22 @@
           switch(e.which) {
 
             case 38: // up
-              e.preventDefault();
-              if (this._isScrolling === false && this._canScroll === true) {
-                this._isScrolling = true;
-                this.controllers.scroll.go.call(this, 'UP');
+              if (!this._scrollUnbound) {
+                e.preventDefault();
+                if (this._isScrolling === false && this._canScroll === true) {
+                  this._isScrolling = true;
+                  this.controllers.scroll.go.call(this, 'UP');
+                }
               }
             break;
 
             case 40: // down
-              e.preventDefault();
-              if (this._isScrolling === false && this._canScroll === true) {
-                this._isScrolling = true;
-                this.controllers.scroll.go.call(this, 'DOWN');
+              if (!this._scrollUnbound) {
+                e.preventDefault();
+                if (this._isScrolling === false && this._canScroll === true) {
+                  this._isScrolling = true;
+                  this.controllers.scroll.go.call(this, 'DOWN');
+                }
               }
             break;
 
@@ -371,9 +412,11 @@
         go: function(o) {
           var ns, tr, direction,
               cs = this._currentSection,
-              i = this.sections.indexOf(cs),
+              csIndex = this.sections.indexOf(cs),
+              nsIndex,
               $cs = $(cs.element),
               that = this;
+
 
           // If we've passed a jQuery object directly, use it as the next section
           if (o.jquery) {
@@ -384,7 +427,7 @@
           // Else if we've just passed the scroll direction, find the next section
           } else if (o === 'UP' || o === 'DOWN') {
             direction = o;
-            ns = (direction === 'UP') ? this.sections[i-1] : this.sections[i+1];
+            ns = (direction === 'UP') ? this.sections[csIndex-1] : this.sections[csIndex+1];
           }
 
           if (direction === 'UP') {
@@ -398,6 +441,10 @@
             that._isScrolling = false;
             that._canScroll = true;
             return false;
+          } else {
+            nsIndex = that.sections.indexOf(ns);
+            that._sectionAbove = that.sections[nsIndex-1];
+            that._sectionBelow = that.sections[nsIndex+1];
           }
 
           // New section element
@@ -416,12 +463,17 @@
             $ns.trigger(tr.entered);
             // Set current section to exited
             $cs.trigger(tr.exited);
+            // Set variables
+            that._lastSection = cs;
+            that._currentSection = ns;
             // We're done, so set new section as current section
             that.$elem.trigger('sectionChanged', [{
-              prev: cs,
-              current: ns,
+              last: that._lastSection,
+              current: that._currentSection,
+              below: that._sectionBelow,
+              above: that._sectionAbove
             }]);
-            that._currentSection = ns;
+
 
             setTimeout(function() {
               // Reset flags
@@ -975,7 +1027,7 @@
           updateNav: page.defaults.options.updateNav,
           transition: page.defaults.options.transition,
           hideFromNav: false,
-          unbound: false
+          unbindScroll: false
         }
 
         var section = $.extend(true, defaults, section);

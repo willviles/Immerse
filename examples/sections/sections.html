@@ -70,6 +70,15 @@
       </div>
     </section>
 
+    <section id="section-5" class="imm-fullscreen imm-section">
+      <div class="container-fluid">
+        <div class="row text-center">
+          <h1>SECTION 5</h1>
+          <p>An animation for section 5</p>
+        </div>
+      </div>
+    </section>
+
     <nav class="imm-nav">
       <button class="imm-mute"></button>
       <ul class="imm-nav-list"></ul>
@@ -223,7 +232,7 @@
           // Set the element. Must be able to take either a string, javascript or jquery selector
           element: $('#section-3'),
           // Make unbound
-          unbound: true,
+          unbindScroll: true,
           // Define audio
           audio: {
             'gnossienne': { volume: .2, changeDuration: 1 }
