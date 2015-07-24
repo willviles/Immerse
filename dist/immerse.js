@@ -343,34 +343,43 @@
             // Disable browser scroll
             this.controllers.scroll.browserScroll('disable', e);
 
-            if (this._isScrolling === false && this._canScroll === true) {
-              this._isScrolling = true;
-
-              if (e.originalEvent.wheelDelta >= 0) {
-                this.controllers.scroll.go.call(this, 'UP');
-              } else {
-                this.controllers.scroll.go.call(this, 'DOWN');
-              }
+            if (e.originalEvent.wheelDelta >= 0) {
+              this.controllers.scroll.ifCanThenGo.call(this, 'UP');
+            } else {
+              this.controllers.scroll.ifCanThenGo.call(this, 'DOWN');
             }
           }
         },
 
         detectUnboundSectionChange: function(e) {
 
+          // !TO-DO: DETECT WHETHER IT'S A SCROLL CHANGE OR KEYBOARD CHANGE
+
+          var above = this._scrollContainer.scrollTop() <= this._currentSection.scrollOffset,
+              below = this._scrollContainer.scrollTop() >= this._sectionBelow.scrollOffset;
+
+          // If next section is not also unbound, ensure it scrolls to new section from a window height away
+          below = this._sectionBelow.unbindScroll === false ? below - this._windowHeight : below;
+
           // If scrollTop is above current section
-          if (this._scrollContainer.scrollTop() < this._currentSection.scrollOffset) {
+          if (above && e.originalEvent.wheelDelta >= 0) {
+            // If above section is also unbound
             if (this._sectionAbove.unbindScroll) {
               // Just change section references. Otherwise, do a proper scroll.
+
+            // If above section is not unbound
             } else {
               e.preventDefault();
               this._scrollUnbound = false;
+              this.controllers.scroll.ifCanThenGo.call(this, 'UP');
             }
-          } else if (this._scrollContainer.scrollTop() > this._sectionBelow.scrollOffset - this._windowHeight) {
+          } else if (below && e.originalEvent.wheelDelta < 0) {
             if (this._sectionBelow.unbindScroll) {
               // Just change section references. Otherwise, do a proper scroll.
             } else {
               e.preventDefault();
               this._scrollUnbound = false;
+              this.controllers.scroll.ifCanThenGo.call(this, 'DOWN');
             }
           }
         },
@@ -383,29 +392,35 @@
             return;
           }
           this._lastKey = e;
+
           switch(e.which) {
 
             case 38: // up
-              if (!this._scrollUnbound) {
+              if (this._scrollUnbound) {
+                this.controllers.scroll.detectUnboundSectionChange.call(this, e);
+              } else {
                 e.preventDefault();
-                if (this._isScrolling === false && this._canScroll === true) {
-                  this._isScrolling = true;
-                  this.controllers.scroll.go.call(this, 'UP');
-                }
+                this.controllers.scroll.ifCanThenGo.call(this, 'UP');
               }
             break;
 
             case 40: // down
-              if (!this._scrollUnbound) {
+              if (this._scrollUnbound) {
+                this.controllers.scroll.detectUnboundSectionChange.call(this, e);
+              } else {
                 e.preventDefault();
-                if (this._isScrolling === false && this._canScroll === true) {
-                  this._isScrolling = true;
-                  this.controllers.scroll.go.call(this, 'DOWN');
-                }
+                this.controllers.scroll.ifCanThenGo.call(this, 'DOWN');
               }
             break;
 
             default: return; // exit this handler for other keys
+          }
+        },
+
+        ifCanThenGo: function(goVar) {
+          if (this._isScrolling === false && this._canScroll === true) {
+            this._isScrolling = true;
+            this.controllers.scroll.go.call(this, goVar);
           }
         },
 
@@ -572,17 +587,11 @@
           $(document).on('swipedown swipeup',function(e){
             switch(e.type) {
               case 'swipedown':
-                if (that._isScrolling === false && that._canScroll === true) {
-                  that._isScrolling = true;
-                  that.controllers.scroll.go.call(that, 'UP');
-                }
+                that.controllers.scroll.ifCanThenGo.call(that, 'UP');
               break;
 
               case 'swipeup':
-                if (that._isScrolling === false && that._canScroll === true) {
-                  that._isScrolling = true;
-                  that.controllers.scroll.go.call(that, 'DOWN');
-                }
+                that.controllers.scroll.ifCanThenGo.call(that, 'DOWN');
               break;
 
               default: return;
@@ -608,7 +617,7 @@
           // On nav list click
           $('.imm-nav-list li a').on('click', function() {
             var $target = $($(this).data('imm-section'));
-            that.controllers.scroll.go.call(that, $target);
+            that.controllers.scroll.ifCanThenGo.call(that, $target);
             that.controllers.navigation.update.call(that, $(this));
           });
           // Handle on section change
