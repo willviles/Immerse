@@ -286,26 +286,6 @@
 
         },
 
-        scrollOffset: {
-          set: function(s) {
-            s.scrollOffset = $(s.element).offset().top;
-          },
-
-          update: function() {
-            // Update on resize handler
-            var that = this;
-            $.each(this.sections, function(i, s) {
-              that.controllers.scroll.scrollOffset.set.call(that, s);
-            });
-
-          }
-        },
-
-        stickySection: function() {
-          var t = this._currentSection.scrollOffset;
-          this._scrollContainer.scrollTop(t);
-        },
-
         browserScroll: function(status, e) {
           function preventDefaultScroll(e) {
             e = e || window.event;
@@ -358,7 +338,7 @@
           var isAbove = this._scrollContainer.scrollTop() <= this._currentSection.scrollOffset,
               // If next section is not also unbound, ensure it scrolls to new section from a window height away
               belowVal = this._sectionBelow.unbindScroll === false ?
-                         this._sectionBelow.scrollOffset - this._windowHeight :
+                         this._sectionBelow.scrollOffset - $(window).height() :
                          this._sectionBelow.scrollOffset,
               isBelow = this._scrollContainer.scrollTop() >= belowVal;
 
@@ -490,7 +470,7 @@
 
           // If direction is up and next section has scroll unbound, let's hijack that shit!
           if (direction === 'UP' && ns.unbindScroll === true) {
-            t = "-=" + this._windowHeight;
+            t = "-=" + $(window).height();
           }
 
           this.$elem.animate({scrollTop: t}, 1000, function() {
@@ -518,6 +498,28 @@
             }, 500);
 
           });
+        },
+
+        scrollOffset: {
+          set: function(s) {
+            s.scrollOffset = $(s.element).offset().top;
+          },
+
+          update: function() {
+            // Update on resize handler
+            var that = this;
+            $.each(this.sections, function(i, s) {
+              that.controllers.scroll.scrollOffset.set.call(that, s);
+            });
+
+          }
+        },
+
+        stickySection: function() {
+          if (!this._scrollUnbound) {
+            var t = this._currentSection.scrollOffset;
+            this._scrollContainer.scrollTop(t);
+          }
         }
 
       },
