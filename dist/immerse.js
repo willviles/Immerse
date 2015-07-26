@@ -61,7 +61,7 @@
       // Init device view utilities
       this.utils.deviceView.init.call(this);
 
-      var assets = this.utils.assets.register.call(this, this);
+      var assets = this.controllers.assets.register.call(this, this);
 
       // Setup sections
       this.controllers.section.call(this, this);
@@ -505,6 +505,7 @@
               below: that._sectionBelow,
               above: that._sectionAbove
             }]);
+//             that.controllers.navigation.update.call(that, ns);
 
             setTimeout(function() {
               // Reset flags
@@ -656,7 +657,6 @@
           $('.imm-nav-list li a').on('click', function() {
             var $target = $($(this).data('imm-section'));
             that.controllers.scroll.ifCanThenGo.call(that, $target);
-            that.controllers.navigation.update.call(that, $(this));
           });
           // Handle on section change
           this.$elem.on('sectionChanged', function(e, d) {
@@ -687,7 +687,7 @@
 
         update: function($e) {
           $('.imm-nav-list li a').removeClass('current');
-          if ($e !== undefined) { $e.addClass('current'); }
+          if ($e.length > 0) { $e.addClass('current'); }
         }
       },
 
@@ -919,110 +919,8 @@
         }
 
       },
-    },
 
-    // Utilities
-    ///////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////
-
-    utils: {
-
-      // Device View functions
-      ///////////////////////////////////////////////////////
-
-      deviceView: {
-        init: function() {
-          this._windowWidth = $(window).width();
-          this._windowHeight = $(window).height();
-          this.utils.deviceView.set.call(this, this._windowWidth);
-          this.utils.deviceView.resize.call(this, this);
-
-        },
-
-        set: function(width) {
-          var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|OperaMini/i.test(navigator.userAgent),
-              isMobileWidth = width <= 480;
-
-          if (isMobile || isMobileWidth) {
-            this._device = 'mobile';
-            this._isMobile = true;
-            this._isDesktop = false;
-          } else {
-            this._device = 'desktop';
-            this._isMobile = false;
-            this._isDesktop = true;
-          }
-        },
-
-        resize: function(that) {
-
-          this._windowWidth = $(window).width();
-          this._windowHeight = $(window).height();
-          $(window).on('resize', function() {
-            that.utils.deviceView.set.call(that, that._windowWidth);
-            that.controllers.scroll.scrollOffset.update.call(that);
-            that.controllers.scroll.stickySection.call(that);
-            // Resize background videos
-            if (!that._isMobile) { that.controllers.video.resizeAll.call(that); }
-          });
-        },
-
-        check: function(a) {
-
-          // Prepare devices
-          var mobile = $.inArray('mobile', a.devices) !== -1,
-              desktop = $.inArray('desktop', a.devices) !== -1
-
-          // If animation is for mobile but not desktop and we're not in a mobile view
-          // ...or...
-          // If animation is for desktop but not mobile and we're not in a desktop view
-          if (mobile && !desktop && !this._isMobile || desktop && !mobile && !this._isDesktop) { return false; }
-        }
-
-      },
-
-      isScrollEvent: function(e) {
-        return e.type === 'wheel' || e.type === 'DOMMouseScroll' || e.type === 'mousewheel';
-      },
-
-      isKeydownEvent: function(e) {
-        return e.type === 'keydown';
-      },
-
-      stringify: function(str) {
-        return str.replace(/[-_]/g, ' ').replace(/([a-z])([A-Z])/g, '$1 $2').toLowerCase().replace(/\b[a-z]/g, function(letter) {
-            return letter.toUpperCase();
-        });
-      },
-
-      cookies: {
-        set: function(name, value, expiresInSeconds) {
-          var r = new Date;
-          r.setTime(r.getTime() + expiresInSeconds * 24 * 60 * 60 * 1e3);
-          var i = "expires=" + r.toGMTString();
-          document.cookie = name + "=" + value + "; " + i
-
-        },
-
-        get: function(e) {
-          var t = e + "=",
-              n = document.cookie.split(";");
-          for (var r = 0; r < n.length; r++) {
-              var i = n[r];
-              while (i.charAt(0) == " ") i = i.substring(1);
-              if (i.indexOf(t) != -1) return i.substring(t.length, i.length)
-          }
-          return ""
-        },
-
-        delete: function(e) {
-          this.utils.cookies.set.call(this, e, '', -1);
-        }
-
-      },
-
-      // Asset management
+      // Asset Controller
       ///////////////////////////////////////////////////////
 
       assets: {
@@ -1038,10 +936,10 @@
           $.each(this.assets, function(n, a) {
 
             // Add audio to DOM
-            if (a.type === 'audio') { that.utils.assets.addToDOM.audio.call(that, n, a); }
+            if (a.type === 'audio') { that.controllers.assets.addToDOM.audio.call(that, n, a); }
 
             // Add video to DOM
-            if (a.type === 'video') { that.utils.assets.addToDOM.video.call(that, n, a); }
+            if (a.type === 'video') { that.controllers.assets.addToDOM.video.call(that, n, a); }
 
             // If set to wait, push into queue
             if (a.wait === true) {
@@ -1145,6 +1043,108 @@
             $wrapper.append($v);
           }
         }
+      }
+    },
+
+    // Utilities
+    ///////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////
+
+    utils: {
+
+      // Device View functions
+      ///////////////////////////////////////////////////////
+
+      deviceView: {
+        init: function() {
+          this._windowWidth = $(window).width();
+          this._windowHeight = $(window).height();
+          this.utils.deviceView.set.call(this, this._windowWidth);
+          this.utils.deviceView.resize.call(this, this);
+
+        },
+
+        set: function(width) {
+          var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|OperaMini/i.test(navigator.userAgent),
+              isMobileWidth = width <= 480;
+
+          if (isMobile || isMobileWidth) {
+            this._device = 'mobile';
+            this._isMobile = true;
+            this._isDesktop = false;
+          } else {
+            this._device = 'desktop';
+            this._isMobile = false;
+            this._isDesktop = true;
+          }
+        },
+
+        resize: function(that) {
+
+          this._windowWidth = $(window).width();
+          this._windowHeight = $(window).height();
+          $(window).on('resize', function() {
+            that.utils.deviceView.set.call(that, that._windowWidth);
+            that.controllers.scroll.scrollOffset.update.call(that);
+            that.controllers.scroll.stickySection.call(that);
+            // Resize background videos
+            if (!that._isMobile) { that.controllers.video.resizeAll.call(that); }
+          });
+        },
+
+        check: function(a) {
+
+          // Prepare devices
+          var mobile = $.inArray('mobile', a.devices) !== -1,
+              desktop = $.inArray('desktop', a.devices) !== -1
+
+          // If animation is for mobile but not desktop and we're not in a mobile view
+          // ...or...
+          // If animation is for desktop but not mobile and we're not in a desktop view
+          if (mobile && !desktop && !this._isMobile || desktop && !mobile && !this._isDesktop) { return false; }
+        }
+
+      },
+
+      isScrollEvent: function(e) {
+        return e.type === 'wheel' || e.type === 'DOMMouseScroll' || e.type === 'mousewheel';
+      },
+
+      isKeydownEvent: function(e) {
+        return e.type === 'keydown';
+      },
+
+      stringify: function(str) {
+        return str.replace(/[-_]/g, ' ').replace(/([a-z])([A-Z])/g, '$1 $2').toLowerCase().replace(/\b[a-z]/g, function(letter) {
+            return letter.toUpperCase();
+        });
+      },
+
+      cookies: {
+        set: function(name, value, expiresInSeconds) {
+          var r = new Date;
+          r.setTime(r.getTime() + expiresInSeconds * 24 * 60 * 60 * 1e3);
+          var i = "expires=" + r.toGMTString();
+          document.cookie = name + "=" + value + "; " + i
+
+        },
+
+        get: function(e) {
+          var t = e + "=",
+              n = document.cookie.split(";");
+          for (var r = 0; r < n.length; r++) {
+              var i = n[r];
+              while (i.charAt(0) == " ") i = i.substring(1);
+              if (i.indexOf(t) != -1) return i.substring(t.length, i.length)
+          }
+          return ""
+        },
+
+        delete: function(e) {
+          this.utils.cookies.set.call(this, e, '', -1);
+        }
+
       },
 
       // Extend Section
