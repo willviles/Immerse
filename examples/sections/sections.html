@@ -101,6 +101,9 @@
 
           // Options
           options: {
+            defaultTransition: {
+              type: 'scroll'
+            },
             muteButton: {
               unmuted: '<i class="fa fa-volume-up"></i> On',
               muted: '<i class="fa fa-volume-off"></i> Off',
@@ -127,7 +130,7 @@
           element: $('#header'),
           // Section options
           options: {
-            hideFromHav: true,
+            hideFromNav: true,
           },
           // Define starting audio
           audio: {
@@ -251,9 +254,27 @@
 
         var pageImmerse = $.Immerse.init($('body'), pageName);
 
+
+
+/*
+        setTimeout(function() {
+          pageImmerse.changeSection();
+        }, 3000);
+
+        setTimeout(function() {
+          if (pageImmerse.audio() === false) {
+            pageImmerse.audio('unmute');
+          } else if (pageImmerse.audio() === true) {
+            pageImmerse.audio('mute');
+          }
+        }, 3000);
+
         $('body').on('logoColor', function(obj, value) {
           console.log('logoColor is ' + value);
         });
+*/
+
+
 
       });
     </script>

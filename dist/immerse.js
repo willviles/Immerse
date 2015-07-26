@@ -19,9 +19,9 @@
           // Set a default for the section selector
           sectionSelector: '.imm-section',
           // Transition
-          transition: 'default',
-          // Set a default for the updateNav value. Any section can change it.
-          updateNav: true,
+          defaultTransition: {
+            type: 'scroll', duration: 250
+          },
           // Set breakpoints
           breakpoints: {
             mobile: 480,
@@ -117,17 +117,18 @@
         var $allSectionElems = $(this.setup.options.sectionSelector);
 
         $.each($allSectionElems, function(i, $s) {
-          var u = $($s).hasClass('imm-fullscreen') ? false : true;
-          var s = {
-            name: $($s)[0].id,
-            element: $($s),
-            updateNav: that.setup.options.updateNav,
-            transition: that.setup.options.transition,
-            options: {
-              hideFromNav: false,
-              unbindScroll: u
-            }
-          };
+          var u = $($s).hasClass('imm-fullscreen') ? false : true,
+              n = that.utils.stringify($($s)[0].id),
+              s = {
+                name: n,
+                element: $($s),
+                updateNav: that.setup.options.updateNav,
+                transition: that.setup.options.transition,
+                options: {
+                  hideFromNav: false,
+                  unbindScroll: u
+                }
+              };
           that.sections.push(s);
         });
 
@@ -436,7 +437,7 @@
         },
 
         go: function(o) {
-          var ns, tr, direction,
+          var ns, tr, direction, duration,
               cs = this._currentSection,
               csIndex = this.sections.indexOf(cs),
               nsIndex,
@@ -504,7 +505,6 @@
               below: that._sectionBelow,
               above: that._sectionAbove
             }]);
-
 
             setTimeout(function() {
               // Reset flags
@@ -802,19 +802,27 @@
             }
           },
 
+          muteAll: function() {
+            var audioToMute = this.controllers.audio.playing;
+            this.controllers.audio.mute.call(this, audioToMute);
+            this.controllers.audio.muteBtns.change.call(this, 'off');
+            this.utils.cookies.set.call(this, 'immAudioState', 'muted', 3650);
+          },
+
+          unmuteAll: function() {
+            var currentAudio = this._currentSection.audio;
+            this.controllers.audio.start.call(this, currentAudio);
+            this.controllers.audio.muteBtns.change.call(this, 'on');
+            this.utils.cookies.set.call(this, 'immAudioState', '', 3650);
+          },
+
           click: function() {
             // If audio is muted, turn it on
             if (this._muted) {
-              var currentAudio = this._currentSection.audio;
-              this.controllers.audio.start.call(this, currentAudio);
-              this.controllers.audio.muteBtns.change.call(this, 'on');
-              this.utils.cookies.set.call(this, 'immAudioState', '', 3650);
+              this.controllers.audio.muteBtns.unmuteAll.call(this);
             // Else if it's on, mute it
             } else {
-              var audioToMute = this.controllers.audio.playing;
-              this.controllers.audio.mute.call(this, audioToMute);
-              this.controllers.audio.muteBtns.change.call(this, 'off');
-              this.utils.cookies.set.call(this, 'immAudioState', 'muted', 3650);
+              this.controllers.audio.muteBtns.muteAll.call(this);
             }
           }
         },
@@ -980,6 +988,12 @@
 
       isKeydownEvent: function(e) {
         return e.type === 'keydown';
+      },
+
+      stringify: function(str) {
+        return str.replace(/[-_]/g, ' ').replace(/([a-z])([A-Z])/g, '$1 $2').toLowerCase().replace(/\b[a-z]/g, function(letter) {
+            return letter.toUpperCase();
+        });
       },
 
       cookies: {
@@ -1155,6 +1169,29 @@
         page.setup.sections.push(section);
         return section;
       }
+    },
+
+    // API Endpoints
+    ///////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////
+
+    // Expose audio endpoint to get state of audio & mute/unmute programmatically
+    audio: function(status) {
+      if (status === 'unmute') {
+        this.controllers.audio.muteBtns.unmuteAll.call(this);
+      } else if (status === 'mute') {
+        this.controllers.audio.muteBtns.muteAll.call(this);
+      } else if (status === undefined) {
+        return this._muted ? false : true;
+      }
+
+    },
+
+    // Expose changeSection endpoint to allow for changing section programmatically
+    changeSection: function(goVar) {
+      if (goVar === undefined) { return false; }
+      this.controllers.scroll.ifCanThenGo.call(this, goVar);
     }
 
   }; // End of all plugin functions
@@ -1174,7 +1211,7 @@
     },
 
     init: function(elem, setup) {
-      new Immerse(this).init(elem, setup);
+      return new Immerse(this).init(elem, setup);
     }
 
   }
