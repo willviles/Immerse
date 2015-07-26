@@ -1,11 +1,15 @@
 @import 'compass';
 @import 'compass/layout';
 
+body::-webkit-scrollbar { width: 0 !important; }
+
 .imm-scroll-container {
-  @include stretch(0, 0, 0, 0);
-  overflow-y: scroll;
-  -webkit-overflow-scrolling: touch;
-  &::-webkit-scrollbar { width: 0 !important }
+/*
+  @include opacity(0);
+  &.loaded {
+    @include opacity(1);
+  }
+*/
 }
 
 .imm-section { position: relative; overflow: hidden; }
@@ -13,7 +17,22 @@
 
 
 .imm-video {
-  @include stretch(0, 0, 0, 0); overflow: hidden;
+  @include stretch(); overflow: hidden;
   @include background-size(cover);
   background-repeat: no-repeat;
+}
+
+
+@include keyframes(rotate) {
+  from { @include transform(rotate(0deg)); }
+  to { @include transform(rotate(360deg)); }
+}
+
+.imm-loading {
+  @include stretch(); position: fixed; background-color: white;
+  .imm-spinner {
+    position: absolute; top: 50%; left: 50%; @include translate(-50%, -50%);
+    &:before { content: '*'; font-size: 10em; @include transform-origin(50% 50%); @include animation(rotate .5s linear infinite); }
+
+  }
 }

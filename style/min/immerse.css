@@ -1,13 +1,13 @@
+body::-webkit-scrollbar {
+  width: 0 !important; }
+
 .imm-scroll-container {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  overflow-y: scroll;
-  -webkit-overflow-scrolling: touch; }
-  .imm-scroll-container::-webkit-scrollbar {
-    width: 0 !important; }
+  /*
+    @include opacity(0);
+    &.loaded {
+      @include opacity(1);
+    }
+  */ }
 
 .imm-section {
   position: relative;
@@ -28,3 +28,55 @@
   -webkit-background-size: cover;
   background-size: cover;
   background-repeat: no-repeat; }
+
+@-moz-keyframes rotate {
+  from {
+    -moz-transform: rotate(0deg);
+    transform: rotate(0deg); }
+  to {
+    -moz-transform: rotate(360deg);
+    transform: rotate(360deg); } }
+@-webkit-keyframes rotate {
+  from {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg); }
+  to {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg); } }
+@keyframes rotate {
+  from {
+    -moz-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg); }
+  to {
+    -moz-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg); } }
+.imm-loading {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  position: fixed;
+  background-color: white; }
+  .imm-loading .imm-spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -moz-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%); }
+    .imm-loading .imm-spinner:before {
+      content: '*';
+      font-size: 10em;
+      -moz-transform-origin: 50% 50% 50%;
+      -ms-transform-origin: 50% 50% 50%;
+      -webkit-transform-origin: 50% 50% 50%;
+      transform-origin: 50% 50% 50%;
+      -moz-animation: rotate 0.5s linear infinite;
+      -webkit-animation: rotate 0.5s linear infinite;
+      animation: rotate 0.5s linear infinite; }

@@ -61,8 +61,7 @@
       // Init device view utilities
       this.utils.deviceView.init.call(this);
 
-      // Load assets
-      this.utils.assets.register.call(this, this);
+      var assets = this.utils.assets.register.call(this, this);
 
       // Setup sections
       this.controllers.section.call(this, this);
@@ -76,11 +75,24 @@
       // Init audio
       this.controllers.audio.init.call(this, this);
 
-      // Run init on all sections
-      $.each(this.sections, function(i, s) {
-        $(s.element).trigger('init');
-      });
+      // Ensure init is called when assets are loaded
+      $.when(assets).then(
+        function(s) {
+          console.log('Assets loaded');
 
+          // Run init on all sections
+          $.each(that.sections, function(i, s) {
+            $(s.element).trigger('init');
+          });
+
+          //
+          $('.imm-loading').hide();
+
+        },
+        function(s) {
+          alert('Asset loading failed');
+        }
+      );
 
       return this;
     },
@@ -999,6 +1011,13 @@
       assets: {
         register: function(that) {
 
+          var assetQueueLoaded = jQuery.Deferred(),
+              assetQueue = [],
+              assetLoadingFailed,
+              assetQueueCheck = function() {
+                if (assetQueue.length === 0) { assetQueueLoaded.resolve('loaded'); clearTimeout(assetLoadingFailed); }
+              };
+
           $.each(this.assets, function(n, a) {
 
             // Add audio to DOM
@@ -1006,15 +1025,72 @@
 
             // Add video to DOM
             if (a.type === 'video') { that.utils.assets.addToDOM.video.call(that, n, a); }
-            // some method of loading & tracking load needs to go here
+
+            // If set to wait, push into queue
+            if (a.wait === true) {
+              // Catch any error in instantiating asset
+              if (a.error) { console.log("Asset Failure: Could not preload " + a.type + " asset '" + n + "'"); return; }
+              assetQueue.push({name: n, asset: a});
+            }
 
           });
+
+          $.each(assetQueue, function(i, a) {
+
+            var n = a.name,
+                a = a.asset;
+
+            // Check if connection is fast enough to load audio/video
+            if (a.type === 'audio' || a.type === 'video') {
+              $(a.type + '#' + n)[0].addEventListener('canplaythrough', function() {
+                assetQueue.splice( $.inArray(a, assetQueue), 1 );
+                assetQueueCheck();
+              }, false);
+            }
+
+            // Load the image asset
+            if (a.type === 'image') {
+              var fileTypes = ($.isArray(a.fileTypes)) ? a.fileTypes : ['jpg'],
+                  imagesLoadComplete = jQuery.Deferred(),
+                  imagesLoadCheck = function() {
+                    if (fileTypes.length === 0) { imagesLoadComplete.resolve('loaded'); }
+                  };
+
+              $.each(fileTypes, function(i, ft) {
+                var tmp = new Image();
+                tmp.src = a.path + '.' + ft;
+                tmp.onload = function() {
+                  fileTypes.splice( $.inArray(ft, fileTypes), 1 );
+                  imagesLoadCheck();
+                };
+              });
+
+              imagesLoadComplete.done(function() {
+                assetQueue.splice( $.inArray(a, assetQueue), 1 );
+                assetQueueCheck();
+              });
+            }
+          });
+
+          // If no assets are queued, make sure function fires
+          assetQueueCheck();
+
+          // Reject after a random interval
+          assetLoadingFailed = setTimeout(function() {
+            assetQueueLoaded.reject('problem');
+          }, 10000);
+
+          return assetQueueLoaded.promise();
+
         },
 
         addToDOM: {
 
           // Audio
           audio: function(n, a) {
+
+            if (a.path === undefined ) { console.log("Asset Error: Must define a path for audio asset '" + n + "'"); a.error = true; return false };
+
             var l = a.loop == true ? 'loop' : '',
                 fileTypes = ($.isArray(a.fileTypes)) ? a.fileTypes : ['mp3'],
                 sourceStr = '';
@@ -1031,7 +1107,7 @@
           // Video
           video: function(n, o) {
 
-            if (o.path === undefined ) { console.log("Must define a path for video '" + n + "'"); return false };
+            if (o.path === undefined ) { console.log("Asset Error: Must define a path for video asset '" + n + "'"); o.error = true; return false };
 
             var $wrapper = this.$elem.find('[data-imm-video="' + n + '"]'),
                 fileTypes = ($.isArray(o.fileTypes)) ? o.fileTypes : ['mp4', 'ogv', 'webm'],
