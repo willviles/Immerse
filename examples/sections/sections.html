@@ -101,8 +101,6 @@
 
           // Options
           options: {
-            // Set a default for the updateNav value. Any section can change it.
-            updateNav: true,
             muteButton: {
               unmuted: '<i class="fa fa-volume-up"></i> On',
               muted: '<i class="fa fa-volume-off"></i> Off',
@@ -125,10 +123,12 @@
 
           // Unique name for the section
           name: 'Header',
-          // Name to be printed as a string
-          hideFromNav: true,
           // Set the element. Must be able to take either a string, javascript or jquery selector
           element: $('#header'),
+          // Section options
+          options: {
+            hideFromHav: true,
+          },
           // Define starting audio
           audio: {
             'gnossienne': { volume: 1, changeDuration: 1 } // Audio #1
@@ -217,7 +217,7 @@
         $.Immerse.section.setup(pageName, {
 
           // Unique name for the section
-          uid: 'Section 2',
+          name: 'Section 2',
           // Set the element. Must be able to take either a string, javascript or jquery selector
           element: $('#section-2'),
           // Define audio
@@ -227,17 +227,19 @@
           }
         });
 
-        // Setup #section-2
+        // Setup #section-3
         ///////////////////////////////////////////
 
         $.Immerse.section.setup(pageName, {
 
           // Unique name for the section
-          uid: 'Section 3',
+          name: 'Section 3',
           // Set the element. Must be able to take either a string, javascript or jquery selector
           element: $('#section-3'),
-          // Make unbound
-          unbindScroll: true,
+          // Section options
+          options: {
+            unbindScroll: true  // Make unbound
+          },
           // Define audio
           audio: {
             'gnossienne': { volume: .2, changeDuration: 1 }

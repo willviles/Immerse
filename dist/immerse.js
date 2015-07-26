@@ -85,7 +85,8 @@
             $(s.element).trigger('init');
           });
 
-          //
+          // Hide loading
+          // TODO: Allow for custom loading animation sequences. Consider how to introduce a percentage bar
           $('.imm-loading').hide();
 
         },
@@ -122,8 +123,10 @@
             element: $($s),
             updateNav: that.setup.options.updateNav,
             transition: that.setup.options.transition,
-            hideFromNav: false,
-            unbindScroll: u
+            options: {
+              hideFromNav: false,
+              unbindScroll: u
+            }
           };
           that.sections.push(s);
         });
@@ -277,12 +280,12 @@
           // Ensure page always starts at the top
           this._scrollContainer.scrollTop(0);
           // Get bound/unbound status of first section
-          this._scrollUnbound = this._currentSection.unbindScroll ? true : false;
+          this._scrollUnbound = this._currentSection.options.unbindScroll ? true : false;
           this.controllers.scroll.initHandlers.call(this);
 
           // Manage binding or unbind of scroll on sectionChange
           this.$elem.on('sectionChanged', function(e, d) {
-            that._scrollUnbound = d.current.unbindScroll ? true : false;
+            that._scrollUnbound = d.current.options.unbindScroll ? true : false;
             that.controllers.scroll.initHandlers.call(that);
           });
 
@@ -349,7 +352,7 @@
 
           var isAbove = this._scrollContainer.scrollTop() <= this._currentSection.scrollOffset,
               // If next section is not also unbound, ensure it scrolls to new section from a window height away
-              belowVal = this._sectionBelow.unbindScroll === false ?
+              belowVal = this._sectionBelow.options.unbindScroll === false ?
                          this._sectionBelow.scrollOffset - $(window).height() :
                          this._sectionBelow.scrollOffset,
               isBelow = this._scrollContainer.scrollTop() >= belowVal;
@@ -361,7 +364,7 @@
             // If it's a keydown event and we're not pressing upwards
             if (this.utils.isKeydownEvent(e) && e.which !== 38) { return; }
             // If above section is also unbound
-            if (this._sectionAbove.unbindScroll) {
+            if (this._sectionAbove.options.unbindScroll) {
               // Just change section references.
 
             // If above section is not unbound, do a scroll
@@ -381,7 +384,7 @@
             if (this.utils.isKeydownEvent(e) && e.which !== 40) { return; }
 
             // If below section is also unbound
-            if (this._sectionBelow.unbindScroll) {
+            if (this._sectionBelow.options.unbindScroll) {
               // Just change section references.
             // If below section is not unbound, do a scroll
             } else {
@@ -481,7 +484,7 @@
           $ns.trigger(tr.entering);
 
           // If direction is up and next section has scroll unbound, let's hijack that shit!
-          if (direction === 'UP' && ns.unbindScroll === true) {
+          if (direction === 'UP' && ns.options.unbindScroll === true) {
             t = "-=" + $(window).height();
           }
 
@@ -670,7 +673,7 @@
           var str = '';
 
           $.each(this.sections, function(i, s) {
-            if (!s.hideFromNav) {
+            if (!s.options.hideFromNav) {
               str = str + '<li>
                             <a class="imm-nav-link" data-imm-section="#' + s.element[0].id + '">
                               <span>' + s.name + '</span>
@@ -1142,8 +1145,10 @@
           attributes: {},
           updateNav: page.defaults.options.updateNav,
           transition: page.defaults.options.transition,
-          hideFromNav: false,
-          unbindScroll: false
+          options: {
+            hideFromNav: false,
+            unbindScroll: false
+          }
         }
 
         var section = $.extend(true, defaults, section);
