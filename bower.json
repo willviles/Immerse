@@ -5,9 +5,10 @@
   "authors": [
     "willviles <will@willviles.com>"
   ],
-  "description": "Does awesome stuff",
+  "description": "Build immersive, media driven
+web experiences - the easy way.",
   "keywords": [
-    "Stuff"
+    "Scrolling", "Immersive", "Media", "Video", "Audio", "Experiences", "Stuff"
   ],
   "license": "MIT",
   "private": false,
@@ -20,7 +21,6 @@
   ],
   "dependencies": {
     "gsap": "*",
-    "scrollmagic": "*",
     "jquery": "*"
   }
 }
