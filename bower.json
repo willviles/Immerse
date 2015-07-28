@@ -13,5 +13,13 @@
   "dependencies": {
     "gsap": "*",
     "jquery": "*"
-  }
+  },
+  "main": [
+    "dist/min/immerse.min.js",
+    "style/min/immerse.css"
+  ],
+  "ignore": [
+    "**/.*",
+    "bower_components"
+  ]
 }
