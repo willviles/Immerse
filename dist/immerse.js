@@ -47,14 +47,14 @@
     ///////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////
 
-    init: function(elem, setup) {
+    init: function(elem) {
 
       this.elem = elem;
       this.$elem = $(elem);
-      this.setup = setup.setup;
       this.assets = this.setup.assets;
       this.sections = [];
-      this._isScrolling = false; this._canScroll = true;
+      this._isScrolling = false;
+      this._canScroll = true;
 
       var that = this;
 
@@ -666,12 +666,10 @@
         },
 
         addToDOM: function() {
-
           var nav = $('.imm-nav-list');
           if (nav.length === 0) { return false; }
 
           var str = '';
-
           $.each(this.sections, function(i, s) {
             if (!s.options.hideFromNav) {
               str = str + '<li>
@@ -1150,15 +1148,15 @@
       // Extend Section
       ///////////////////////////////////////////////////////
 
-      extendSection: function(page, section) {
+      extendSection: function(section) {
 
         var defaults = {
           name: section.element[0].id,
           animations: {},
           actions: {},
           attributes: {},
-          updateNav: page.defaults.options.updateNav,
-          transition: page.defaults.options.transition,
+          updateNav: this.setup.options.updateNav,
+          transition: this.setup.options.transition,
           options: {
             hideFromNav: false,
             unbindScroll: false
@@ -1166,7 +1164,7 @@
         }
 
         var section = $.extend(true, defaults, section);
-        page.setup.sections.push(section);
+        this.setup.sections.push(section);
         return section;
       }
     },
@@ -1175,6 +1173,11 @@
     ///////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////
+
+    // Add a section to a page
+    section: function(section) {
+      return this.utils.extendSection.call(this, section);
+    },
 
     // Expose audio endpoint to get state of audio & mute/unmute programmatically
     audio: function(status) {
@@ -1198,22 +1201,9 @@
 
 
   $.Immerse = {
-    page: {
-      setup: function(setup) {
-        return new Immerse(this).setup(setup);
-      }
-    },
-
-    section: {
-      setup: function(page, section) {
-        return new Immerse(this).utils.extendSection(page, section);
-      }
-    },
-
-    init: function(elem, setup) {
-      return new Immerse(this).init(elem, setup);
+    setup: function(setup) {
+      return new Immerse(this).setup(setup);
     }
-
   }
 
 })( jQuery, window , document );

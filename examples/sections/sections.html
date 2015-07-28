@@ -95,7 +95,7 @@
         // Setup a page
         ///////////////////////////////////////////
 
-        var pageName = $.Immerse.page.setup({
+        var pageName = $.Immerse.setup({
 
           // Options
           options: {
@@ -120,7 +120,7 @@
         // Setup Header
         ///////////////////////////////////////////
 
-        $.Immerse.section.setup(pageName, {
+        pageName.section({
 
           // Unique name for the section
           name: 'Header',
@@ -159,7 +159,7 @@
         // Setup #section-1
         ///////////////////////////////////////////
 
-        $.Immerse.section.setup(pageName, {
+        pageName.section({
 
           // Unique name for the section
           name: 'Section 1',
@@ -215,7 +215,7 @@
         // Setup #section-2
         ///////////////////////////////////////////
 
-        $.Immerse.section.setup(pageName, {
+        pageName.section({
 
           // Unique name for the section
           name: 'Section 2',
@@ -231,7 +231,7 @@
         // Setup #section-3
         ///////////////////////////////////////////
 
-        $.Immerse.section.setup(pageName, {
+        pageName.section({
 
           // Unique name for the section
           name: 'Section 3',
@@ -247,23 +247,24 @@
           }
         });
 
-        // Init immerse
+        // Init immerse instance
         ///////////////////////////////////////////
 
-        var pageImmerse = $.Immerse.init($('body'), pageName);
+        pageName.init($('body'));
+
 
 
 
 /*
         setTimeout(function() {
-          pageImmerse.changeSection();
+          pageName.changeSection('DOWN');
         }, 3000);
 
         setTimeout(function() {
           if (pageImmerse.audio() === false) {
-            pageImmerse.audio('unmute');
+            pageName.audio('unmute');
           } else if (pageImmerse.audio() === true) {
-            pageImmerse.audio('mute');
+            pageName.audio('mute');
           }
         }, 3000);
 
