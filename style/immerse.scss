@@ -1,20 +1,18 @@
 @import 'compass';
 @import 'compass/layout';
 
-body::-webkit-scrollbar { width: 0 !important; }
-
-.imm-scroll-container {
 /*
-  @include opacity(0);
-  &.loaded {
-    @include opacity(1);
-  }
+  Scaffold
 */
-}
+
+body::-webkit-scrollbar { width: 0 !important; }
 
 .imm-section { position: relative; overflow: hidden; }
 .imm-fullscreen { height: 100vh; }
 
+/*
+  Video
+*/
 
 .imm-video {
   @include stretch(); overflow: hidden;
@@ -22,6 +20,9 @@ body::-webkit-scrollbar { width: 0 !important; }
   background-repeat: no-repeat;
 }
 
+/*
+  Loading
+*/
 
 @include keyframes(rotate) {
   from { @include transform(rotate(0deg)); }
@@ -34,5 +35,62 @@ body::-webkit-scrollbar { width: 0 !important; }
     position: absolute; top: 50%; left: 50%; @include translate(-50%, -50%);
     &:before { content: '*'; font-size: 10em; @include transform-origin(50% 50%); @include animation(rotate .5s linear infinite); }
 
+  }
+}
+
+/*
+  Tooltips
+*/
+
+[data-imm-tooltip] {
+  position: relative; cursor: pointer; border-bottom: 2px solid darken(white, 10%);
+  .imm-tooltip {
+    display: none;
+    position: absolute;
+    padding: 1em; background-color: white; @include border-radius(5px);
+    &:before { content: ''; position: absolute; width: 0; height: 0; }
+    &.top, &.bottom {
+      left: 50%; @include translateX(-50%);
+      &:before { left: 50%; margin-left: -5px; }
+    }
+    &.left, &.right {
+      top: 50%; @include translateY(-50%);
+      &:before { top: 50%; margin-top: -5px; }
+    }
+    &.top {
+      bottom: 100%; margin-bottom: 5px;
+      &:before {
+        top: 100%;
+      	border-left: 5px solid transparent; border-right: 5px solid transparent;
+      	border-top: 5px solid white;
+      }
+    }
+    &.bottom {
+      top: 100%; margin-top: 5px;
+      &:before {
+        bottom: 100%;
+      	border-left: 5px solid transparent; border-right: 5px solid transparent;
+      	border-bottom: 5px solid white;
+      }
+    }
+    &.left {
+      right: 100%; margin-right: 10px;
+      &:before {
+        left: 100%;
+      	border-top: 5px solid transparent; border-bottom: 5px solid transparent;
+      	border-left: 5px solid white;
+      }
+    }
+    &.right {
+      left: 100%; margin-right: 10px;
+      &:before {
+        right: 100%;
+      	border-top: 5px solid transparent; border-bottom: 5px solid transparent;
+      	border-right: 5px solid white;
+      }
+    }
+  }
+  &:hover .imm-tooltip {
+    display: block;
   }
 }

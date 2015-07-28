@@ -161,6 +161,11 @@
           $.each(sectionVideos, function(i, videoWrapper) {
             that.controllers.video.init.call(that, s, $(videoWrapper));
           });
+          // Tooltips
+          var tooltips = $s.find('[data-imm-tooltip]');
+          $.each(tooltips, function(i, tooltip) {
+            that.components.tooltips.call(that, $(tooltip));
+          });
         });
 
         $.each(this.sections, function(i, s) {
@@ -1042,6 +1047,30 @@
           }
         }
       }
+    },
+
+    // Components
+    ///////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////
+
+    components: {
+
+      // Tooltips
+      ///////////////////////////////////////////////////////
+      tooltips: function($t) {
+        var c = $t.data('imm-tooltip'),
+            c = c.charAt(0) === '#' ? $(c) : c,
+            c = (c.jquery) ? $(c).html() : c;
+
+        // TODO: Method of determining desired size of the tooltip
+
+        // TODO: Method of determining the placement of the tooltip
+        var p = 'bottom';
+
+        $t.append('<span class="imm-tooltip ' + p + '">' + c + '</span>');
+      }
+
     },
 
     // Utilities
