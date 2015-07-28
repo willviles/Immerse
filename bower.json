@@ -1,24 +1,15 @@
 {
   "name": "immerse",
-  "version": "0.0.1",
-  "homepage": "https://github.com/willviles/Immerse",
+  "version": "1.0.0",
+  "homepage": "http://immerse.vil.es",
   "authors": [
     "willviles <will@willviles.com>"
   ],
-  "description": "Build immersive, media driven
-web experiences - the easy way.",
+  "description": "Build immersive, media driven web experiences the easy way",
   "keywords": [
-    "Scrolling", "Immersive", "Media", "Video", "Audio", "Experiences", "Stuff"
+    "scrolling", "immersive", "media", "video", "audio", "experiences", "stuff"
   ],
   "license": "MIT",
-  "private": false,
-  "ignore": [
-    "**/.*",
-    "node_modules",
-    "bower_components",
-    "test",
-    "tests"
-  ],
   "dependencies": {
     "gsap": "*",
     "jquery": "*"
