@@ -164,7 +164,7 @@
           // Tooltips
           var tooltips = $s.find('[data-imm-tooltip]');
           $.each(tooltips, function(i, tooltip) {
-            that.components.tooltips.call(that, $(tooltip));
+            that.components.tooltips.init.call(that, $(tooltip));
           });
         });
 
@@ -1058,17 +1058,47 @@
 
       // Tooltips
       ///////////////////////////////////////////////////////
-      tooltips: function($t) {
-        var c = $t.data('imm-tooltip'),
-            c = c.charAt(0) === '#' ? $(c) : c,
-            c = (c.jquery) ? $(c).html() : c;
+      tooltips: {
+        init: function($t) {
+          var c = $t.data('imm-tooltip'),
+              c = c.charAt(0) === '#' ? $(c) : c,
+              c = (c.jquery) ? $(c).html() : c,
+              that = this;
 
-        // TODO: Method of determining desired size of the tooltip
+          // Append correct tooltip content
+          $tContent = $('<span class="imm-tooltip">' + c + '</span>');
+          $t.append($tContent);
 
-        // TODO: Method of determining the placement of the tooltip
-        var p = 'bottom';
+          $t.hover(function() {
+            $tContent.removeClass('top left right bottom');
+            that.components.tooltips.position.call(that, $t);
+          }, function() {
+            $tContent.removeClass('top left right bottom');
+          });
+        },
 
-        $t.append('<span class="imm-tooltip ' + p + '">' + c + '</span>');
+        position: function($t) {
+
+          var $tContent = $t.find('.imm-tooltip');
+
+          // TODO: Method of determining the placement of the tooltip
+          var tHeight = $tContent.height(),
+              tWidth = $tContent.width(),
+              tXY = $t[0].getBoundingClientRect(),
+              p = 'top';
+
+          // Determine vertical position
+          if (tHeight >= tXY.top) { p = 'bottom'; }
+
+          if (tWidth/2 >= tXY.left) {
+            p = 'right';
+          } else if (tWidth/2 >= $(window).width() - tXY.right) {
+            p = 'left';
+          }
+
+          // Add position to tooltip
+          $tContent.addClass(p);
+        }
       }
 
     },

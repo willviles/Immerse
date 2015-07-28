@@ -92,6 +92,7 @@ body::-webkit-scrollbar {
   [data-imm-tooltip] .imm-tooltip {
     display: none;
     position: absolute;
+    width: auto;
     padding: 1em;
     background-color: white;
     -moz-border-radius: 5px;
