@@ -1069,17 +1069,14 @@
           $tContent = $('<span class="imm-tooltip">' + c + '</span>');
           $t.append($tContent);
 
-          $t.hover(function() {
-            $tContent.removeClass('top left right bottom');
-            that.components.tooltips.position.call(that, $t);
-          }, function() {
-            $tContent.removeClass('top left right bottom');
+          $t.on('mouseover', function() {
+            that.components.tooltips.position.call(that, $t, $tContent);
           });
         },
 
-        position: function($t) {
+        position: function($t, $tContent) {
 
-          var $tContent = $t.find('.imm-tooltip');
+          $tContent.removeClass('top left right bottom');
 
           // TODO: Method of determining the placement of the tooltip
           var tHeight = $tContent.height(),
