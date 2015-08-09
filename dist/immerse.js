@@ -354,12 +354,10 @@
 
         detectUnboundSectionChange: function(e) {
 
-          // !TO-DO: DETECT WHETHER IT'S A SCROLL CHANGE OR KEYBOARD CHANGE
-
           var isAbove = this._scrollContainer.scrollTop() <= this._currentSection.scrollOffset,
               // If next section is not also unbound, ensure it scrolls to new section from a window height away
               belowVal = this._sectionBelow.options.unbindScroll === false ?
-                         this._sectionBelow.scrollOffset - $(window).height() :
+                         this._sectionBelow.scrollOffset - this._windowHeight :
                          this._sectionBelow.scrollOffset,
               isBelow = this._scrollContainer.scrollTop() >= belowVal;
 
@@ -372,7 +370,7 @@
             // If above section is also unbound
             if (this._sectionAbove.options.unbindScroll) {
               // Just change section references.
-
+              this.controllers.scroll.ifCanThenGo.call(this, 'UP');
             // If above section is not unbound, do a scroll
             } else {
               e.preventDefault();
@@ -392,6 +390,7 @@
             // If below section is also unbound
             if (this._sectionBelow.options.unbindScroll) {
               // Just change section references.
+              this.controllers.scroll.ifCanThenGo.call(this, 'DOWN');
             // If below section is not unbound, do a scroll
             } else {
               e.preventDefault();
@@ -437,88 +436,126 @@
         ifCanThenGo: function(goVar) {
           if (this._isScrolling === false && this._canScroll === true) {
             this._isScrolling = true;
-            this.controllers.scroll.go.call(this, goVar);
+            this.controllers.scroll.go.fire.call(this, goVar);
           }
         },
 
-        go: function(o) {
-          var ns, tr, direction, duration,
-              cs = this._currentSection,
-              csIndex = this.sections.indexOf(cs),
-              nsIndex,
-              $cs = $(cs.element),
+        // Prepare scrollChange
+
+        prepare: function(o) {
+          var a = { currentSection: this._currentSection },
               that = this;
 
+          a.$currentSection = $(a.currentSection.element);
+          a.currentSectionIndex = this.sections.indexOf(a.currentSection);
 
           // If we've passed a jQuery object directly, use it as the next section
           if (o.jquery) {
-            ns = $.grep(this.sections, function(s) { return o[0].id == s.element[0].id; })[0];
+            a.nextSection = $.grep(this.sections, function(s) { return o[0].id == s.element[0].id; })[0];
             // Determine direction
-            direction = cs.scrollOffset > ns.scrollOffset ? 'UP' : 'DOWN';
+            a.direction = a.currentSection.scrollOffset > a.nextSection.scrollOffset ? 'UP' : 'DOWN';
 
           // Else if we've just passed the scroll direction, find the next section
           } else if (o === 'UP' || o === 'DOWN') {
-            direction = o;
-            ns = (direction === 'UP') ? this.sections[csIndex-1] : this.sections[csIndex+1];
+            a.direction = o;
+            a.nextSection = (a.direction === 'UP') ? this.sections[a.currentSectionIndex-1] : this.sections[a.currentSectionIndex+1];
           }
 
-          if (direction === 'UP') {
-            tr = { exiting: 'exitingUp', entering: 'enteringUp', exited: 'exitedUp', entered: 'enteredUp' }
-          } else if (direction === 'DOWN') {
-            tr = { exiting: 'exitingDown', entering: 'enteringDown', exited: 'exitedDown', entered: 'enteredDown' }
+          // Setup direction triggers
+          if (a.direction === 'UP') {
+            a.triggers = { exiting: 'exitingUp', entering: 'enteringUp', exited: 'exitedUp', entered: 'enteredUp' }
+          } else if (a.direction === 'DOWN') {
+            a.triggers = { exiting: 'exitingDown', entering: 'enteringDown', exited: 'exitedDown', entered: 'enteredDown' }
           }
 
           // If there's no new section, don't scroll!
-          if (ns === undefined) {
-            this._isScrolling = false;
-            this._canScroll = true;
-            return false;
-          } else {
-            nsIndex = that.sections.indexOf(ns);
-            this._sectionAbove = this.sections[nsIndex-1];
-            this._sectionBelow = this.sections[nsIndex+1];
+          if (a.nextSection === undefined) { return false; }
+
+          a.$nextSection = $(a.nextSection.element);
+          a.nextSectionIndex = this.sections.indexOf(a.nextSection);
+          this._sectionAbove = this.sections[a.nextSectionIndex-1];
+          this._sectionBelow = this.sections[a.nextSectionIndex+1];
+
+          return a;
+
+        },
+
+        // Fire scrollChange
+        go: {
+          fire: function(o) {
+
+            var opts = this.controllers.scroll.prepare.call(this, o);
+
+            if (opts === false) {
+              this._isScrolling = false;
+              this._canScroll = true;
+              return false;
+            }
+
+            // SCROLL LOGIC:
+            // Just change section if...
+            // 1) currentSection is unbound && nextSection is unbound
+            // 2) currentSection is bound, nextSection is unbound && direction is up
+            // Animate change if..
+            // 1) nextSection is bound
+            // 2) currentSection is bound, nextSection is unbound && direction is down
+
+            console.log(opts.nextSection.options.unbindScroll);
+            if (opts.nextSection.options.unbindScroll) {
+              if (opts.currentSection.options.unbindScroll) {
+                console.log('Should do a smooth change');
+                this.controllers.scroll.go.smoothChange.call(this, opts);
+              } else {
+                if (opts.direction === 'UP') {
+                  console.log('Should do a smooth change');
+                  this.controllers.scroll.go.smoothChange.call(this, opts);
+                } else if (opts.direction === 'DOWN') {
+                  this.controllers.scroll.go.animate.call(this, opts);
+                }
+              }
+            } else {
+              this.controllers.scroll.go.animate.call(this, opts);
+            }
+          },
+
+          animate: function(opts) {
+            // New section scroll offset
+            var dist = opts.nextSection.scrollOffset,
+                that = this;
+
+            // Set current section to exiting
+            opts.$currentSection.trigger(opts.triggers.exiting);
+            // Set new section to entering
+            opts.$nextSection.trigger(opts.triggers.entering);
+
+            this.$elem.animate({scrollTop: dist}, 1000, function() {
+              // Set new section to entered
+              opts.$nextSection.trigger(opts.triggers.entered);
+              // Set current section to exited
+              opts.$currentSection.trigger(opts.triggers.exited);
+              // Set variables
+              that._lastSection = opts.currentSection;
+              that._currentSection = opts.nextSection;
+              // We're done, so set new section as current section
+              that.$elem.trigger('sectionChanged', [{
+                last: that._lastSection,
+                current: that._currentSection,
+                below: that._sectionBelow,
+                above: that._sectionAbove
+              }]);
+
+              setTimeout(function() {
+                // Reset flags
+                that._isScrolling = false;
+                that._canScroll = true;
+              }, 500);
+
+            });
+          },
+
+          smoothChange: function(opts) {
+
           }
-
-          // New section element
-          var $ns = $(ns.element),
-          // New section scroll offset
-          t = ns.scrollOffset;
-
-          // Set current section to exiting
-          $cs.trigger(tr.exiting);
-          // Set new section to entering
-          $ns.trigger(tr.entering);
-
-          // If direction is up and next section has scroll unbound, let's hijack that shit!
-          if (direction === 'UP' && ns.options.unbindScroll === true) {
-            t = "-=" + $(window).height();
-          }
-
-          this.$elem.animate({scrollTop: t}, 1000, function() {
-
-            // Set new section to entered
-            $ns.trigger(tr.entered);
-            // Set current section to exited
-            $cs.trigger(tr.exited);
-            // Set variables
-            that._lastSection = cs;
-            that._currentSection = ns;
-            // We're done, so set new section as current section
-            that.$elem.trigger('sectionChanged', [{
-              last: that._lastSection,
-              current: that._currentSection,
-              below: that._sectionBelow,
-              above: that._sectionAbove
-            }]);
-//             that.controllers.navigation.update.call(that, ns);
-
-            setTimeout(function() {
-              // Reset flags
-              that._isScrolling = false;
-              that._canScroll = true;
-            }, 500);
-
-          });
         },
 
         scrollOffset: {
@@ -1055,6 +1092,34 @@
     ///////////////////////////////////////////////////////
 
     components: {
+
+      // Sliders
+      ///////////////////////////////////////////////////////
+      sliders: {
+        // Choose whether to build own slider or use iDangerous swiper.
+      },
+
+      // Modals
+      ///////////////////////////////////////////////////////
+      modals: {
+        // Content which is displayed over the top of the current screen.
+      },
+
+      // Modals
+      ///////////////////////////////////////////////////////
+      stacks: {
+        // Content which slides out the section content and reveals more content with a back button to go back to the current content.
+
+        // Firstly need to wrap the section content in a div which can slide out
+
+        // Secondly need to hide the stack content
+
+        // Thirdly need some kind of animation to fire on a button press
+
+        // Fouthly need to enable native scrolling on the section.
+
+        // Fifthly need to fire another animation to take you back to the content
+      },
 
       // Tooltips
       ///////////////////////////////////////////////////////
