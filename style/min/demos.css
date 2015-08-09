@@ -7,8 +7,13 @@ body#imm-demo-sections {
   body#imm-demo-sections #section-2 {
     background-color: #536DFE; }
   body#imm-demo-sections #section-3 {
-    background-color: #673AB7;
-    height: 5000px; }
+    background-color: yellow;
+    padding: 100px 0; }
+  body#imm-demo-sections #section-3-and-a-bit {
+    background-color: #999900;
+    padding: 100px 0; }
+  body#imm-demo-sections #section-4 {
+    background-color: #7446c4; }
   body#imm-demo-sections #section-5 {
     background-color: #fbe8c7; }
   body#imm-demo-sections nav {

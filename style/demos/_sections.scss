@@ -11,8 +11,17 @@ header {
 }
 
 #section-3 {
-  background-color: #673AB7;
-  height: 5000px;
+  background-color: yellow;
+  padding: 100px 0;
+}
+
+#section-3-and-a-bit {
+  background-color: darken(yellow, 20%);
+  padding: 100px 0;
+}
+
+#section-4 {
+  background-color: lighten(#673AB7, 5%);
 }
 
 #section-5 {

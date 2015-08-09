@@ -555,7 +555,31 @@
 
           smoothChange: function(opts) {
 
-          }
+            var that = this;
+
+            // Set current section to exiting
+            opts.$currentSection.trigger(opts.triggers.exiting);
+            // Set new section to entering and entered
+            opts.$nextSection.trigger(opts.triggers.entering);
+            opts.$nextSection.trigger(opts.triggers.entered);
+
+            // 1) Setup listeners to check whether opts.$currentSection has been exited (scrolled fully out of view).
+            // 2) When they have, cancel the listeners.
+
+            // Set variables
+            this._lastSection = opts.currentSection;
+            this._currentSection = opts.nextSection;
+            // We're done, so set new section as current section
+            this.$elem.trigger('sectionChanged', [{
+              last: that._lastSection,
+              current: that._currentSection,
+              below: that._sectionBelow,
+              above: that._sectionAbove
+            }]);
+
+            this._isScrolling = false;
+            this._canScroll = true;
+        }
         },
 
         scrollOffset: {
