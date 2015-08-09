@@ -607,85 +607,85 @@
       touch: {
 
         init: function() {
-          this.controllers.touch.recognize.call(this);
+          var that = this;
+
+          if (!this._isMobile) { return false; }
+
+          var status = this._scrollUnbound ? 'disable' : 'enable';
+          this.controllers.touch.recognize.call(this, status);
+
+          this.$elem.on('sectionChanged', function(e, d) {
+            var status = that._scrollUnbound ? 'disable' : 'enable';
+            that.controllers.touch.recognize.call(that, status);
+          });
+
           this.controllers.touch.handler.call(this);
         },
 
-        recognize: function() {
-          var supportTouch = $.support.touch,
-              scrollEvent = "touchmove scroll",
-              touchStartEvent = supportTouch ? "touchstart" : "mousedown",
-              touchStopEvent = supportTouch ? "touchend" : "mouseup",
-              touchMoveEvent = supportTouch ? "touchmove" : "mousemove";
+        track: {},
 
-          $.event.special.swipeupdown = {
-            setup: function() {
-              var thisObject = this;
-              var $this = $(thisObject);
-              $this.bind(touchStartEvent, function(event) {
-                var data = event.originalEvent.touches ?
-                    event.originalEvent.touches[ 0 ] :
-                    event,
-                    start = {
-                      time: (new Date).getTime(),
-                      coords: [ data.pageX, data.pageY ],
-                      origin: $(event.target)
-                    },
-                    stop;
+        handlers: {
 
-                function moveHandler(event) {
-                  if (!start) {
-                    return;
-                  }
-                  var data = event.originalEvent.touches ?
-                      event.originalEvent.touches[0] :
-                      event;
-                  stop = {
-                    time: (new Date).getTime(),
-                    coords: [ data.pageX, data.pageY ]
-                  };
+          touchEnd: function(event) {
+            $(document).unbind('touchmove', this.controllers.touch.handlers.touchMove);
+            if (this._touchStartData && this._touchStopData) {
+              if (this._touchStopData.time - this._touchStartData.time < 1000 &&
+                  Math.abs(this._touchStartData.coords[1] - this._touchStopData.coords[1]) > 30 &&
+                  Math.abs(this._touchStartData.coords[0] - this._touchStopData.coords[0]) < 75) {
 
-                  // prevent scrolling
-                  if (Math.abs(start.coords[1] - stop.coords[1]) > 10) {
-                    event.preventDefault();
-                  }
-                }
-
-                $this
-                  .bind(touchMoveEvent, moveHandler)
-                  .one(touchStopEvent, function(event) {
-                    $this.unbind(touchMoveEvent, moveHandler);
-                    if (start && stop) {
-                      if (stop.time - start.time < 1000 &&
-                          Math.abs(start.coords[1] - stop.coords[1]) > 30 &&
-                          Math.abs(start.coords[0] - stop.coords[0]) < 75) {
-                          start.origin
-                                .trigger("swipeupdown")
-                                .trigger(start.coords[1] > stop.coords[1] ? "swipeup" : "swipedown");
-                      }
-                    }
-                    start = stop = undefined;
-
-                  });
-              });
-            }
-          };
-          $.each({
-            swipedown: "swipeupdown",
-            swipeup: "swipeupdown"
-          }, function(event, sourceEvent){
-            $.event.special[event] = {
-              setup: function(){
-                $(this).bind(sourceEvent, $.noop);
+                    var direction = this._touchStartData.coords[1] > this._touchStopData.coords[1] ?
+                        'swipeup' : 'swipedown';
+                    this._touchStartData.origin
+                    .trigger('swipeupdown')
+                    .trigger(direction);
               }
+            }
+            this.controllers.touch.track.start = this.controllers.touch.track.stop = undefined;
+          },
+
+          touchMove: function(event) {
+            if (!this._touchStartData) {
+              return;
+            }
+            var data = event.originalEvent.touches ? event.originalEvent.touches[0] : event;
+            this._touchStopData = {
+              time: (new Date).getTime(),
+              coords: [ data.pageX, data.pageY ]
             };
-          });
+
+            // prevent scrolling
+            if (Math.abs(this._touchStartData.coords[1] - this._touchStopData[1]) > 10) {
+              event.preventDefault();
+            }
+
+          },
+
+          touchStart: function(event) {
+            var data = event.originalEvent.touches ? event.originalEvent.touches[ 0 ] : event;
+            this._touchStartData = {
+              time: (new Date).getTime(),
+              coords: [ data.pageX, data.pageY ],
+              origin: $(event.target)
+            };
+
+            $(document)
+              .bind('touchmove', this.controllers.touch.handlers.touchMove.bind(this))
+              .one('touchend', this.controllers.touch.handlers.touchEnd.bind(this));
+          }
         },
+
+        recognize: function(status) {
+          $(document).bind('touchstart', this.controllers.touch.handlers.touchStart.bind(this));
+        },
+
 
         handler: function() {
           var that = this;
 
           $(document).on('swipedown swipeup',function(e){
+
+            if (that._scrollUnbound) { return false; }
+
             switch(e.type) {
               case 'swipedown':
                 that.controllers.scroll.ifCanThenGo.call(that, 'UP');
