@@ -499,15 +499,11 @@
             // Animate change if..
             // 1) nextSection is bound
             // 2) currentSection is bound, nextSection is unbound && direction is down
-
-            console.log(opts.nextSection.options.unbindScroll);
             if (opts.nextSection.options.unbindScroll) {
               if (opts.currentSection.options.unbindScroll) {
-                console.log('Should do a smooth change');
                 this.controllers.scroll.go.smoothChange.call(this, opts);
               } else {
                 if (opts.direction === 'UP') {
-                  console.log('Should do a smooth change');
                   this.controllers.scroll.go.smoothChange.call(this, opts);
                 } else if (opts.direction === 'DOWN') {
                   this.controllers.scroll.go.animate.call(this, opts);
