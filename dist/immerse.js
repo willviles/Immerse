@@ -622,6 +622,7 @@
             setup: function() {
               var thisObject = this;
               var $this = $(thisObject);
+              // touchStart
               $this.bind(touchStartEvent, function(event) {
                 var data = event.originalEvent.touches ?
                     event.originalEvent.touches[ 0 ] :
@@ -633,6 +634,7 @@
                     },
                     stop;
 
+                // Touch move
                 function moveHandler(event) {
                   if (!start) {
                     return;
@@ -653,6 +655,7 @@
 
                 $this
                   .bind(touchMoveEvent, moveHandler)
+                  // Touch stop
                   .one(touchStopEvent, function(event) {
                     $this.unbind(touchMoveEvent, moveHandler);
                     if (start && stop) {
