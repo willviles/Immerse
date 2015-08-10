@@ -78,12 +78,12 @@
       // Ensure init is called when assets are loaded
       $.when(assets).then(
         function(s) {
-          console.log('Assets loaded');
-
           // Run init on all sections
           $.each(that.sections, function(i, s) {
             $(s.element).trigger('init');
           });
+
+          that.$elem.trigger('immInit');
 
           // Hide loading
           // TODO: Allow for custom loading animation sequences. Consider how to introduce a percentage bar
@@ -609,44 +609,31 @@
         init: function() {
           var that = this;
 
-          if (!this._isMobile) { return false; }
+          if (this._isDesktop) { return false; }
 
-          var status = this._scrollUnbound ? 'disable' : 'enable';
-          this.controllers.touch.recognize.call(this, status);
+          this.$elem.on('immInit sectionChanged', that.controllers.touch.manage.bind(this));
 
-          this.$elem.on('sectionChanged', function(e, d) {
-            var status = that._scrollUnbound ? 'disable' : 'enable';
-            that.controllers.touch.recognize.call(that, status);
-          });
-
-          this.controllers.touch.handler.call(this);
+          this.controllers.touch.attach.call(this);
         },
-
-        track: {},
 
         handlers: {
 
           touchEnd: function(event) {
-            $(document).unbind('touchmove', this.controllers.touch.handlers.touchMove);
+            $(document).off('touchmove', this.controllers.touch.handlers.touchMove);
             if (this._touchStartData && this._touchStopData) {
               if (this._touchStopData.time - this._touchStartData.time < 1000 &&
                   Math.abs(this._touchStartData.coords[1] - this._touchStopData.coords[1]) > 30 &&
                   Math.abs(this._touchStartData.coords[0] - this._touchStopData.coords[0]) < 75) {
 
-                    var direction = this._touchStartData.coords[1] > this._touchStopData.coords[1] ?
-                        'swipeup' : 'swipedown';
-                    this._touchStartData.origin
-                    .trigger('swipeupdown')
-                    .trigger(direction);
+                    var direction = this._touchStartData.coords[1] > this._touchStopData.coords[1] ? 'swipeup' : 'swipedown';
+                    $(document).trigger(direction);
               }
             }
-            this.controllers.touch.track.start = this.controllers.touch.track.stop = undefined;
+            this._touchStartData = this._touchStopData = undefined;
           },
 
           touchMove: function(event) {
-            if (!this._touchStartData) {
-              return;
-            }
+            if (!this._touchStartData) { return; }
             var data = event.originalEvent.touches ? event.originalEvent.touches[0] : event;
             this._touchStopData = {
               time: (new Date).getTime(),
@@ -654,7 +641,7 @@
             };
 
             // prevent scrolling
-            if (Math.abs(this._touchStartData.coords[1] - this._touchStopData[1]) > 10) {
+            if (Math.abs(this._touchStartData.coords[1] - this._touchStopData.coords[1]) > 10) {
               event.preventDefault();
             }
 
@@ -664,22 +651,26 @@
             var data = event.originalEvent.touches ? event.originalEvent.touches[ 0 ] : event;
             this._touchStartData = {
               time: (new Date).getTime(),
-              coords: [ data.pageX, data.pageY ],
-              origin: $(event.target)
+              coords: [ data.pageX, data.pageY ]
             };
 
             $(document)
-              .bind('touchmove', this.controllers.touch.handlers.touchMove.bind(this))
+              .on('touchmove', this.controllers.touch.handlers.touchMove.bind(this))
               .one('touchend', this.controllers.touch.handlers.touchEnd.bind(this));
           }
         },
 
-        recognize: function(status) {
-          $(document).bind('touchstart', this.controllers.touch.handlers.touchStart.bind(this));
+        manage: function() {
+          console.log('In manage');
+          $(document).off('touchstart touchmove touchend');
+
+          if (!this._scrollUnbound) {
+            $(document).on('touchstart', this.controllers.touch.handlers.touchStart.bind(this));
+          }
         },
 
 
-        handler: function() {
+        attach: function() {
           var that = this;
 
           $(document).on('swipedown swipeup',function(e){
