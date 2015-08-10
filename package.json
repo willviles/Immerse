@@ -1,0 +1,14 @@
+{
+  "name": "immerse",
+  "version": "1.0.1",
+  "dependencies": {
+    "grunt-cli": "latest",
+    "grunt-contrib-concat": "latest",
+    "grunt-contrib-uglify": "latest",
+    "grunt-contrib-sass": "latest",
+    "grunt-contrib-watch": "latest",
+    "jquery": "latest",
+    "jquery-mobile": "latest",
+    "gsap": "latest"
+  }
+}
