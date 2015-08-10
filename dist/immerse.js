@@ -625,9 +625,6 @@
                          this._sectionBelow.scrollOffset,
               isBelow = this._scrollContainer.scrollTop() >= belowVal;
 
-          console.log('ScrollTop: ' + this._scrollContainer.scrollTop());
-          console.log('Current Section Offset: ' + this._currentSection.scrollOffset);
-
           // If scrollTop is above current section
           if (isAbove) {
             // If it's a scroll event and we're not scrolling upwards (i.e, we're just at the top of the section)
