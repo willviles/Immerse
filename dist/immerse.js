@@ -170,7 +170,7 @@
 
         $.each(this.sections, function(i, s) {
           // Set scroll triggers on all sections
-          that.controllers.scroll.scrollOffset.set.call(that, s);
+          that.controllers.scroll.offset.set.call(that, s);
         });
 
         // Order sections by vertical order
@@ -287,149 +287,189 @@
           this._scrollContainer.scrollTop(0);
           // Get bound/unbound status of first section
           this._scrollUnbound = this._currentSection.options.unbindScroll ? true : false;
-          this.controllers.scroll.initHandlers.call(this);
-
           // Manage binding or unbind of scroll on sectionChange
-          this.$elem.on('sectionChanged', function(e, d) {
-            that._scrollUnbound = d.current.options.unbindScroll ? true : false;
-            that.controllers.scroll.initHandlers.call(that);
+          this.$elem.on('immInit sectionChanged', function(e, d) {
+            if (e.type === 'sectionChanged') {
+              that._scrollUnbound = d.current.options.unbindScroll ? true : false;
+            }
+            $.each(that.controllers.scroll.events, function(n, f) { f.call(that); });
           });
-
-          // Bind to touch events
-          this.controllers.touch.init.call(this);
-
         },
 
-        initHandlers: function() {
-          this._scrollContainer.on('mousewheel wheel DOMMouseScroll', this.controllers.scroll.handler.bind(this));
-          $(document).on('keydown', this.controllers.scroll.keydownHandler.bind(this));
-          $(document).on('keyup', this.controllers.scroll.keyupHandler.bind(this));
+        events: {
+          scroll: function() {
+            this._scrollContainer.on('mousewheel wheel DOMMouseScroll', this.controllers.scroll.handlers.scroll.detect.bind(this));
+          },
 
-        },
+          keys: function() {
+            $(document).on('keydown', this.controllers.scroll.handlers.keys.down.bind(this));
+            $(document).on('keyup', this.controllers.scroll.handlers.keys.up.bind(this));
+          },
 
-        browserScroll: function(status, e) {
-          function preventDefaultScroll(e) {
-            e = e || window.event;
-            if (e.preventDefault) { e.preventDefault(); }
-            e.returnValue = false;
-          }
+          touch: function() {
+            if (this._isDesktop) { return false; }
 
-          if (status === 'enable') {
-            if (window.removeEventListener) {
-              window.removeEventListener('DOMMouseScroll', preventDefaultScroll, false);
-            }
-            window.onmousewheel = document.onmousewheel = null;
-            window.onwheel = null;
-            window.ontouchmove = null;
+            $(document).off('touchstart touchmove touchend');
 
-          } else if (status === 'disable') {
-            if (window.addEventListener) {
-              window.addEventListener('DOMMouseScroll', preventDefaultScroll, false);
-            }
-            window.onwheel = preventDefaultScroll; // modern standard
-            window.onmousewheel = document.onmousewheel = preventDefaultScroll; // older browsers, IE
-            window.ontouchmove  = preventDefaultScroll; // mobile
-
-          }
-        },
-
-        handler: function(e) {
-
-          if (this._scrollUnbound) {
-            // Enable browser scroll
-            this.controllers.scroll.browserScroll('enable', e);
-            this.controllers.scroll.detectUnboundSectionChange.call(this, e);
-
-          } else {
-            // Disable browser scroll
-            this.controllers.scroll.browserScroll('disable', e);
-
-            if (e.originalEvent.wheelDelta >= 0) {
-              this.controllers.scroll.ifCanThenGo.call(this, 'UP');
+            if (this._scrollUnbound) {
+              $(document).on('touchmove', this.controllers.scroll.unbound.bind(this));
             } else {
-              this.controllers.scroll.ifCanThenGo.call(this, 'DOWN');
+              $(document).on('touchstart', this.controllers.scroll.handlers.touch.start.bind(this));
             }
+
+            $(document)
+              .off('swipedown swipeup')
+              .on('swipedown swipeup', this.controllers.scroll.handlers.touch.detect.bind(this));
           }
+
         },
 
-        detectUnboundSectionChange: function(e) {
+        handlers: {
 
-          var isAbove = this._scrollContainer.scrollTop() <= this._currentSection.scrollOffset,
-              // If next section is not also unbound, ensure it scrolls to new section from a window height away
-              belowVal = this._sectionBelow.options.unbindScroll === false ?
-                         this._sectionBelow.scrollOffset - this._windowHeight :
-                         this._sectionBelow.scrollOffset,
-              isBelow = this._scrollContainer.scrollTop() >= belowVal;
+          // Scroll Handler
+          scroll: {
 
-          // If scrollTop is above current section
-          if (isAbove) {
-            // If it's a scroll event and we're not scrolling upwards (i.e, we're just at the top of the section)
-            if (this.utils.isScrollEvent(e) && e.originalEvent.wheelDelta < 0) { return; };
-            // If it's a keydown event and we're not pressing upwards
-            if (this.utils.isKeydownEvent(e) && e.which !== 38) { return; }
-            // If above section is also unbound
-            if (this._sectionAbove.options.unbindScroll) {
-              // Just change section references.
-              this.controllers.scroll.ifCanThenGo.call(this, 'UP');
-            // If above section is not unbound, do a scroll
-            } else {
-              e.preventDefault();
-              this._scrollUnbound = false;
-              this.controllers.scroll.ifCanThenGo.call(this, 'UP');
-            }
-
-          // If scrollTop is above current section
-
-          } else if (isBelow) {
-
-            // If it's a scroll event and we're not scrolling download (i.e, we're just at the bottom end of the section)
-            if (this.utils.isScrollEvent(e) && e.originalEvent.wheelDelta >= 0) { return; };
-            // If it's a keydown event and we're not pressing upwards
-            if (this.utils.isKeydownEvent(e) && e.which !== 40) { return; }
-
-            // If below section is also unbound
-            if (this._sectionBelow.options.unbindScroll) {
-              // Just change section references.
-              this.controllers.scroll.ifCanThenGo.call(this, 'DOWN');
-            // If below section is not unbound, do a scroll
-            } else {
-              e.preventDefault();
-              this._scrollUnbound = false;
-              this.controllers.scroll.ifCanThenGo.call(this, 'DOWN');
-            }
-          }
-        },
-
-        keyupHandler: function(e) { this._lastKey = null; },
-
-        keydownHandler: function(e) {
-          if (!this._scrollUnbound && this._lastKey && this._lastKey.which == e.which) {
-            e.preventDefault();
-            return;
-          }
-          this._lastKey = e;
-
-          switch(e.which) {
-
-            case 38: // up
+            detect: function(e) {
               if (this._scrollUnbound) {
-                this.controllers.scroll.detectUnboundSectionChange.call(this, e);
-              } else {
-                e.preventDefault();
-                this.controllers.scroll.ifCanThenGo.call(this, 'UP');
-              }
-            break;
+                // Enable browser scroll
+                this.controllers.scroll.handlers.scroll.toggle('enable', e);
+                this.controllers.scroll.unbound.call(this, e);
 
-            case 40: // down
-              if (this._scrollUnbound) {
-                this.controllers.scroll.detectUnboundSectionChange.call(this, e);
               } else {
-                e.preventDefault();
-                this.controllers.scroll.ifCanThenGo.call(this, 'DOWN');
+                // Disable browser scroll
+                this.controllers.scroll.handlers.scroll.toggle('disable', e);
+                // Fire animation to next section
+                if (e.originalEvent.wheelDelta >= 0) {
+                  this.controllers.scroll.ifCanThenGo.call(this, 'UP');
+                } else {
+                  this.controllers.scroll.ifCanThenGo.call(this, 'DOWN');
+                }
               }
-            break;
+            },
 
-            default: return; // exit this handler for other keys
+            toggle: function(status, e) {
+              function preventDefaultScroll(e) {
+                e = e || window.event;
+                if (e.preventDefault) { e.preventDefault(); }
+                e.returnValue = false;
+              }
+
+              if (status === 'enable') {
+                if (window.removeEventListener) {
+                  window.removeEventListener('DOMMouseScroll', preventDefaultScroll, false);
+                }
+                window.onmousewheel = document.onmousewheel = null;
+                window.onwheel = null;
+                window.ontouchmove = null;
+
+              } else if (status === 'disable') {
+                if (window.addEventListener) {
+                  window.addEventListener('DOMMouseScroll', preventDefaultScroll, false);
+                }
+                window.onwheel = preventDefaultScroll; // modern standard
+                window.onmousewheel = document.onmousewheel = preventDefaultScroll; // older browsers, IE
+                window.ontouchmove  = preventDefaultScroll; // mobile
+
+              }
+            }
+
+          },
+
+          // Scroll Keys Handler
+          keys: {
+            down: function(e) {
+              if (!this._scrollUnbound && this._lastKey && this._lastKey.which == e.which) {
+                e.preventDefault();
+                return;
+              }
+              this._lastKey = e;
+
+              switch(e.which) {
+
+                case 38: // up
+                  if (this._scrollUnbound) {
+                    this.controllers.scroll.unbound.call(this, e);
+                  } else {
+                    e.preventDefault();
+                    this.controllers.scroll.ifCanThenGo.call(this, 'UP');
+                  }
+                break;
+
+                case 40: // down
+                  if (this._scrollUnbound) {
+                    this.controllers.scroll.unbound.call(this, e);
+                  } else {
+                    e.preventDefault();
+                    this.controllers.scroll.ifCanThenGo.call(this, 'DOWN');
+                  }
+                break;
+
+                default: return; // exit this handler for other keys
+              }
+            },
+
+            up: function(e) {
+              this._lastKey = null;
+            }
+
+          },
+
+          // Scroll Touch Handler
+          touch: {
+
+            start: function(e) {
+              var data = e.originalEvent.touches ? e.originalEvent.touches[ 0 ] : e;
+              this._touchStartData = {
+                time: (new Date).getTime(),
+                coords: [ data.pageX, data.pageY ]
+              };
+
+              $(document)
+                .on('touchmove', this.controllers.scroll.handlers.touch.move.bind(this))
+                .one('touchend', this.controllers.scroll.handlers.touch.end.bind(this));
+            },
+
+            move: function(e) {
+              if (!this._touchStartData) { return; }
+              var data = e.originalEvent.touches ? e.originalEvent.touches[0] : e;
+              this._touchStopData = {
+                time: (new Date).getTime(),
+                coords: [ data.pageX, data.pageY ]
+              };
+
+              // prevent scrolling
+              if (Math.abs(this._touchStartData.coords[1] - this._touchStopData.coords[1]) > 10) {
+                e.preventDefault();
+              }
+            },
+
+            end: function(e) {
+              $(document).off('touchmove', this.controllers.scroll.handlers.touch.move);
+              if (this._touchStartData && this._touchStopData) {
+                if (this._touchStopData.time - this._touchStartData.time < 1000 &&
+                    Math.abs(this._touchStartData.coords[1] - this._touchStopData.coords[1]) > 30 &&
+                    Math.abs(this._touchStartData.coords[0] - this._touchStopData.coords[0]) < 75) {
+                      var direction = this._touchStartData.coords[1] > this._touchStopData.coords[1] ? 'swipeup' : 'swipedown';
+                      $(document).trigger(direction);
+                }
+              }
+              this._touchStartData = this._touchStopData = undefined;
+            },
+
+            detect: function(e) {
+              if (this._scrollUnbound) { return false; }
+              switch(e.type) {
+                case 'swipedown':
+                  this.controllers.scroll.ifCanThenGo.call(this, 'UP');
+                break;
+
+                case 'swipeup':
+                  this.controllers.scroll.ifCanThenGo.call(this, 'DOWN');
+                break;
+
+                default: return;
+              }
+            }
           }
         },
 
@@ -440,51 +480,49 @@
           }
         },
 
-        // Prepare scrollChange
-
-        prepare: function(o) {
-          var a = { currentSection: this._currentSection },
-              that = this;
-
-          a.$currentSection = $(a.currentSection.element);
-          a.currentSectionIndex = this.sections.indexOf(a.currentSection);
-
-          // If we've passed a jQuery object directly, use it as the next section
-          if (o.jquery) {
-            a.nextSection = $.grep(this.sections, function(s) { return o[0].id == s.element[0].id; })[0];
-            // Determine direction
-            a.direction = a.currentSection.scrollOffset > a.nextSection.scrollOffset ? 'UP' : 'DOWN';
-
-          // Else if we've just passed the scroll direction, find the next section
-          } else if (o === 'UP' || o === 'DOWN') {
-            a.direction = o;
-            a.nextSection = (a.direction === 'UP') ? this.sections[a.currentSectionIndex-1] : this.sections[a.currentSectionIndex+1];
-          }
-
-          // Setup direction triggers
-          if (a.direction === 'UP') {
-            a.triggers = { exiting: 'exitingUp', entering: 'enteringUp', exited: 'exitedUp', entered: 'enteredUp' }
-          } else if (a.direction === 'DOWN') {
-            a.triggers = { exiting: 'exitingDown', entering: 'enteringDown', exited: 'exitedDown', entered: 'enteredDown' }
-          }
-
-          // If there's no new section, don't scroll!
-          if (a.nextSection === undefined) { return false; }
-
-          a.$nextSection = $(a.nextSection.element);
-          a.nextSectionIndex = this.sections.indexOf(a.nextSection);
-          this._sectionAbove = this.sections[a.nextSectionIndex-1];
-          this._sectionBelow = this.sections[a.nextSectionIndex+1];
-
-          return a;
-
-        },
-
         // Fire scrollChange
         go: {
+
+          prepare: function(o) {
+            var a = { currentSection: this._currentSection },
+              that = this;
+
+            a.$currentSection = $(a.currentSection.element);
+            a.currentSectionIndex = this.sections.indexOf(a.currentSection);
+
+            // If we've passed a jQuery object directly, use it as the next section
+            if (o.jquery) {
+              a.nextSection = $.grep(this.sections, function(s) { return o[0].id == s.element[0].id; })[0];
+              // Determine direction
+              a.direction = a.currentSection.scrollOffset > a.nextSection.scrollOffset ? 'UP' : 'DOWN';
+
+            // Else if we've just passed the scroll direction, find the next section
+            } else if (o === 'UP' || o === 'DOWN') {
+              a.direction = o;
+              a.nextSection = (a.direction === 'UP') ? this.sections[a.currentSectionIndex-1] : this.sections[a.currentSectionIndex+1];
+            }
+
+            // Setup direction triggers
+            if (a.direction === 'UP') {
+              a.triggers = { exiting: 'exitingUp', entering: 'enteringUp', exited: 'exitedUp', entered: 'enteredUp' }
+            } else if (a.direction === 'DOWN') {
+              a.triggers = { exiting: 'exitingDown', entering: 'enteringDown', exited: 'exitedDown', entered: 'enteredDown' }
+            }
+
+            // If there's no new section, don't scroll!
+            if (a.nextSection === undefined) { return false; }
+
+            a.$nextSection = $(a.nextSection.element);
+            a.nextSectionIndex = this.sections.indexOf(a.nextSection);
+            this._sectionAbove = this.sections[a.nextSectionIndex-1];
+            this._sectionBelow = this.sections[a.nextSectionIndex+1];
+
+            return a;
+          },
+
           fire: function(o) {
 
-            var opts = this.controllers.scroll.prepare.call(this, o);
+            var opts = this.controllers.scroll.go.prepare.call(this, o);
 
             if (opts === false) {
               this._isScrolling = false;
@@ -501,10 +539,10 @@
             // 2) currentSection is bound, nextSection is unbound && direction is down
             if (opts.nextSection.options.unbindScroll) {
               if (opts.currentSection.options.unbindScroll) {
-                this.controllers.scroll.go.smoothChange.call(this, opts);
+                this.controllers.scroll.go.change.call(this, opts);
               } else {
                 if (opts.direction === 'UP') {
-                  this.controllers.scroll.go.smoothChange.call(this, opts);
+                  this.controllers.scroll.go.change.call(this, opts);
                 } else if (opts.direction === 'DOWN') {
                   this.controllers.scroll.go.animate.call(this, opts);
                 }
@@ -549,7 +587,7 @@
             });
           },
 
-          smoothChange: function(opts) {
+          change: function(opts) {
 
             var that = this;
 
@@ -575,10 +613,61 @@
 
             this._isScrolling = false;
             this._canScroll = true;
-        }
+          }
         },
 
-        scrollOffset: {
+        unbound: function(e) {
+
+          var isAbove = this._scrollContainer.scrollTop() <= this._currentSection.scrollOffset,
+              // If next section is not also unbound, ensure it scrolls to new section from a window height away
+              belowVal = this._sectionBelow.options.unbindScroll === false ?
+                         this._sectionBelow.scrollOffset - this._windowHeight :
+                         this._sectionBelow.scrollOffset,
+              isBelow = this._scrollContainer.scrollTop() >= belowVal;
+
+          console.log('ScrollTop: ' + this._scrollContainer.scrollTop());
+          console.log('Current Section Offset: ' + this._currentSection.scrollOffset);
+
+          // If scrollTop is above current section
+          if (isAbove) {
+            // If it's a scroll event and we're not scrolling upwards (i.e, we're just at the top of the section)
+            if (this.utils.isScrollEvent(e) && e.originalEvent.wheelDelta < 0) { return; };
+            // If it's a keydown event and we're not pressing upwards
+            if (this.utils.isKeydownEvent(e) && e.which !== 38) { return; }
+            // If above section is also unbound
+            if (this._sectionAbove.options.unbindScroll) {
+              // Just change section references.
+              this.controllers.scroll.ifCanThenGo.call(this, 'UP');
+            // If above section is not unbound, do a scroll
+            } else {
+              e.preventDefault();
+              this._scrollUnbound = false;
+              this.controllers.scroll.ifCanThenGo.call(this, 'UP');
+            }
+
+          // If scrollTop is above current section
+
+          } else if (isBelow) {
+
+            // If it's a scroll event and we're not scrolling download (i.e, we're just at the bottom end of the section)
+            if (this.utils.isScrollEvent(e) && e.originalEvent.wheelDelta >= 0) { return; };
+            // If it's a keydown event and we're not pressing upwards
+            if (this.utils.isKeydownEvent(e) && e.which !== 40) { return; }
+
+            // If below section is also unbound
+            if (this._sectionBelow.options.unbindScroll) {
+              // Just change section references.
+              this.controllers.scroll.ifCanThenGo.call(this, 'DOWN');
+            // If below section is not unbound, do a scroll
+            } else {
+              e.preventDefault();
+              this._scrollUnbound = false;
+              this.controllers.scroll.ifCanThenGo.call(this, 'DOWN');
+            }
+          }
+        },
+
+        offset: {
           set: function(s) {
             s.scrollOffset = $(s.element).offset().top;
           },
@@ -587,110 +676,19 @@
             // Update on resize handler
             var that = this;
             $.each(this.sections, function(i, s) {
-              that.controllers.scroll.scrollOffset.set.call(that, s);
+              that.controllers.scroll.offset.set.call(that, s);
             });
 
           }
         },
 
-        stickySection: function() {
+        stick: function() {
           if (!this._scrollUnbound) {
             var t = this._currentSection.scrollOffset;
             this._scrollContainer.scrollTop(t);
           }
         }
 
-      },
-
-      // Touch Controller
-
-      touch: {
-
-        init: function() {
-          var that = this;
-
-          if (this._isDesktop) { return false; }
-
-          this.$elem.on('immInit sectionChanged', that.controllers.touch.manage.bind(this));
-
-          this.controllers.touch.attach.call(this);
-        },
-
-        handlers: {
-
-          touchEnd: function(event) {
-            $(document).off('touchmove', this.controllers.touch.handlers.touchMove);
-            if (this._touchStartData && this._touchStopData) {
-              if (this._touchStopData.time - this._touchStartData.time < 1000 &&
-                  Math.abs(this._touchStartData.coords[1] - this._touchStopData.coords[1]) > 30 &&
-                  Math.abs(this._touchStartData.coords[0] - this._touchStopData.coords[0]) < 75) {
-                    var direction = this._touchStartData.coords[1] > this._touchStopData.coords[1] ? 'swipeup' : 'swipedown';
-                    $(document).trigger(direction);
-              }
-            }
-            this._touchStartData = this._touchStopData = undefined;
-          },
-
-          touchMove: function(event) {
-            if (!this._touchStartData) { return; }
-            var data = event.originalEvent.touches ? event.originalEvent.touches[0] : event;
-            this._touchStopData = {
-              time: (new Date).getTime(),
-              coords: [ data.pageX, data.pageY ]
-            };
-
-            // prevent scrolling
-            if (Math.abs(this._touchStartData.coords[1] - this._touchStopData.coords[1]) > 10) {
-              event.preventDefault();
-            }
-
-          },
-
-          touchStart: function(event) {
-            var data = event.originalEvent.touches ? event.originalEvent.touches[ 0 ] : event;
-            this._touchStartData = {
-              time: (new Date).getTime(),
-              coords: [ data.pageX, data.pageY ]
-            };
-
-            $(document)
-              .on('touchmove', this.controllers.touch.handlers.touchMove.bind(this))
-              .one('touchend', this.controllers.touch.handlers.touchEnd.bind(this));
-          }
-        },
-
-        manage: function() {
-          console.log('In manage');
-          $(document).off('touchstart touchmove touchend');
-
-          if (!this._scrollUnbound) {
-            $(document).on('touchstart', this.controllers.touch.handlers.touchStart.bind(this));
-          }
-        },
-
-
-        attach: function() {
-          var that = this;
-
-          $(document).on('swipedown swipeup',function(e){
-
-            if (that._scrollUnbound) { return false; }
-
-            switch(e.type) {
-              case 'swipedown':
-                that.controllers.scroll.ifCanThenGo.call(that, 'UP');
-              break;
-
-              case 'swipeup':
-                that.controllers.scroll.ifCanThenGo.call(that, 'DOWN');
-              break;
-
-              default: return;
-            }
-
-          });
-
-        }
       },
 
       // Navigation Controller
@@ -1215,8 +1213,8 @@
           this._windowHeight = $(window).height();
           $(window).on('resize', function() {
             that.utils.deviceView.set.call(that, that._windowWidth);
-            that.controllers.scroll.scrollOffset.update.call(that);
-            that.controllers.scroll.stickySection.call(that);
+            that.controllers.scroll.offset.update.call(that);
+            that.controllers.scroll.stick.call(that);
             // Resize background videos
             if (!that._isMobile) { that.controllers.video.resizeAll.call(that); }
           });
