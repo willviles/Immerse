@@ -78,12 +78,12 @@
       // Ensure init is called when assets are loaded
       $.when(assets).then(
         function(s) {
-          console.log('Assets loaded');
-
           // Run init on all sections
           $.each(that.sections, function(i, s) {
             $(s.element).trigger('init');
           });
+
+          that.$elem.trigger('immInit');
 
           // Hide loading
           // TODO: Allow for custom loading animation sequences. Consider how to introduce a percentage bar
@@ -607,88 +607,75 @@
       touch: {
 
         init: function() {
-          this.controllers.touch.recognize.call(this);
-          this.controllers.touch.handler.call(this);
+          var that = this;
+
+          if (this._isDesktop) { return false; }
+
+          this.$elem.on('immInit sectionChanged', that.controllers.touch.manage.bind(this));
+
+          this.controllers.touch.attach.call(this);
         },
 
-        recognize: function() {
-          var supportTouch = $.support.touch,
-              scrollEvent = "touchmove scroll",
-              touchStartEvent = supportTouch ? "touchstart" : "mousedown",
-              touchStopEvent = supportTouch ? "touchend" : "mouseup",
-              touchMoveEvent = supportTouch ? "touchmove" : "mousemove";
+        handlers: {
 
-          $.event.special.swipeupdown = {
-            setup: function() {
-              var thisObject = this;
-              var $this = $(thisObject);
-              // touchStart
-              $this.bind(touchStartEvent, function(event) {
-                var data = event.originalEvent.touches ?
-                    event.originalEvent.touches[ 0 ] :
-                    event,
-                    start = {
-                      time: (new Date).getTime(),
-                      coords: [ data.pageX, data.pageY ],
-                      origin: $(event.target)
-                    },
-                    stop;
-
-                // Touch move
-                function moveHandler(event) {
-                  if (!start) {
-                    return;
-                  }
-                  var data = event.originalEvent.touches ?
-                      event.originalEvent.touches[0] :
-                      event;
-                  stop = {
-                    time: (new Date).getTime(),
-                    coords: [ data.pageX, data.pageY ]
-                  };
-
-                  // prevent scrolling
-                  if (Math.abs(start.coords[1] - stop.coords[1]) > 10) {
-                    event.preventDefault();
-                  }
-                }
-
-                $this
-                  .bind(touchMoveEvent, moveHandler)
-                  // Touch stop
-                  .one(touchStopEvent, function(event) {
-                    $this.unbind(touchMoveEvent, moveHandler);
-                    if (start && stop) {
-                      if (stop.time - start.time < 1000 &&
-                          Math.abs(start.coords[1] - stop.coords[1]) > 30 &&
-                          Math.abs(start.coords[0] - stop.coords[0]) < 75) {
-                          start.origin
-                                .trigger("swipeupdown")
-                                .trigger(start.coords[1] > stop.coords[1] ? "swipeup" : "swipedown");
-                      }
-                    }
-                    start = stop = undefined;
-
-                  });
-              });
-            }
-          };
-          $.each({
-            swipedown: "swipeupdown",
-            swipeup: "swipeupdown"
-          }, function(event, sourceEvent){
-            $.event.special[event] = {
-              setup: function(){
-                $(this).bind(sourceEvent, $.noop);
+          touchEnd: function(event) {
+            $(document).off('touchmove', this.controllers.touch.handlers.touchMove);
+            if (this._touchStartData && this._touchStopData) {
+              if (this._touchStopData.time - this._touchStartData.time < 1000 &&
+                  Math.abs(this._touchStartData.coords[1] - this._touchStopData.coords[1]) > 30 &&
+                  Math.abs(this._touchStartData.coords[0] - this._touchStopData.coords[0]) < 75) {
+                    var direction = this._touchStartData.coords[1] > this._touchStopData.coords[1] ? 'swipeup' : 'swipedown';
+                    $(document).trigger(direction);
               }
+            }
+            this._touchStartData = this._touchStopData = undefined;
+          },
+
+          touchMove: function(event) {
+            if (!this._touchStartData) { return; }
+            var data = event.originalEvent.touches ? event.originalEvent.touches[0] : event;
+            this._touchStopData = {
+              time: (new Date).getTime(),
+              coords: [ data.pageX, data.pageY ]
             };
-          });
+
+            // prevent scrolling
+            if (Math.abs(this._touchStartData.coords[1] - this._touchStopData.coords[1]) > 10) {
+              event.preventDefault();
+            }
+
+          },
+
+          touchStart: function(event) {
+            var data = event.originalEvent.touches ? event.originalEvent.touches[ 0 ] : event;
+            this._touchStartData = {
+              time: (new Date).getTime(),
+              coords: [ data.pageX, data.pageY ]
+            };
+
+            $(document)
+              .on('touchmove', this.controllers.touch.handlers.touchMove.bind(this))
+              .one('touchend', this.controllers.touch.handlers.touchEnd.bind(this));
+          }
         },
 
-        handler: function() {
+        manage: function() {
+          console.log('In manage');
+          $(document).off('touchstart touchmove touchend');
+
+          if (!this._scrollUnbound) {
+            $(document).on('touchstart', this.controllers.touch.handlers.touchStart.bind(this));
+          }
+        },
+
+
+        attach: function() {
           var that = this;
 
           $(document).on('swipedown swipeup',function(e){
+
+            if (that._scrollUnbound) { return false; }
+
             switch(e.type) {
               case 'swipedown':
                 that.controllers.scroll.ifCanThenGo.call(that, 'UP');
