@@ -8,10 +8,10 @@ Author URI: http://vil.es/
 
 (function( $, window, document, undefined ){
 
-  // our plugin constructor
+  // Plugin Constructor
   var Immerse = function() {};
 
-  // the plugin prototype
+  // Plugin Prototype
   Immerse.prototype = {
 
     // Setup
