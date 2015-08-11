@@ -14,7 +14,8 @@ module.exports = function(grunt) {
           'src/js/scroll.js',
           'src/js/video.js',
           'src/js/audio.js',
-          'src/js/navigation.js'
+          'src/js/navigation.js',
+          'src/js/assets.js'
         ],
         dest: 'dist/js/immerse.js'
       },
