@@ -11,6 +11,7 @@ module.exports = function(grunt) {
         },
         src: [
           'src/js/main.js',
+          'src/js/section.js',
           'src/js/scroll.js',
           'src/js/video.js',
           'src/js/audio.js',
