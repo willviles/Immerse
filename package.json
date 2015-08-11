@@ -1,8 +1,10 @@
 {
   "name": "immersejs",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Build immersive, media driven web experiences the easy way",
-  "keywords": ["Immerse", "immersive", "media", "scroll", "video", "audio", "asset management"],
+  "keywords": [
+    "scrolling", "immersive", "media", "video", "audio", "experiences", "asset management"
+  ],
   "homepage": "http://immerse.vil.es",
   "author": "Will Viles <will@vil.es> (http://vil.es/)",
   "main": "dist/js/immerse.js",

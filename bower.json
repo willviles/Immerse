@@ -1,13 +1,13 @@
 {
   "name": "immerse",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "homepage": "http://immerse.vil.es",
   "authors": [
     "willviles <will@willviles.com>"
   ],
   "description": "Build immersive, media driven web experiences the easy way",
   "keywords": [
-    "scrolling", "immersive", "media", "video", "audio", "experiences", "stuff"
+    "scrolling", "immersive", "media", "video", "audio", "experiences", "asset management"
   ],
   "license": "MIT",
   "dependencies": {
