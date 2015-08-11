@@ -1,6 +1,6 @@
 {
-  "name": "immerse",
-  "version": "1.0.1",
+  "name": "immersejs",
+  "version": "1.0.2",
   "dependencies": {
     "grunt-cli": "latest",
     "grunt-contrib-concat": "latest",

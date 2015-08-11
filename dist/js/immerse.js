@@ -1,7 +1,7 @@
 /*
 Script Name: Immerse.js
 Description: Build immersive, media driven web experiences the easy way
-Version: 1.0.1
+Version: 1.0.2
 Author: Will Viles
 Author URI: http://vil.es/
 */
