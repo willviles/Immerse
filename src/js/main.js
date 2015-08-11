@@ -1,3 +1,11 @@
+/*
+Script Name: Immerse.js
+Description: Build immersive, media driven web experiences the easy way
+Version: 1.0.1
+Author: Will Viles
+Author URI: http://vil.es/
+*/
+
 (function( $, window, document, undefined ){
 
   // our plugin constructor
@@ -7,8 +15,6 @@
   Immerse.prototype = {
 
     // Setup
-    ///////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////
 
     setup: function(setup) {
