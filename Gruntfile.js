@@ -6,7 +6,7 @@ module.exports = function(grunt) {
     concat: {
       main: {
         options: {
-          separator: ';',
+          separator: '\n\n',
           sourceMap: true
         },
         src: [

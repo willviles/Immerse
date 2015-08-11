@@ -1,7 +1,7 @@
 /*
 Plugin: Immerse.js
 Component: Tooltips
-Description: Adds tooltips
+Description: Adds tooltips to any element with .imm-tooltip class
 Version: 1.0.0
 Author: Will Viles
 Author URI: http://vil.es/

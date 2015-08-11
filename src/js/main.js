@@ -83,45 +83,6 @@ Author URI: http://vil.es/
       return this;
     },
 
-
-
-    // Components
-    ///////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////
-
-    components: {
-
-      // Sliders
-      ///////////////////////////////////////////////////////
-      sliders: {
-        // Choose whether to build own slider or use iDangerous swiper.
-      },
-
-      // Modals
-      ///////////////////////////////////////////////////////
-      modals: {
-        // Content which is displayed over the top of the current screen.
-      },
-
-      // Modals
-      ///////////////////////////////////////////////////////
-      stacks: {
-        // Content which slides out the section content and reveals more content with a back button to go back to the current content.
-
-        // Firstly need to wrap the section content in a div which can slide out
-
-        // Secondly need to hide the stack content
-
-        // Thirdly need some kind of animation to fire on a button press
-
-        // Fouthly need to enable native scrolling on the section.
-
-        // Fifthly need to fire another animation to take you back to the content
-      }
-
-    },
-
     // Utilities
     ///////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////

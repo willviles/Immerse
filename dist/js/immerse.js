@@ -83,45 +83,6 @@ Author URI: http://vil.es/
       return this;
     },
 
-
-
-    // Components
-    ///////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////
-
-    components: {
-
-      // Sliders
-      ///////////////////////////////////////////////////////
-      sliders: {
-        // Choose whether to build own slider or use iDangerous swiper.
-      },
-
-      // Modals
-      ///////////////////////////////////////////////////////
-      modals: {
-        // Content which is displayed over the top of the current screen.
-      },
-
-      // Modals
-      ///////////////////////////////////////////////////////
-      stacks: {
-        // Content which slides out the section content and reveals more content with a back button to go back to the current content.
-
-        // Firstly need to wrap the section content in a div which can slide out
-
-        // Secondly need to hide the stack content
-
-        // Thirdly need some kind of animation to fire on a button press
-
-        // Fouthly need to enable native scrolling on the section.
-
-        // Fifthly need to fire another animation to take you back to the content
-      }
-
-    },
-
     // Utilities
     ///////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////
@@ -199,7 +160,9 @@ Author URI: http://vil.es/
     }
   }
 
-})( jQuery, window , document );;// Section Controller
+})( jQuery, window , document );
+
+// Section Controller
 ///////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////
@@ -412,7 +375,9 @@ Author URI: http://vil.es/
     }
   }
 
-})( jQuery, window , document );;// Scroll Controller
+})( jQuery, window , document );
+
+// Scroll Controller
 ///////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////
@@ -880,7 +845,9 @@ Author URI: http://vil.es/
     }
   }
 
-})( jQuery, window , document );;// Video Controller
+})( jQuery, window , document );
+
+// Video Controller
 ///////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////
@@ -982,7 +949,9 @@ Author URI: http://vil.es/
     }
   }
 
-})( jQuery, window , document );;// Audio Controller
+})( jQuery, window , document );
+
+// Audio Controller
 ///////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////
@@ -1164,7 +1133,9 @@ Author URI: http://vil.es/
     }
   }
 
-})( jQuery, window , document );;// Navigation Controller
+})( jQuery, window , document );
+
+// Navigation Controller
 ///////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////
@@ -1228,7 +1199,9 @@ Author URI: http://vil.es/
     }
   }
 
-})( jQuery, window , document );;// Asset Controller
+})( jQuery, window , document );
+
+// Asset Controller
 ///////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////
@@ -1407,7 +1380,9 @@ Author URI: http://vil.es/
     }
   }
 
-})( jQuery, window , document );;// Viewport Controller
+})( jQuery, window , document );
+
+// Viewport Controller
 ///////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////
@@ -1489,7 +1464,9 @@ Author URI: http://vil.es/
     }
   }
 
-})( jQuery, window , document );;// Component Controller
+})( jQuery, window , document );
+
+// Component Controller
 ///////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////
@@ -1533,10 +1510,97 @@ Author URI: http://vil.es/
     }
   }
 
-})( jQuery, window , document );;;;;/*
+})( jQuery, window , document );
+
+/*
+Plugin: Immerse.js
+Component: Modals
+Description: Adds a modal window to any Immerse section
+Version: 1.0.0
+Author: Will Viles
+Author URI: http://vil.es/
+*/
+
+$.Immerse.registerComponent({
+  name: 'modals',
+
+  // Initialize function
+  init: function(opts) {
+    var section = opts.section,
+        $section = $(section.element),
+        that = this;
+
+    // Content which is displayed over the top of the current screen.
+
+    return this;
+  }
+
+});
+
+/*
+Plugin: Immerse.js
+Component: Sliders
+Description: Adds a slider to any Immerse section
+Version: 1.0.0
+Author: Will Viles
+Author URI: http://vil.es/
+*/
+
+$.Immerse.registerComponent({
+  name: 'sliders',
+
+  // Initialize function
+  init: function(opts) {
+    var section = opts.section,
+        $section = $(section.element),
+        that = this;
+
+    // Choose whether to build own slider or use iDangerous swiper.
+
+    return this;
+  }
+
+});
+
+/*
+Plugin: Immerse.js
+Component: Stacks
+Description: Adds a stack of content to any Immerse section
+Version: 1.0.0
+Author: Will Viles
+Author URI: http://vil.es/
+*/
+
+$.Immerse.registerComponent({
+  name: 'stacks',
+
+  // Initialize function
+  init: function(opts) {
+    var section = opts.section,
+        $section = $(section.element),
+        that = this;
+
+    // Content which slides out the section content and reveals more content with a back button to go back to the current content.
+
+    // Firstly need to wrap the section content in a div which can slide out
+
+    // Secondly need to hide the stack content
+
+    // Thirdly need some kind of animation to fire on a button press
+
+    // Fouthly need to enable native scrolling on the section.
+
+    // Fifthly need to fire another animation to take you back to the content
+
+    return this;
+  }
+
+});
+
+/*
 Plugin: Immerse.js
 Component: Tooltips
-Description: Adds tooltips
+Description: Adds tooltips to any element with .imm-tooltip class
 Version: 1.0.0
 Author: Will Viles
 Author URI: http://vil.es/
