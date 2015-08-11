@@ -1,14 +1,21 @@
 {
   "name": "immersejs",
   "version": "1.0.2",
-  "dependencies": {
+  "description": "Build immersive, media driven web experiences the easy way",
+  "keywords": ["Immerse", "immersive", "media", "scroll", "video", "audio", "asset management"],
+  "homepage": "http://immerse.vil.es",
+  "author": "Will Viles <will@vil.es> (http://vil.es/)",
+  "main": "dist/js/immerse.js",
+  "devDependencies": {
     "grunt-cli": "latest",
     "grunt-contrib-concat": "latest",
     "grunt-contrib-uglify": "latest",
     "grunt-contrib-sass": "latest",
     "grunt-contrib-watch": "latest",
     "grunt-contrib-connect": "latest",
-    "grunt-contrib-livereload": "latest",
+    "grunt-contrib-livereload": "latest"
+  },
+  "dependencies": {
     "jquery": "latest",
     "jquery-mobile": "latest",
     "gsap": "latest"
