@@ -1,6 +1,6 @@
 module.exports = function(grunt) {
 
-  grunt.registerTask('watch', [ 'watch' ]);
+  grunt.registerTask('server', [ 'connect', 'watch' ]);
 
   grunt.initConfig({
     concat: {
@@ -38,6 +38,15 @@ module.exports = function(grunt) {
         }
       }
     },
+    connect: {
+      all: {
+        options:{
+          port: 9000,
+          hostname: "0.0.0.0",
+          livereload: true
+        }
+      }
+    },
     watch: {
       js: {
         files: ['src/js/*.js'],
@@ -60,5 +69,6 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-sass');
   grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-contrib-connect');
 
 };

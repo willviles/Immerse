@@ -7,6 +7,8 @@
     "grunt-contrib-uglify": "latest",
     "grunt-contrib-sass": "latest",
     "grunt-contrib-watch": "latest",
+    "grunt-contrib-connect": "latest",
+    "grunt-contrib-livereload": "latest",
     "jquery": "latest",
     "jquery-mobile": "latest",
     "gsap": "latest"
