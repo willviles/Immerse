@@ -429,6 +429,16 @@
         var t = this.imm._currentSection.scrollOffset;
         this.imm._scrollContainer.scrollTop(t);
       }
+    },
+
+    utils: {
+      isScrollEvent: function(e) {
+        return e.type === 'wheel' || e.type === 'DOMMouseScroll' || e.type === 'mousewheel';
+      },
+
+      isKeydownEvent: function(e) {
+        return e.type === 'keydown';
+      }
     }
 
   }; // End of all plugin functions

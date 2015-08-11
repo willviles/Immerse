@@ -806,14 +806,6 @@
 
       },
 
-      isScrollEvent: function(e) {
-        return e.type === 'wheel' || e.type === 'DOMMouseScroll' || e.type === 'mousewheel';
-      },
-
-      isKeydownEvent: function(e) {
-        return e.type === 'keydown';
-      },
-
       stringify: function(str) {
         return str.replace(/[-_]/g, ' ').replace(/([a-z])([A-Z])/g, '$1 $2').toLowerCase().replace(/\b[a-z]/g, function(letter) {
             return letter.toUpperCase();
