@@ -82,9 +82,9 @@
             this.handlers.scroll.toggle('disable', e);
             // Fire animation to next section
             if (e.originalEvent.wheelDelta >= 0) {
-              this.ifCanThenGo.call(this, 'UP');
+              this.ifCanThenGo.call(this, this.imm, 'UP');
             } else {
-              this.ifCanThenGo.call(this, 'DOWN');
+              this.ifCanThenGo.call(this, this.imm, 'DOWN');
             }
           }
         },
@@ -133,7 +133,7 @@
                 this.unbound.call(this, e);
               } else {
                 e.preventDefault();
-                this.ifCanThenGo.call(this, 'UP');
+                this.ifCanThenGo.call(this, this.imm, 'UP');
               }
             break;
 
@@ -142,7 +142,7 @@
                 this.unbound.call(this, e);
               } else {
                 e.preventDefault();
-                this.ifCanThenGo.call(this, 'DOWN');
+                this.ifCanThenGo.call(this, this.imm, 'DOWN');
               }
             break;
 
@@ -202,11 +202,11 @@
           if (this.imm._scrollUnbound) { return false; }
           switch(e.type) {
             case 'swipedown':
-              this.ifCanThenGo.call(this, 'UP');
+              this.ifCanThenGo.call(this, this.imm, 'UP');
             break;
 
             case 'swipeup':
-              this.ifCanThenGo.call(this, 'DOWN');
+              this.ifCanThenGo.call(this, this.imm, 'DOWN');
             break;
 
             default: return;
@@ -215,10 +215,12 @@
       }
     },
 
-    ifCanThenGo: function(goVar) {
+    ifCanThenGo: function(imm, goVar) {
+      this.imm = (this.imm === undefined) ? imm : this.imm;
       if (this.imm._isScrolling === false && this.imm._canScroll === true) {
         this.imm._isScrolling = true;
         this.go.fire.call(this, goVar);
+
       }
     },
 
@@ -376,12 +378,12 @@
         // If above section is also unbound
         if (this.imm._sectionAbove.options.unbindScroll) {
           // Just change section references.
-          this.ifCanThenGo.call(this, 'UP');
+          this.ifCanThenGo.call(this, this.imm, 'UP');
         // If above section is not unbound, do a scroll
         } else {
           e.preventDefault();
           this.imm._scrollUnbound = false;
-          this.ifCanThenGo.call(this, 'UP');
+          this.ifCanThenGo.call(this, this.imm, 'UP');
         }
 
       // If scrollTop is above current section
@@ -396,32 +398,33 @@
         // If below section is also unbound
         if (this.imm._sectionBelow.options.unbindScroll) {
           // Just change section references.
-          this.ifCanThenGo.call(this, 'DOWN');
+          this.ifCanThenGo.call(this, this.imm, 'DOWN');
         // If below section is not unbound, do a scroll
         } else {
           e.preventDefault();
           this.imm._scrollUnbound = false;
-          this.ifCanThenGo.call(this, 'DOWN');
+          this.ifCanThenGo.call(this, this.imm, 'DOWN');
         }
       }
     },
 
-    offset: {
+    sectionOffset: {
       set: function(s) {
         s.scrollOffset = $(s.element).offset().top;
       },
 
-      update: function() {
-        // Update on resize handler
+      update: function(imm) {
+        this.imm = (this.imm === undefined) ? imm : this.imm;
         var that = this;
         $.each(this.imm._sections, function(i, s) {
-          that.offset.set.call(that, s);
+          that.sectionOffset.set.call(that, s);
         });
 
       }
     },
 
-    stick: function() {
+    stick: function(imm) {
+      this.imm = (this.imm === undefined) ? imm : this.imm;
       if (!this.imm._scrollUnbound) {
         var t = this.imm._currentSection.scrollOffset;
         this.imm._scrollContainer.scrollTop(t);
@@ -430,9 +433,26 @@
 
   }; // End of all plugin functions
 
-
-  $.Immerse.scrollController = function(imm) {
-    return new ImmerseScrollController(this).init(imm);
+  // Functions to expose to rest of the plugin
+  $.Immerse.scrollController = {
+    init: function(imm) {
+      return new ImmerseScrollController(this).init(imm);
+    },
+    doScroll: function(imm, goVar) {
+      var controller = new ImmerseScrollController(this);
+      controller.ifCanThenGo.call(controller, imm, goVar);
+      return controller;
+    },
+    updateSectionOffsets: function(imm) {
+      var controller = new ImmerseScrollController(this);
+      controller.sectionOffset.update.call(controller, imm);
+      return controller;
+    },
+    stickSection: function(imm) {
+      var controller = new ImmerseScrollController(this);
+      controller.stick.call(controller, imm);
+      return controller;
+    }
   }
 
 })( jQuery, window , document );
