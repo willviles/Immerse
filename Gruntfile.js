@@ -4,7 +4,7 @@ module.exports = function(grunt) {
 
   grunt.initConfig({
     concat: {
-      js: {
+      main: {
         options: {
           separator: ';',
           sourceMap: true
@@ -17,7 +17,8 @@ module.exports = function(grunt) {
           'src/js/audio.js',
           'src/js/navigation.js',
           'src/js/assets.js',
-          'src/js/viewport.js'
+          'src/js/viewport.js',
+          'src/js/components/tooltips.js'
         ],
         dest: 'dist/js/immerse.js'
       },
@@ -56,8 +57,8 @@ module.exports = function(grunt) {
     },
     watch: {
       js: {
-        files: ['src/js/*.js'],
-        tasks: ['concat:js', 'uglify:js'],
+        files: ['src/js/*.js', 'src/js/components/*.js'],
+        tasks: ['concat:main', 'uglify:js'],
         options: {
           livereload: true,
         }

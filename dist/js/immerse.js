@@ -118,48 +118,6 @@ Author URI: http://vil.es/
         // Fouthly need to enable native scrolling on the section.
 
         // Fifthly need to fire another animation to take you back to the content
-      },
-
-      // Tooltips
-      ///////////////////////////////////////////////////////
-      tooltips: {
-        init: function($t) {
-          var c = $t.data('imm-tooltip'),
-              c = c.charAt(0) === '#' ? $(c) : c,
-              c = (c.jquery) ? $(c).html() : c,
-              that = this;
-
-          // Append correct tooltip content
-          $tContent = $('<span class="imm-tooltip">' + c + '</span>');
-          $t.append($tContent);
-
-          $t.on('mouseover', function() {
-            that.components.tooltips.position.call(that, $t, $tContent);
-          });
-        },
-
-        position: function($t, $tContent) {
-
-          $tContent.removeClass('top left right bottom');
-
-          // TODO: Method of determining the placement of the tooltip
-          var tHeight = $tContent.height(),
-              tWidth = $tContent.width(),
-              tXY = $t[0].getBoundingClientRect(),
-              p = 'top';
-
-          // Determine vertical position
-          if (tHeight >= tXY.top) { p = 'bottom'; }
-
-          if (tWidth/2 >= tXY.left) {
-            p = 'right';
-          } else if (tWidth/2 >= $(window).width() - tXY.right) {
-            p = 'left';
-          }
-
-          // Add position to tooltip
-          $tContent.addClass(p);
-        }
       }
 
     },
@@ -235,7 +193,8 @@ Author URI: http://vil.es/
   $.Immerse = {
     setup: function(setup) {
       return new Immerse(this).setup(setup);
-    }
+    },
+    components: {}
   }
 
 })( jQuery, window , document );;// Section Controller
@@ -331,11 +290,6 @@ Author URI: http://vil.es/
         $.each(sectionVideos, function(i, wrapper) {
           $.Immerse.videoController.init(that.imm, s, $(wrapper));
         });
-        // Tooltips
-        var tooltips = $s.find('[data-imm-tooltip]');
-        $.each(tooltips, function(i, tooltip) {
-          that.imm.components.tooltips.init.call(that.imm, $(tooltip));
-        });
       });
 
       $.Immerse.scrollController.updateSectionOffsets(this.imm);
@@ -344,6 +298,16 @@ Author URI: http://vil.es/
       this.imm._sections.sort(function(obj1, obj2) {
       	return obj1.scrollOffset - obj2.scrollOffset;
       });
+
+      // Loop over all sections objects, both defined and generated
+      $.each(this.imm._sections, function(n, s) {
+        // Init all components
+        $.each($.Immerse.components, function(n, f) {
+          var opts = { immerse: that, section: s }
+          f.init(opts);
+        });
+      });
+
 
       return this;
     },
@@ -1524,6 +1488,83 @@ Author URI: http://vil.es/
     },
     isView: function(imm, a) {
       return new ImmerseViewportController(this).isView(imm, a);
+    }
+  }
+
+})( jQuery, window , document );;/*
+Plugin: Immerse.js
+Component: Tooltips
+Description: Adds tooltips
+Version: 1.0.0
+Author: Will Viles
+Author URI: http://vil.es/
+*/
+
+(function( $, window, document, undefined ){
+
+  var ImmerseTooltips = function() {};
+
+  ImmerseTooltips.prototype = {
+
+    // Initialize
+    ///////////////////////////////////////////////////////
+
+    init: function(opts) {
+
+      this.imm = opts.immerse;
+
+      var section = opts.section,
+          $section = $(section.element),
+          that = this;
+
+      // Get each tooltip in section
+      $.each($section.find('[data-imm-tooltip]'), function(i, tooltip) {
+
+        var $tooltip = $(tooltip),
+            content = $tooltip.data('imm-tooltip'),
+            content = content.charAt(0) === '#' ? $(content) : content,
+            content = (content.jquery) ? $(content).html() : content;
+
+        // Append correct tooltip content
+        var $content = $('<span class="imm-tooltip">' + content + '</span>');
+        $tooltip.append($content);
+
+        $tooltip.on('mouseover', function() {
+          that.position.call(that, $tooltip, $content);
+        });
+      });
+
+      return this;
+    },
+
+    position: function($tooltip, $content) {
+
+      $content.removeClass('top left right bottom');
+
+      // TODO: Method of determining the placement of the tooltip
+      var tHeight = $content.height(),
+          tWidth = $content.width(),
+          tXY = $tooltip[0].getBoundingClientRect(),
+          p = 'top';
+
+      // Determine vertical position
+      if (tHeight >= tXY.top) { p = 'bottom'; }
+
+      if (tWidth/2 >= tXY.left) {
+        p = 'right';
+      } else if (tWidth/2 >= $(window).width() - tXY.right) {
+        p = 'left';
+      }
+
+      // Add position to tooltip
+      $content.addClass(p);
+    }
+
+  }; // End of all plugin functions
+
+  $.Immerse.components.tooltips = {
+    init: function(opts) {
+      return new ImmerseTooltips(this).init(opts);
     }
   }
 

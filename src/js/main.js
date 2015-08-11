@@ -118,48 +118,6 @@ Author URI: http://vil.es/
         // Fouthly need to enable native scrolling on the section.
 
         // Fifthly need to fire another animation to take you back to the content
-      },
-
-      // Tooltips
-      ///////////////////////////////////////////////////////
-      tooltips: {
-        init: function($t) {
-          var c = $t.data('imm-tooltip'),
-              c = c.charAt(0) === '#' ? $(c) : c,
-              c = (c.jquery) ? $(c).html() : c,
-              that = this;
-
-          // Append correct tooltip content
-          $tContent = $('<span class="imm-tooltip">' + c + '</span>');
-          $t.append($tContent);
-
-          $t.on('mouseover', function() {
-            that.components.tooltips.position.call(that, $t, $tContent);
-          });
-        },
-
-        position: function($t, $tContent) {
-
-          $tContent.removeClass('top left right bottom');
-
-          // TODO: Method of determining the placement of the tooltip
-          var tHeight = $tContent.height(),
-              tWidth = $tContent.width(),
-              tXY = $t[0].getBoundingClientRect(),
-              p = 'top';
-
-          // Determine vertical position
-          if (tHeight >= tXY.top) { p = 'bottom'; }
-
-          if (tWidth/2 >= tXY.left) {
-            p = 'right';
-          } else if (tWidth/2 >= $(window).width() - tXY.right) {
-            p = 'left';
-          }
-
-          // Add position to tooltip
-          $tContent.addClass(p);
-        }
       }
 
     },
@@ -235,7 +193,8 @@ Author URI: http://vil.es/
   $.Immerse = {
     setup: function(setup) {
       return new Immerse(this).setup(setup);
-    }
+    },
+    components: {}
   }
 
 })( jQuery, window , document );

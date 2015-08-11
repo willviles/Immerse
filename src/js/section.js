@@ -91,11 +91,6 @@
         $.each(sectionVideos, function(i, wrapper) {
           $.Immerse.videoController.init(that.imm, s, $(wrapper));
         });
-        // Tooltips
-        var tooltips = $s.find('[data-imm-tooltip]');
-        $.each(tooltips, function(i, tooltip) {
-          that.imm.components.tooltips.init.call(that.imm, $(tooltip));
-        });
       });
 
       $.Immerse.scrollController.updateSectionOffsets(this.imm);
@@ -104,6 +99,16 @@
       this.imm._sections.sort(function(obj1, obj2) {
       	return obj1.scrollOffset - obj2.scrollOffset;
       });
+
+      // Loop over all sections objects, both defined and generated
+      $.each(this.imm._sections, function(n, s) {
+        // Init all components
+        $.each($.Immerse.components, function(n, f) {
+          var opts = { immerse: that, section: s }
+          f.init(opts);
+        });
+      });
+
 
       return this;
     },
