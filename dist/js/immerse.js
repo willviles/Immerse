@@ -50,8 +50,6 @@ Author URI: http://vil.es/
 
     // Initialize
     ///////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////
 
     init: function(elem) {
 
@@ -84,8 +82,6 @@ Author URI: http://vil.es/
     },
 
     // Utilities
-    ///////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////
 
     utils: {
@@ -125,15 +121,13 @@ Author URI: http://vil.es/
 
     // API Endpoints
     ///////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////
 
-    // Add a section to a page
+    // Description: Add a section to a page
     section: function(section) {
       return $.Immerse.sectionController.add(this, section);
     },
 
-    // Expose audio endpoint to get state of audio & mute/unmute programmatically
+    // Description: Get state of audio & mute/unmute programmatically
     audio: function(status) {
       if (status === undefined) {
         return this._muted ? false : true;
@@ -142,7 +136,7 @@ Author URI: http://vil.es/
       }
     },
 
-    // Expose changeSection endpoint to allow for changing section programmatically
+    // Description: Allow for changing section programmatically
     changeSection: function(goVar) {
       if (goVar === undefined) { return false; }
       $.Immerse.scrollController.doScroll(this, $target);
