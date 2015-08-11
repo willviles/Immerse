@@ -65,8 +65,8 @@ Author URI: http://vil.es/
 
       var that = this;
 
-      // Init device view utilities
-      this.utils.deviceView.init.call(this);
+      // Setup the Viewport Controller
+      $.Immerse.viewportController.init(this);
 
       // Setup the Asset Queue
       this._assetQueue = $.Immerse.assetController.register(this);
@@ -175,7 +175,7 @@ Author URI: http://vil.es/
       animation: function(s, n, a) {
 
         // Proceed or kill based upon device selection
-        if (this.utils.deviceView.check.call(this, a) === false) { return false };
+        if ($.Immerse.viewportController.isView(this, a) === false) { return false };
 
         var t = new TimelineMax({ paused: true }),
             c = a.timeline(s),
@@ -213,7 +213,7 @@ Author URI: http://vil.es/
       action: function(s, n, a) {
 
         // Proceed or kill based upon device selection
-        if (this.utils.deviceView.check.call(this, a) === false) { return false };
+        if ($.Immerse.viewportController.isView(this, a) === false) { return false };
 
         var action = a.action,
             d = !isNaN(a.delay) ? a.delay : 0,
@@ -239,7 +239,7 @@ Author URI: http://vil.es/
       attribute: function(s, n, a) {
 
         // Proceed or kill based upon device selection
-        if (this.utils.deviceView.check.call(this, a) === false) { return false };
+        if ($.Immerse.viewportController.isView(this, a) === false) { return false };
 
         var value = a.value,
             d = !isNaN(a.delay) ? a.delay : 0,
@@ -345,62 +345,6 @@ Author URI: http://vil.es/
     ///////////////////////////////////////////////////////
 
     utils: {
-
-      // Device View functions
-      ///////////////////////////////////////////////////////
-
-      deviceView: {
-        init: function() {
-          this._windowWidth = $(window).width();
-          this._windowHeight = $(window).height();
-          this.utils.deviceView.set.call(this, this._windowWidth);
-          this.utils.deviceView.resize.call(this, this);
-
-        },
-
-        set: function(width) {
-          var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|OperaMini/i.test(navigator.userAgent),
-              isMobileWidth = width <= 480;
-
-          if (isMobile || isMobileWidth) {
-            this._device = 'mobile';
-            this._isMobile = true;
-            this._isDesktop = false;
-          } else {
-            this._device = 'desktop';
-            this._isMobile = false;
-            this._isDesktop = true;
-          }
-        },
-
-        resize: function(that) {
-
-          this._windowWidth = $(window).width();
-          this._windowHeight = $(window).height();
-          $(window).on('resize', function() {
-            that.utils.deviceView.set.call(that, that._windowWidth);
-            $.Immerse.scrollController.updateSectionOffsets(that);
-            $.Immerse.scrollController.stickSection(that);
-            // Resize background videos
-            if (!that._isMobile) {
-              $.Immerse.videoController.resizeAll(that);
-            }
-          });
-        },
-
-        check: function(a) {
-
-          // Prepare devices
-          var mobile = $.inArray('mobile', a.devices) !== -1,
-              desktop = $.inArray('desktop', a.devices) !== -1
-
-          // If animation is for mobile but not desktop and we're not in a mobile view
-          // ...or...
-          // If animation is for desktop but not mobile and we're not in a desktop view
-          if (mobile && !desktop && !this._isMobile || desktop && !mobile && !this._isDesktop) { return false; }
-        }
-
-      },
 
       stringify: function(str) {
         return str.replace(/[-_]/g, ' ').replace(/([a-z])([A-Z])/g, '$1 $2').toLowerCase().replace(/\b[a-z]/g, function(letter) {
@@ -1484,6 +1428,88 @@ Author URI: http://vil.es/
 
     loading: function(imm) {
       return new ImmerseAssetController(this).loading(imm);
+    }
+  }
+
+})( jQuery, window , document );;// Viewport Controller
+///////////////////////////////////////////////////////
+///////////////////////////////////////////////////////
+///////////////////////////////////////////////////////
+
+(function( $, window, document, undefined ){
+
+  var ImmerseViewportController = function() {};
+
+  ImmerseViewportController.prototype = {
+
+    // Initialize
+    ///////////////////////////////////////////////////////
+
+    init: function(imm) {
+
+      // Get a handle on the Immerse object
+      this.imm = imm;
+
+      this.imm._windowWidth = $(window).width();
+      this.imm._windowHeight = $(window).height();
+      this.set.call(this, this.imm._windowWidth);
+      this.resize.call(this, this);
+
+      return this;
+    },
+
+    set: function(width) {
+      var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|OperaMini/i.test(navigator.userAgent),
+          isMobileWidth = width <= 480;
+
+      if (isMobile || isMobileWidth) {
+        this.imm._device = 'mobile';
+        this.imm._isMobile = true;
+        this.imm._isDesktop = false;
+      } else {
+        this.imm._device = 'desktop';
+        this.imm._isMobile = false;
+        this.imm._isDesktop = true;
+      }
+    },
+
+    resize: function(that) {
+
+      this.imm._windowWidth = $(window).width();
+      this.imm._windowHeight = $(window).height();
+      $(window).on('resize', function() {
+        that.set.call(that, that.imm._windowWidth);
+        $.Immerse.scrollController.updateSectionOffsets(that);
+        $.Immerse.scrollController.stickSection(that);
+        // Resize background videos
+        if (!that.imm._isMobile) {
+          $.Immerse.videoController.resizeAll(that);
+        }
+      });
+    },
+
+    isView: function(imm, a) {
+
+      this.imm = imm;
+      // Prepare devices
+      var mobile = $.inArray('mobile', a.devices) !== -1,
+          desktop = $.inArray('desktop', a.devices) !== -1
+
+      // If animation is for mobile but not desktop and we're not in a mobile view
+      // ...or...
+      // If animation is for desktop but not mobile and we're not in a desktop view
+      if (mobile && !desktop && !this.imm._isMobile || desktop && !mobile && !this.imm._isDesktop) { return false; }
+    }
+
+  }; // End of all plugin functions
+
+  // Functions to expose to rest of the plugin
+  $.Immerse.viewportController = {
+    init: function(imm) {
+      return new ImmerseViewportController(this).init(imm);
+    },
+    isView: function(imm, a) {
+      return new ImmerseViewportController(this).isView(imm, a);
     }
   }
 

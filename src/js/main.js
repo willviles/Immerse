@@ -65,8 +65,8 @@ Author URI: http://vil.es/
 
       var that = this;
 
-      // Init device view utilities
-      this.utils.deviceView.init.call(this);
+      // Setup the Viewport Controller
+      $.Immerse.viewportController.init(this);
 
       // Setup the Asset Queue
       this._assetQueue = $.Immerse.assetController.register(this);
@@ -175,7 +175,7 @@ Author URI: http://vil.es/
       animation: function(s, n, a) {
 
         // Proceed or kill based upon device selection
-        if (this.utils.deviceView.check.call(this, a) === false) { return false };
+        if ($.Immerse.viewportController.isView(this, a) === false) { return false };
 
         var t = new TimelineMax({ paused: true }),
             c = a.timeline(s),
@@ -213,7 +213,7 @@ Author URI: http://vil.es/
       action: function(s, n, a) {
 
         // Proceed or kill based upon device selection
-        if (this.utils.deviceView.check.call(this, a) === false) { return false };
+        if ($.Immerse.viewportController.isView(this, a) === false) { return false };
 
         var action = a.action,
             d = !isNaN(a.delay) ? a.delay : 0,
@@ -239,7 +239,7 @@ Author URI: http://vil.es/
       attribute: function(s, n, a) {
 
         // Proceed or kill based upon device selection
-        if (this.utils.deviceView.check.call(this, a) === false) { return false };
+        if ($.Immerse.viewportController.isView(this, a) === false) { return false };
 
         var value = a.value,
             d = !isNaN(a.delay) ? a.delay : 0,
@@ -345,62 +345,6 @@ Author URI: http://vil.es/
     ///////////////////////////////////////////////////////
 
     utils: {
-
-      // Device View functions
-      ///////////////////////////////////////////////////////
-
-      deviceView: {
-        init: function() {
-          this._windowWidth = $(window).width();
-          this._windowHeight = $(window).height();
-          this.utils.deviceView.set.call(this, this._windowWidth);
-          this.utils.deviceView.resize.call(this, this);
-
-        },
-
-        set: function(width) {
-          var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|OperaMini/i.test(navigator.userAgent),
-              isMobileWidth = width <= 480;
-
-          if (isMobile || isMobileWidth) {
-            this._device = 'mobile';
-            this._isMobile = true;
-            this._isDesktop = false;
-          } else {
-            this._device = 'desktop';
-            this._isMobile = false;
-            this._isDesktop = true;
-          }
-        },
-
-        resize: function(that) {
-
-          this._windowWidth = $(window).width();
-          this._windowHeight = $(window).height();
-          $(window).on('resize', function() {
-            that.utils.deviceView.set.call(that, that._windowWidth);
-            $.Immerse.scrollController.updateSectionOffsets(that);
-            $.Immerse.scrollController.stickSection(that);
-            // Resize background videos
-            if (!that._isMobile) {
-              $.Immerse.videoController.resizeAll(that);
-            }
-          });
-        },
-
-        check: function(a) {
-
-          // Prepare devices
-          var mobile = $.inArray('mobile', a.devices) !== -1,
-              desktop = $.inArray('desktop', a.devices) !== -1
-
-          // If animation is for mobile but not desktop and we're not in a mobile view
-          // ...or...
-          // If animation is for desktop but not mobile and we're not in a desktop view
-          if (mobile && !desktop && !this._isMobile || desktop && !mobile && !this._isDesktop) { return false; }
-        }
-
-      },
 
       stringify: function(str) {
         return str.replace(/[-_]/g, ' ').replace(/([a-z])([A-Z])/g, '$1 $2').toLowerCase().replace(/\b[a-z]/g, function(letter) {
