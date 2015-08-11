@@ -9,7 +9,6 @@ Author URI: http://vil.es/
 
 $.Immerse.registerComponent({
   name: 'tooltips',
-  global: false, // By default, plugins run on each component
 
   // Initialize function
   init: function(opts) {
