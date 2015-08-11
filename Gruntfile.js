@@ -6,17 +6,19 @@ module.exports = function(grunt) {
     concat: {
       js: {
         options: {
-          separator: ';'
+          separator: ';',
+          sourceMap: true
         },
         src: [
-          'src/js/main.js'
+          'src/js/main.js', 'src/js/scroll.js'
         ],
         dest: 'dist/js/immerse.js'
       },
     },
     uglify: {
       options: {
-        mangle: false
+        mangle: false,
+        sourceMap: true
       },
       js: {
         files: {

@@ -51,8 +51,8 @@
 
       this.elem = elem;
       this.$elem = $(elem);
-      this.assets = this.setup.assets;
-      this.sections = [];
+      this._assets = this.setup.assets;
+      this._sections = [];
       this._isScrolling = false;
       this._canScroll = true;
 
@@ -67,7 +67,7 @@
       this.controllers.section.call(this, this);
 
       // Setup the scroll controller
-      this.controllers.scroll.init.call(this, this);
+      $.Immerse.scrollController(this);
 
       // Setup the navigation controller
       this.controllers.navigation.init.call(this, this);
@@ -79,7 +79,7 @@
       $.when(assets).then(
         function(s) {
           // Run init on all sections
-          $.each(that.sections, function(i, s) {
+          $.each(that._sections, function(i, s) {
             $(s.element).trigger('init');
           });
 
@@ -129,7 +129,7 @@
                   unbindScroll: u
                 }
               };
-          that.sections.push(s);
+          that._sections.push(s);
         });
 
         // Setup all defined sections
@@ -139,9 +139,9 @@
           var $s = $(s.element);
 
           // Replace selector created section
-          // E.g If $(s.element) matches $(this.sections[i].element), remove that record and replace with new one.
-          $.each(that.sections, function(i, _s) {
-            that.sections[i] = $(_s.element)[0] === $(s.element)[0] ? s : _s;
+          // E.g If $(s.element) matches $(this._sections[i].element), remove that record and replace with new one.
+          $.each(that._sections, function(i, _s) {
+            that._sections[i] = $(_s.element)[0] === $(s.element)[0] ? s : _s;
           });
 
           // Animations
@@ -168,13 +168,13 @@
           });
         });
 
-        $.each(this.sections, function(i, s) {
+        $.each(this._sections, function(i, s) {
           // Set scroll triggers on all sections
           that.controllers.scroll.offset.set.call(that, s);
         });
 
         // Order sections by vertical order
-        this.sections.sort(function(obj1, obj2) {
+        this._sections.sort(function(obj1, obj2) {
         	return obj1.scrollOffset - obj2.scrollOffset;
         });
       },
@@ -281,8 +281,8 @@
           // If element initiated on is body, set the scroll target to window
           this._scrollContainer = ($(this.elem)[0] === $('body')[0]) ? $(window) : $(this.elem);
           // Set current section
-          this._currentSection = this.sections[0];
-          this._sectionBelow = this.sections[1];
+          this._currentSection = this._sections[0];
+          this._sectionBelow = this._sections[1];
           // Ensure page always starts at the top
           this._scrollContainer.scrollTop(0);
           // Get bound/unbound status of first section
@@ -488,18 +488,18 @@
               that = this;
 
             a.$currentSection = $(a.currentSection.element);
-            a.currentSectionIndex = this.sections.indexOf(a.currentSection);
+            a.currentSectionIndex = this._sections.indexOf(a.currentSection);
 
             // If we've passed a jQuery object directly, use it as the next section
             if (o.jquery) {
-              a.nextSection = $.grep(this.sections, function(s) { return o[0].id == s.element[0].id; })[0];
+              a.nextSection = $.grep(this._sections, function(s) { return o[0].id == s.element[0].id; })[0];
               // Determine direction
               a.direction = a.currentSection.scrollOffset > a.nextSection.scrollOffset ? 'UP' : 'DOWN';
 
             // Else if we've just passed the scroll direction, find the next section
             } else if (o === 'UP' || o === 'DOWN') {
               a.direction = o;
-              a.nextSection = (a.direction === 'UP') ? this.sections[a.currentSectionIndex-1] : this.sections[a.currentSectionIndex+1];
+              a.nextSection = (a.direction === 'UP') ? this._sections[a.currentSectionIndex-1] : this._sections[a.currentSectionIndex+1];
             }
 
             // Setup direction triggers
@@ -513,9 +513,9 @@
             if (a.nextSection === undefined) { return false; }
 
             a.$nextSection = $(a.nextSection.element);
-            a.nextSectionIndex = this.sections.indexOf(a.nextSection);
-            this._sectionAbove = this.sections[a.nextSectionIndex-1];
-            this._sectionBelow = this.sections[a.nextSectionIndex+1];
+            a.nextSectionIndex = this._sections.indexOf(a.nextSection);
+            this._sectionAbove = this._sections[a.nextSectionIndex-1];
+            this._sectionBelow = this._sections[a.nextSectionIndex+1];
 
             return a;
           },
@@ -672,7 +672,7 @@
           update: function() {
             // Update on resize handler
             var that = this;
-            $.each(this.sections, function(i, s) {
+            $.each(this._sections, function(i, s) {
               that.controllers.scroll.offset.set.call(that, s);
             });
 
@@ -717,13 +717,9 @@
           if (nav.length === 0) { return false; }
 
           var str = '';
-          $.each(this.sections, function(i, s) {
+          $.each(this._sections, function(i, s) {
             if (!s.options.hideFromNav) {
-              str = str + '<li>
-                            <a class="imm-nav-link" data-imm-section="#' + s.element[0].id + '">
-                              <span>' + s.name + '</span>
-                            </a>
-                          </li>';
+              str = str + '<li><a class="imm-nav-link" data-imm-section="#' + s.element[0].id + '"><span>' + s.name + '</span></a></li>';
             }
           });
           // Add list to any elem with .imm-nav-sections class
@@ -978,7 +974,7 @@
                 if (assetQueue.length === 0) { assetQueueLoaded.resolve('loaded'); clearTimeout(assetLoadingFailed); }
               };
 
-          $.each(this.assets, function(n, a) {
+          $.each(this._assets, function(n, a) {
 
             // Add audio to DOM
             if (a.type === 'audio') { that.controllers.assets.addToDOM.audio.call(that, n, a); }
