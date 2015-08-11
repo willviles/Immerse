@@ -10,7 +10,7 @@ module.exports = function(grunt) {
           sourceMap: true
         },
         src: [
-          'src/js/main.js', 'src/js/scroll.js'
+          'src/js/main.js', 'src/js/scroll.js', 'src/js/video.js'
         ],
         dest: 'dist/js/immerse.js'
       },

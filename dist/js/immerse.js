@@ -158,8 +158,8 @@
           });
           // Videos
           var sectionVideos = $s.find('[data-imm-video]');
-          $.each(sectionVideos, function(i, videoWrapper) {
-            that.controllers.video.init.call(that, s, $(videoWrapper));
+          $.each(sectionVideos, function(i, wrapper) {
+            $.Immerse.videoController.init(that, s, $(wrapper));
           });
           // Tooltips
           var tooltips = $s.find('[data-imm-tooltip]');
@@ -464,82 +464,6 @@
 
       },
 
-      video: {
-
-        init: function(s, $wrapper) {
-
-          // If it's mobile, don't play background videos
-          if (this._isMobile) { return false; }
-
-          var $video = $wrapper.find('video'),
-              $s = $(s.element),
-              that = this;
-
-          // On entering scene & resize the video
-          $s.on('init enteringDown enteringUp', function(e) {
-
-            if (e.type === 'init' && s.element !== that._currentSection.element) { return; };
-
-            $video
-              .css({visibility: 'hidden'})
-              .one('canplaythrough', function() {
-                that.controllers.video.resize.call(that, $wrapper, $video);
-              })
-              .one('playing', function() {
-                $video.css('visibility', 'visible');
-                $wrapper.css('background-image', 'none');
-              });
-
-            if ($video[0].paused) {
-              $video[0].play();
-              // Just ensure it's the right size once and for all
-              that.controllers.video.resize.call(that, $wrapper, $video);
-            }
-
-          });
-
-          $s.on('exitedDown exitedUp', function() {
-            if (!$video[0].paused) {
-              $video[0].pause();
-              $video[0].currentTime = 0;
-            }
-
-          });
-
-        },
-
-        resizeAll: function() {
-
-          var that = this;
-
-          $.each(this.$elem.find('[data-imm-video]'), function(i, wrapper) {
-            var $wrapper = $(wrapper),
-                $video = $wrapper.find('video');
-            that.controllers.video.resize.call(that, $wrapper, $video);
-          });
-
-        },
-
-        resize: function(wrapper, video) {
-
-          // Get video elem
-          var $wrapper = $(wrapper),
-              $video = $(video),
-              videoHeight = $video[0].videoHeight, // Get native video height
-              videoWidth = $video[0].videoWidth, // Get native video width
-              wrapperHeight = $wrapper.height(), // Wrapper height
-              wrapperWidth = $wrapper.width(); // Wrapper width
-
-          if (wrapperWidth / videoWidth > wrapperHeight / videoHeight) {
-            $video.css({ width: wrapperWidth + 2, height: 'auto'});
-          } else {
-            $video.css({ width: 'auto', height: wrapperHeight + 2 });
-          }
-
-        }
-
-      },
-
       // Asset Controller
       ///////////////////////////////////////////////////////
 
@@ -788,7 +712,9 @@
             $.Immerse.scrollController.updateSectionOffsets(that);
             $.Immerse.scrollController.stickSection(that);
             // Resize background videos
-            if (!that._isMobile) { that.controllers.video.resizeAll.call(that); }
+            if (!that._isMobile) {
+              $.Immerse.videoController.resizeAll(that);
+            }
           });
         },
 
@@ -1363,6 +1289,107 @@
       var controller = new ImmerseScrollController(this);
       controller.stick.call(controller, imm);
       return controller;
+    }
+  }
+
+})( jQuery, window , document );;(function( $, window, document, undefined ){
+
+  // our plugin constructor
+  var ImmerseVideoController = function() {};
+
+  // the plugin prototype
+  ImmerseVideoController.prototype = {
+
+    // Initialize
+    ///////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////
+
+    init: function(imm, s, $wrapper) {
+
+      // Get a handle on the Immerse object
+      this.imm = imm;
+
+      if (this.imm._isMobile) { return false; }
+
+      var $video = $wrapper.find('video'),
+          $s = $(s.element),
+          that = this;
+
+      // On entering scene & resize the video
+      $s.on('init enteringDown enteringUp', function(e) {
+
+        if (e.type === 'init' && s.element !== that.imm._currentSection.element) { return; };
+
+        $video
+          .css({visibility: 'hidden'})
+          .one('canplaythrough', function() {
+            that.resize.call(that, $wrapper, $video);
+          })
+          .one('playing', function() {
+            $video.css('visibility', 'visible');
+            $wrapper.css('background-image', 'none');
+          });
+
+        if ($video[0].paused) {
+          $video[0].play();
+          // Just ensure it's the right size once and for all
+          that.resize.call(that, $wrapper, $video);
+        }
+
+      });
+
+      $s.on('exitedDown exitedUp', function() {
+        if (!$video[0].paused) {
+          $video[0].pause();
+          $video[0].currentTime = 0;
+        }
+
+      });
+
+
+      return this;
+    },
+
+    resizeAll: function(imm) {
+      this.imm = (this.imm === undefined) ? imm : this.imm;
+      var that = this;
+
+      $.each(this.imm.$elem.find('[data-imm-video]'), function(i, wrapper) {
+        var $wrapper = $(wrapper),
+            $video = $wrapper.find('video');
+        that.resize.call(that, $wrapper, $video);
+      });
+
+    },
+
+    resize: function(wrapper, video) {
+
+      // Get video elem
+      var $wrapper = $(wrapper),
+          $video = $(video),
+          videoHeight = $video[0].videoHeight, // Get native video height
+          videoWidth = $video[0].videoWidth, // Get native video width
+          wrapperHeight = $wrapper.height(), // Wrapper height
+          wrapperWidth = $wrapper.width(); // Wrapper width
+
+      if (wrapperWidth / videoWidth > wrapperHeight / videoHeight) {
+        $video.css({ width: wrapperWidth + 2, height: 'auto'});
+      } else {
+        $video.css({ width: 'auto', height: wrapperHeight + 2 });
+      }
+
+    }
+
+  }; // End of all plugin functions
+
+  // Functions to expose to rest of the plugin
+  $.Immerse.videoController = {
+    init: function(imm, s, $wrapper) {
+      return new ImmerseVideoController(this).init(imm, s, $wrapper);
+    },
+    resizeAll: function(imm) {
+      return new ImmerseVideoController(this).resizeAll(imm);
     }
   }
 
