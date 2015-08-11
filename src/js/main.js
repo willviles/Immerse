@@ -194,7 +194,9 @@ Author URI: http://vil.es/
     setup: function(setup) {
       return new Immerse(this).setup(setup);
     },
-    components: {}
+    registerComponent: function(opts) {
+     $.Immerse.componentController.add(opts);
+    }
   }
 
 })( jQuery, window , document );

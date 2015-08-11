@@ -102,11 +102,7 @@
 
       // Loop over all sections objects, both defined and generated
       $.each(this.imm._sections, function(n, s) {
-        // Init all components
-        $.each($.Immerse.components, function(n, f) {
-          var opts = { immerse: that, section: s }
-          f.init(opts);
-        });
+        $.Immerse.componentController.init(that, s);
       });
 
 

@@ -194,7 +194,9 @@ Author URI: http://vil.es/
     setup: function(setup) {
       return new Immerse(this).setup(setup);
     },
-    components: {}
+    registerComponent: function(opts) {
+     $.Immerse.componentController.add(opts);
+    }
   }
 
 })( jQuery, window , document );;// Section Controller
@@ -301,11 +303,7 @@ Author URI: http://vil.es/
 
       // Loop over all sections objects, both defined and generated
       $.each(this.imm._sections, function(n, s) {
-        // Init all components
-        $.each($.Immerse.components, function(n, f) {
-          var opts = { immerse: that, section: s }
-          f.init(opts);
-        });
+        $.Immerse.componentController.init(that, s);
       });
 
 
@@ -1491,7 +1489,51 @@ Author URI: http://vil.es/
     }
   }
 
-})( jQuery, window , document );;/*
+})( jQuery, window , document );;// Component Controller
+///////////////////////////////////////////////////////
+///////////////////////////////////////////////////////
+///////////////////////////////////////////////////////
+
+(function( $, window, document, undefined ){
+
+  $.Immerse.componentRegistry = {};
+
+  var ImmerseComponentController = function() {};
+
+  ImmerseComponentController.prototype = {
+
+    // Initialize
+    ///////////////////////////////////////////////////////
+
+    add: function(opts) {
+      var name = opts.name,
+          that = this;
+
+      $.Immerse.componentRegistry[name] = opts;
+
+      return this;
+    },
+
+    init: function(imm, section) {
+      $.each($.Immerse.componentRegistry, function(n, obj) {
+        var opts = { immerse: imm, section: section }
+        obj.init(opts);
+      });
+    }
+
+  }; // End of all plugin functions
+
+  // Functions to expose to rest of the plugin
+  $.Immerse.componentController = {
+    add: function(opts) {
+      return new ImmerseComponentController(this).add(opts);
+    },
+    init: function(imm, section) {
+      return new ImmerseComponentController(this).init(imm, section);
+    }
+  }
+
+})( jQuery, window , document );;;;;/*
 Plugin: Immerse.js
 Component: Tooltips
 Description: Adds tooltips
@@ -1500,73 +1542,52 @@ Author: Will Viles
 Author URI: http://vil.es/
 */
 
-(function( $, window, document, undefined ){
+$.Immerse.registerComponent({
+  name: 'tooltips',
+  global: false, // By default, plugins run on each component
 
-  var ImmerseTooltips = function() {};
+  // Initialize function
+  init: function(opts) {
+    var section = opts.section,
+        $section = $(section.element),
+        that = this;
 
-  ImmerseTooltips.prototype = {
+    // Get each tooltip in section
+    $.each($section.find('[data-imm-tooltip]'), function(i, tooltip) {
 
-    // Initialize
-    ///////////////////////////////////////////////////////
+      var $tooltip = $(tooltip),
+          content = $tooltip.data('imm-tooltip'),
+          content = content.charAt(0) === '#' ? $(content) : content,
+          content = (content.jquery) ? $(content).html() : content;
 
-    init: function(opts) {
+      // Append correct tooltip content
+      var $content = $('<span class="imm-tooltip">' + content + '</span>');
+      $tooltip.append($content);
 
-      this.imm = opts.immerse;
-
-      var section = opts.section,
-          $section = $(section.element),
-          that = this;
-
-      // Get each tooltip in section
-      $.each($section.find('[data-imm-tooltip]'), function(i, tooltip) {
-
-        var $tooltip = $(tooltip),
-            content = $tooltip.data('imm-tooltip'),
-            content = content.charAt(0) === '#' ? $(content) : content,
-            content = (content.jquery) ? $(content).html() : content;
-
-        // Append correct tooltip content
-        var $content = $('<span class="imm-tooltip">' + content + '</span>');
-        $tooltip.append($content);
-
-        $tooltip.on('mouseover', function() {
-          that.position.call(that, $tooltip, $content);
-        });
+      $tooltip.on('mouseover', function() {
+        that.position.call(that, $tooltip, $content);
       });
+    });
 
-      return this;
-    },
+    return this;
+  },
 
-    position: function($tooltip, $content) {
+  // Position Tooltip
+  position: function($tooltip, $content) {
 
-      $content.removeClass('top left right bottom');
-
-      // TODO: Method of determining the placement of the tooltip
-      var tHeight = $content.height(),
-          tWidth = $content.width(),
-          tXY = $tooltip[0].getBoundingClientRect(),
-          p = 'top';
-
-      // Determine vertical position
-      if (tHeight >= tXY.top) { p = 'bottom'; }
-
-      if (tWidth/2 >= tXY.left) {
-        p = 'right';
-      } else if (tWidth/2 >= $(window).width() - tXY.right) {
-        p = 'left';
-      }
-
-      // Add position to tooltip
-      $content.addClass(p);
+    $content.removeClass('top left right bottom');
+    var tHeight = $content.height(),
+        tWidth = $content.width(),
+        tXY = $tooltip[0].getBoundingClientRect(),
+        p = 'top';
+    if (tHeight >= tXY.top) { p = 'bottom'; }
+    if (tWidth/2 >= tXY.left) {
+      p = 'right';
+    } else if (tWidth/2 >= $(window).width() - tXY.right) {
+      p = 'left';
     }
-
-  }; // End of all plugin functions
-
-  $.Immerse.components.tooltips = {
-    init: function(opts) {
-      return new ImmerseTooltips(this).init(opts);
-    }
+    $content.addClass(p);
   }
 
-})( jQuery, window , document );
+});
 //# sourceMappingURL=immerse.js.map
