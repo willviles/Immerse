@@ -1479,11 +1479,11 @@ Author URI: http://vil.es/
       this.imm._windowHeight = $(window).height();
       $(window).on('resize', function() {
         that.set.call(that, that.imm._windowWidth);
-        $.Immerse.scrollController.updateSectionOffsets(that);
-        $.Immerse.scrollController.stickSection(that);
+        $.Immerse.scrollController.updateSectionOffsets(that.imm);
+        $.Immerse.scrollController.stickSection(that.imm);
         // Resize background videos
         if (!that.imm._isMobile) {
-          $.Immerse.videoController.resizeAll(that);
+          $.Immerse.videoController.resizeAll(that.imm);
         }
       });
     },
