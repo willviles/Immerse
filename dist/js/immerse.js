@@ -282,7 +282,7 @@
           // On nav list click
           $('.imm-nav-list li a').on('click', function() {
             var $target = $($(this).data('imm-section'));
-            $.Immerse.scrollController.doScroll(that.imm, $target);
+            $.Immerse.scrollController.doScroll(that, $target);
           });
           // Handle on section change
           this.$elem.on('sectionChanged', function(e, d) {
@@ -895,7 +895,7 @@
     // Expose changeSection endpoint to allow for changing section programmatically
     changeSection: function(goVar) {
       if (goVar === undefined) { return false; }
-      $.Immerse.scrollController.doScroll(this.imm, $target);
+      $.Immerse.scrollController.doScroll(this, $target);
     }
 
   }; // End of all plugin functions
