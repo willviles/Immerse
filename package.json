@@ -19,7 +19,6 @@
   },
   "dependencies": {
     "jquery": "latest",
-    "jquery-mobile": "latest",
     "gsap": "latest"
   }
 }
