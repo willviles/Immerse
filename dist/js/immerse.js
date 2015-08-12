@@ -1229,6 +1229,8 @@ Author URI: http://vil.es/
 
         // If set to wait, push into queue
         if (a.wait === true) {
+
+          if (that.imm._isMobile && (a.type === 'video' || a.type === 'audio')) { return; }
           // Catch any error in instantiating asset
           if (a.error) { console.log("Asset Failure: Could not preload " + a.type + " asset '" + n + "'"); return; }
           assetQueue.push({name: n, asset: a});
@@ -1243,6 +1245,7 @@ Author URI: http://vil.es/
 
         // Check if connection is fast enough to load audio/video
         if (a.type === 'audio' || a.type === 'video') {
+          if (that.imm._isMobile) { return }
           $(a.type + '#' + n)[0].addEventListener('canplaythrough', function() {
             assetQueue.splice( $.inArray(a, assetQueue), 1 );
             assetQueueCheck();
