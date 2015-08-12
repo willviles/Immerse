@@ -188,4 +188,8 @@ body::-webkit-scrollbar {
   display: block;
 }
 
+.imm-tooltip-content {
+  display: none;
+}
+
 /*# sourceMappingURL=immerse.css.map */
