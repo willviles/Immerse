@@ -736,12 +736,16 @@ Author URI: http://vil.es/
 
     unbound: function(e) {
 
-      var isAbove = this.imm._scrollContainer.scrollTop() <= this.imm._currentSection.scrollOffset,
+      var isAbove = this.imm._isMobile ?
+                    this.imm._scrollContainer.scrollTop() < this.imm._currentSection.scrollOffset :
+                    this.imm._scrollContainer.scrollTop() <= this.imm._currentSection.scrollOffset,
           // If next section is not also unbound, ensure it scrolls to new section from a window height away
           belowVal = this.imm._sectionBelow.options.unbindScroll === false ?
                      this.imm._sectionBelow.scrollOffset - this.imm._windowHeight :
                      this.imm._sectionBelow.scrollOffset,
-          isBelow = this.imm._scrollContainer.scrollTop() >= belowVal;
+          isBelow = this.imm._isMobile ?
+                    this.imm._scrollContainer.scrollTop() > belowVal :
+                    this.imm._scrollContainer.scrollTop() >= belowVal;
 
       // If scrollTop is above current section
       if (isAbove) {
