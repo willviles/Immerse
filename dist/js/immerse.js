@@ -1612,7 +1612,7 @@ $.Immerse.registerComponent({
   },
 
   defaults: {
-    stuff: true
+    option1: true
 
   }
 

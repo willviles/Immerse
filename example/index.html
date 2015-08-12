@@ -136,6 +136,14 @@
             'city': { type: 'audio', path: 'assets/audio/city', loop: true, wait: true },
             'sunImg': { type: 'image', path: 'assets/video/sun', fileTypes: ['jpg', 'png'], wait: true },
             'sun': { type: 'video', path: 'assets/video/sun', loop: true, position: '50% 50%' } // can set mute, autoplay, playbackRate
+          },
+
+          components: {
+            stacks: {
+              option1: {
+                // Allow overriding of component defaults globally
+              }
+            }
           }
         });
 
@@ -236,7 +244,7 @@
 
           components: {
             stacks: {
-              stuff: 'THIS SHOULD ONLY BE VISIBLE IN COMPONENT 1'
+              option1: 'THIS SHOULD ONLY BE VISIBLE IN COMPONENT 1'
             }
           }
         });
