@@ -1,0 +1,63 @@
+/*
+Plugin: Immerse.js
+Component: Tooltips
+Description: Adds tooltips to any element with .imm-tooltip class
+Version: 1.0.0
+Author: Will Viles
+Author URI: http://vil.es/
+*/
+
+[data-imm-tooltip] {
+  position: relative; cursor: pointer; border-bottom: 2px solid darken(white, 10%);
+  .imm-tooltip {
+    display: none;
+    position: absolute; width: auto;
+    padding: 1em; background-color: white; @include border-radius(5px);
+    &:before { content: ''; position: absolute; width: 0; height: 0; }
+    &.top, &.bottom {
+      left: 50%; @include translateX(-50%);
+      &:before { left: 50%; margin-left: -5px; }
+    }
+    &.left, &.right {
+      top: 50%; @include translateY(-50%);
+      &:before { top: 50%; margin-top: -5px; }
+    }
+    &.top {
+      bottom: 100%; margin-bottom: 5px;
+      &:before {
+        top: 100%;
+      	border-left: 5px solid transparent; border-right: 5px solid transparent;
+      	border-top: 5px solid white;
+      }
+    }
+    &.bottom {
+      top: 100%; margin-top: 5px;
+      &:before {
+        bottom: 100%;
+      	border-left: 5px solid transparent; border-right: 5px solid transparent;
+      	border-bottom: 5px solid white;
+      }
+    }
+    &.left {
+      right: 100%; margin-right: 10px;
+      &:before {
+        left: 100%;
+      	border-top: 5px solid transparent; border-bottom: 5px solid transparent;
+      	border-left: 5px solid white;
+      }
+    }
+    &.right {
+      left: 100%; margin-right: 10px;
+      &:before {
+        right: 100%;
+      	border-top: 5px solid transparent; border-bottom: 5px solid transparent;
+      	border-right: 5px solid white;
+      }
+    }
+  }
+  &:hover .imm-tooltip {
+    display: block;
+  }
+}
+
+.imm-tooltip-content { display: none; }

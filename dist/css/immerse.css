@@ -1,6 +1,4 @@
-/*
-  Scaffold
-*/
+/* Scaffold */
 body::-webkit-scrollbar {
   width: 0 !important;
 }
@@ -14,9 +12,7 @@ body::-webkit-scrollbar {
   height: 100vh;
 }
 
-/*
-  Video
-*/
+/* Video */
 .imm-video {
   position: absolute;
   top: 0;
@@ -31,9 +27,7 @@ body::-webkit-scrollbar {
   background-repeat: no-repeat;
 }
 
-/*
-  Loading
-*/
+/* Loading */
 @-moz-keyframes rotate {
   from {
     -moz-transform: rotate(0deg);
@@ -98,8 +92,14 @@ body::-webkit-scrollbar {
   animation: rotate 0.5s linear infinite;
 }
 
+/* Default Components */
 /*
-  Tooltips
+Plugin: Immerse.js
+Component: Tooltips
+Description: Adds tooltips to any element with .imm-tooltip class
+Version: 1.0.0
+Author: Will Viles
+Author URI: http://vil.es/
 */
 [data-imm-tooltip] {
   position: relative;
