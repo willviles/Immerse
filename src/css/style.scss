@@ -28,7 +28,6 @@ body::-webkit-scrollbar { width: 0 !important; }
   .imm-spinner {
     position: absolute; top: 50%; left: 50%; @include translate(-50%, -50%);
     &:before { content: '*'; font-size: 10em; @include transform-origin(50% 50%); @include animation(rotate .5s linear infinite); }
-
   }
 }
 
