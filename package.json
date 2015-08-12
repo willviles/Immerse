@@ -1,7 +1,8 @@
 {
   "name": "immersejs",
   "version": "1.0.4",
-  "description": "Build immersive, media driven web experiences the easy way",
+  "description": "Build immersive, media driven web experiences - the easy way.",
+  "license": "MIT",
   "keywords": [
     "scrolling", "immersive", "media", "video", "audio", "experiences", "asset management"
   ],

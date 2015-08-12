@@ -3,9 +3,9 @@
   "version": "1.0.4",
   "homepage": "http://immerse.vil.es",
   "authors": [
-    "willviles <will@willviles.com>"
+    "willviles <will@vil.es>"
   ],
-  "description": "Build immersive, media driven web experiences the easy way",
+  "description": "Build immersive, media driven web experiences - the easy way.",
   "keywords": [
     "scrolling", "immersive", "media", "video", "audio", "experiences", "asset management"
   ],
