@@ -9,6 +9,20 @@
 
   ImmerseSectionController.prototype = {
 
+    // Default section settings
+    ///////////////////////////////////////////////////////
+
+    sectionDefaults: {
+      animations: {},
+      actions: {},
+      attributes: {},
+      components: {},
+      options: {
+        hideFromNav: false,
+        unbindScroll: false
+      }
+    },
+
     // Add Section to Immerse
     ///////////////////////////////////////////////////////
 
@@ -16,21 +30,21 @@
 
       this.imm = imm;
 
-      var defaults = {
-        name: section.element[0].id,
-        animations: {},
-        actions: {},
-        attributes: {},
-        updateNav: this.imm.setup.options.updateNav,
-        transition: this.imm.setup.options.transition,
-        options: {
-          hideFromNav: false,
-          unbindScroll: false
-        }
-      }
+      var defaults = this.sectionDefaults;
 
-      var section = $.extend(true, defaults, section);
+      // Extend section to include component defaults
+      $.each($.Immerse.componentRegistry, function(name, component) {
+        if (component.hasOwnProperty('defaults')) {
+          defaults.components[name] = component.defaults;
+        };
+      });
+
+      this.sectionDefaults = defaults;
+
+      section = $.extend({}, defaults, section);
+
       this.imm.setup.sections.push(section);
+
       return section;
 
     },
@@ -44,22 +58,25 @@
       this.imm = imm;
 
       var $allSectionElems = $(this.imm.setup.options.sectionSelector),
+          sectionDefaults = this.sectionDefaults,
           that = this;
 
       $.each($allSectionElems, function(i, $s) {
-        var u = $($s).hasClass('imm-fullscreen') ? false : true,
+        // Pass the generated section the section defaults
+        var generatedSection = sectionDefaults,
             n = that.imm.utils.stringify($($s)[0].id),
-            s = {
-              name: n,
+            u = $($s).hasClass('imm-fullscreen') ? false : true,
+            newVals = {
               element: $($s),
-              updateNav: that.imm.setup.options.updateNav,
-              transition: that.imm.setup.options.transition,
+              name: n,
               options: {
-                hideFromNav: false,
                 unbindScroll: u
               }
             };
-        that.imm._sections.push(s);
+
+        var extendedGeneratedSection = $.extend({}, generatedSection, newVals);
+
+        that.imm._sections.push(extendedGeneratedSection);
       });
 
       // Setup all defined sections
@@ -104,7 +121,6 @@
       $.each(this.imm._sections, function(n, s) {
         $.Immerse.componentController.init(that, s);
       });
-
 
       return this;
     },
@@ -206,8 +222,8 @@
       return new ImmerseSectionController(this).init(imm);
     },
 
-    add: function(imm, s) {
-      return new ImmerseSectionController(this).add(imm, s);
+    add: function(imm, section) {
+      return new ImmerseSectionController(this).add(imm, section);
     }
   }
 

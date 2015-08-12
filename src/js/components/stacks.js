@@ -29,6 +29,11 @@ $.Immerse.registerComponent({
     // Fifthly need to fire another animation to take you back to the content
 
     return this;
+  },
+
+  defaults: {
+    stuff: true
+
   }
 
 });

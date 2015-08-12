@@ -25,7 +25,7 @@
 
     init: function(imm, section) {
       $.each($.Immerse.componentRegistry, function(n, obj) {
-        var opts = { immerse: imm, section: section }
+        var opts = { immerse: imm, section: section };
         obj.init(opts);
       });
     }
@@ -36,6 +36,9 @@
   $.Immerse.componentController = {
     add: function(opts) {
       return new ImmerseComponentController(this).add(opts);
+    },
+    defaults: function(imm, section) {
+      return new ImmerseComponentController(this).defaults(imm, section);
     },
     init: function(imm, section) {
       return new ImmerseComponentController(this).init(imm, section);

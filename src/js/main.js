@@ -24,10 +24,6 @@ Author URI: http://vil.es/
         options: {
           // Set a default for the section selector
           sectionSelector: '.imm-section',
-          // Transition
-          defaultTransition: {
-            type: 'scroll', duration: 250
-          },
           // Set breakpoints
           breakpoints: {
             mobile: 480,

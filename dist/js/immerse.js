@@ -24,10 +24,6 @@ Author URI: http://vil.es/
         options: {
           // Set a default for the section selector
           sectionSelector: '.imm-section',
-          // Transition
-          defaultTransition: {
-            type: 'scroll', duration: 250
-          },
           // Set breakpoints
           breakpoints: {
             mobile: 480,
@@ -167,6 +163,20 @@ Author URI: http://vil.es/
 
   ImmerseSectionController.prototype = {
 
+    // Default section settings
+    ///////////////////////////////////////////////////////
+
+    sectionDefaults: {
+      animations: {},
+      actions: {},
+      attributes: {},
+      components: {},
+      options: {
+        hideFromNav: false,
+        unbindScroll: false
+      }
+    },
+
     // Add Section to Immerse
     ///////////////////////////////////////////////////////
 
@@ -174,21 +184,21 @@ Author URI: http://vil.es/
 
       this.imm = imm;
 
-      var defaults = {
-        name: section.element[0].id,
-        animations: {},
-        actions: {},
-        attributes: {},
-        updateNav: this.imm.setup.options.updateNav,
-        transition: this.imm.setup.options.transition,
-        options: {
-          hideFromNav: false,
-          unbindScroll: false
-        }
-      }
+      var defaults = this.sectionDefaults;
 
-      var section = $.extend(true, defaults, section);
+      // Extend section to include component defaults
+      $.each($.Immerse.componentRegistry, function(name, component) {
+        if (component.hasOwnProperty('defaults')) {
+          defaults.components[name] = component.defaults;
+        };
+      });
+
+      this.sectionDefaults = defaults;
+
+      section = $.extend({}, defaults, section);
+
       this.imm.setup.sections.push(section);
+
       return section;
 
     },
@@ -202,22 +212,25 @@ Author URI: http://vil.es/
       this.imm = imm;
 
       var $allSectionElems = $(this.imm.setup.options.sectionSelector),
+          sectionDefaults = this.sectionDefaults,
           that = this;
 
       $.each($allSectionElems, function(i, $s) {
-        var u = $($s).hasClass('imm-fullscreen') ? false : true,
+        // Pass the generated section the section defaults
+        var generatedSection = sectionDefaults,
             n = that.imm.utils.stringify($($s)[0].id),
-            s = {
-              name: n,
+            u = $($s).hasClass('imm-fullscreen') ? false : true,
+            newVals = {
               element: $($s),
-              updateNav: that.imm.setup.options.updateNav,
-              transition: that.imm.setup.options.transition,
+              name: n,
               options: {
-                hideFromNav: false,
                 unbindScroll: u
               }
             };
-        that.imm._sections.push(s);
+
+        var extendedGeneratedSection = $.extend({}, generatedSection, newVals);
+
+        that.imm._sections.push(extendedGeneratedSection);
       });
 
       // Setup all defined sections
@@ -262,7 +275,6 @@ Author URI: http://vil.es/
       $.each(this.imm._sections, function(n, s) {
         $.Immerse.componentController.init(that, s);
       });
-
 
       return this;
     },
@@ -364,8 +376,8 @@ Author URI: http://vil.es/
       return new ImmerseSectionController(this).init(imm);
     },
 
-    add: function(imm, s) {
-      return new ImmerseSectionController(this).add(imm, s);
+    add: function(imm, section) {
+      return new ImmerseSectionController(this).add(imm, section);
     }
   }
 
@@ -1494,7 +1506,7 @@ Author URI: http://vil.es/
 
     init: function(imm, section) {
       $.each($.Immerse.componentRegistry, function(n, obj) {
-        var opts = { immerse: imm, section: section }
+        var opts = { immerse: imm, section: section };
         obj.init(opts);
       });
     }
@@ -1505,6 +1517,9 @@ Author URI: http://vil.es/
   $.Immerse.componentController = {
     add: function(opts) {
       return new ImmerseComponentController(this).add(opts);
+    },
+    defaults: function(imm, section) {
+      return new ImmerseComponentController(this).defaults(imm, section);
     },
     init: function(imm, section) {
       return new ImmerseComponentController(this).init(imm, section);
@@ -1594,6 +1609,11 @@ $.Immerse.registerComponent({
     // Fifthly need to fire another animation to take you back to the content
 
     return this;
+  },
+
+  defaults: {
+    stuff: true
+
   }
 
 });
