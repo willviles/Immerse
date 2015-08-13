@@ -189,10 +189,8 @@ Author URI: http://vil.es/
 
       // Extend component defaults
       defaults = $.Immerse.componentController.extendDefaults(defaults);
-
       // Extend global component options
       defaults = $.Immerse.componentController.extendGlobalOptions(this.imm, defaults);
-
       // Extend global audio options
       defaults = $.Immerse.audioController.extendGlobalOptions(this.imm, defaults);
 
