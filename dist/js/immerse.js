@@ -193,6 +193,9 @@ Author URI: http://vil.es/
       // Extend global component options
       defaults = $.Immerse.componentController.extendGlobalOptions(this.imm, defaults);
 
+      // Extend global audio options
+      defaults = $.Immerse.audioController.extendGlobalOptions(this.imm, defaults);
+
       // Reassign defaults with component defaults/global options included
       this.sectionDefaults = defaults;
 
@@ -973,6 +976,20 @@ Author URI: http://vil.es/
 
   ImmerseAudioController.prototype = {
 
+    // Extend global audio options
+    ///////////////////////////////////////////////////////
+
+    extendGlobalOptions: function(imm, defaults) {
+
+      var audioSetupOpts = imm.setup.audio;
+
+      if (audioSetupOpts !== undefined) {
+        defaults['audio'] = audioSetupOpts;
+      }
+
+      return defaults;
+    },
+
     // Initialize
     ///////////////////////////////////////////////////////
 
@@ -1132,6 +1149,9 @@ Author URI: http://vil.es/
   $.Immerse.audioController = {
     init: function(imm) {
       return new ImmerseAudioController(this).init(imm);
+    },
+    extendGlobalOptions: function(imm, defaults) {
+      return new ImmerseAudioController(this).extendGlobalOptions(imm, defaults);
     },
     changeStatus: function(imm, status) {
       var controller = new ImmerseAudioController(this);

@@ -9,6 +9,20 @@
 
   ImmerseAudioController.prototype = {
 
+    // Extend global audio options
+    ///////////////////////////////////////////////////////
+
+    extendGlobalOptions: function(imm, defaults) {
+
+      var audioSetupOpts = imm.setup.audio;
+
+      if (audioSetupOpts !== undefined) {
+        defaults['audio'] = audioSetupOpts;
+      }
+
+      return defaults;
+    },
+
     // Initialize
     ///////////////////////////////////////////////////////
 
@@ -168,6 +182,9 @@
   $.Immerse.audioController = {
     init: function(imm) {
       return new ImmerseAudioController(this).init(imm);
+    },
+    extendGlobalOptions: function(imm, defaults) {
+      return new ImmerseAudioController(this).extendGlobalOptions(imm, defaults);
     },
     changeStatus: function(imm, status) {
       var controller = new ImmerseAudioController(this);

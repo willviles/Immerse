@@ -39,6 +39,9 @@
       // Extend global component options
       defaults = $.Immerse.componentController.extendGlobalOptions(this.imm, defaults);
 
+      // Extend global audio options
+      defaults = $.Immerse.audioController.extendGlobalOptions(this.imm, defaults);
+
       // Reassign defaults with component defaults/global options included
       this.sectionDefaults = defaults;
 

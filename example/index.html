@@ -138,6 +138,11 @@
             'sun': { type: 'video', path: 'assets/video/sun', loop: true, position: '50% 50%' } // can set mute, autoplay, playbackRate
           },
 
+          // Define default audio
+          audio: {
+            'gnossienne': { volume: 1, changeDuration: 1 } // Audio #1
+          },
+
           components: {
             stacks: {
               option1: 'Default global option'// Allow overriding of component defaults globally
@@ -158,10 +163,6 @@
           // Section options
           options: {
             hideFromNav: true,
-          },
-          // Define starting audio
-          audio: {
-            'gnossienne': { volume: 1, changeDuration: 1 } // Audio #1
           },
           // Define animations
           animations: {
@@ -194,10 +195,6 @@
           name: 'Section 1',
           // Set the element. Must be able to take either a string, javascript or jquery selector
           element: $('#section-1'),
-          // Define audio
-          audio: {
-            'gnossienne': { volume: 1, changeDuration: 1 } // Audio #1
-          },
           // Define animations
           animations: {
             // Animation #1
@@ -256,7 +253,7 @@
           name: 'Section 2',
           // Set the element. Must be able to take either a string, javascript or jquery selector
           element: $('#section-2'),
-          // Define audio
+          // Define audio change
           audio: {
             'gnossienne': { volume: .2, changeDuration: 1 }, // Audio #1
             'city': { volume: .1, changeDuration: .5 }
@@ -276,7 +273,7 @@
           options: {
             unbindScroll: true  // Make unbound
           },
-          // Define audio
+          // Define audio change
           audio: {
             'gnossienne': { volume: .2, changeDuration: 1 }
           }
