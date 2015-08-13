@@ -1,7 +1,7 @@
 # Immerse
 #### Build immersive, media driven web experiences - the easy way.
 
-**WARNING:** *This is not a fully functioning plugin (as of 13 Aug 2015).*
+**WARNING:** *You are welcome to fork the project, but it is not yet anywhere near production ready (as of 13 Aug '15).*
 
 ### What will Immerse.js do?
 
