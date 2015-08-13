@@ -1,4 +1,4 @@
-# Immerse
+# Immerse.js
 #### Build immersive, media driven web experiences - the easy way.
 
 **WARNING:** *You are welcome to fork the project, but it is not yet anywhere near production ready (as of 13 Aug '15).*
