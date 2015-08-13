@@ -20,7 +20,6 @@ Author URI: http://vil.es/
     setup: function(setup) {
 
       this.defaults = {
-        preload: {},
         options: {
           // Set a default for the section selector
           sectionSelector: '.imm-section',
