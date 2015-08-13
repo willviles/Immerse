@@ -33,7 +33,7 @@
         // If set to wait, push into queue
         if (a.wait === true) {
 
-          if (that.imm._isMobile && (a.type === 'video' || a.type === 'audio')) { return; }
+          if (that.imm._isTouch && (a.type === 'video' || a.type === 'audio')) { return; }
           // Catch any error in instantiating asset
           if (a.error) { console.log("Asset Failure: Could not preload " + a.type + " asset '" + n + "'"); return; }
           assetQueue.push({name: n, asset: a});
@@ -48,7 +48,7 @@
 
         // Check if connection is fast enough to load audio/video
         if (a.type === 'audio' || a.type === 'video') {
-          if (that.imm._isMobile) { return }
+          if (that.imm._isTouch) { return }
           $(a.type + '#' + n)[0].addEventListener('canplaythrough', function() {
             assetQueue.splice( $.inArray(a, assetQueue), 1 );
             assetQueueCheck();
@@ -127,7 +127,7 @@
         $wrapper.css('background-image', 'url(' + o.path + '.jpg)');
 
         // If we're on a mobile device, don't append video tags
-        if (this._isMobile) { return false; }
+        if (this._isTouch) { return false; }
 
         $.each(fileTypes, function(i, ft) {
           sourceStr = sourceStr + '<source src="' + o.path + '.' + ft +'" type="video/' + ft + '">';

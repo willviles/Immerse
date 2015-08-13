@@ -68,7 +68,7 @@
     ///////////////////////////////////////////////////////
 
     resize: function(imm) {
-      if (imm._isMobile) { return false; }
+      if (imm._isTouch) { return false; }
       $.each($.Immerse.componentRegistry, function(name, component) {
         if (component.hasOwnProperty('onResize')) {
           component.onResize(imm);

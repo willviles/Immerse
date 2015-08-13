@@ -745,14 +745,14 @@ Author URI: http://vil.es/
 
     unbound: function(e) {
 
-      var isAbove = this.imm._isMobile ?
+      var isAbove = this.imm._isTouch ?
                     this.imm._scrollContainer.scrollTop() < this.imm._currentSection.scrollOffset :
                     this.imm._scrollContainer.scrollTop() <= this.imm._currentSection.scrollOffset,
           // If next section is not also unbound, ensure it scrolls to new section from a window height away
           belowVal = this.imm._sectionBelow.options.unbindScroll === false ?
                      this.imm._sectionBelow.scrollOffset - this.imm._windowHeight :
                      this.imm._sectionBelow.scrollOffset,
-          isBelow = this.imm._isMobile ?
+          isBelow = this.imm._isTouch ?
                     this.imm._scrollContainer.scrollTop() > belowVal :
                     this.imm._scrollContainer.scrollTop() >= belowVal;
 
@@ -1156,7 +1156,7 @@ Author URI: http://vil.es/
         // If set to wait, push into queue
         if (a.wait === true) {
 
-          if (that.imm._isMobile && (a.type === 'video' || a.type === 'audio')) { return; }
+          if (that.imm._isTouch && (a.type === 'video' || a.type === 'audio')) { return; }
           // Catch any error in instantiating asset
           if (a.error) { console.log("Asset Failure: Could not preload " + a.type + " asset '" + n + "'"); return; }
           assetQueue.push({name: n, asset: a});
@@ -1171,7 +1171,7 @@ Author URI: http://vil.es/
 
         // Check if connection is fast enough to load audio/video
         if (a.type === 'audio' || a.type === 'video') {
-          if (that.imm._isMobile) { return }
+          if (that.imm._isTouch) { return }
           $(a.type + '#' + n)[0].addEventListener('canplaythrough', function() {
             assetQueue.splice( $.inArray(a, assetQueue), 1 );
             assetQueueCheck();
@@ -1250,7 +1250,7 @@ Author URI: http://vil.es/
         $wrapper.css('background-image', 'url(' + o.path + '.jpg)');
 
         // If we're on a mobile device, don't append video tags
-        if (this._isMobile) { return false; }
+        if (this._isTouch) { return false; }
 
         $.each(fileTypes, function(i, ft) {
           sourceStr = sourceStr + '<source src="' + o.path + '.' + ft +'" type="video/' + ft + '">';
@@ -1514,7 +1514,7 @@ Author URI: http://vil.es/
     ///////////////////////////////////////////////////////
 
     resize: function(imm) {
-      if (imm._isMobile) { return false; }
+      if (imm._isTouch) { return false; }
       $.each($.Immerse.componentRegistry, function(name, component) {
         if (component.hasOwnProperty('onResize')) {
           component.onResize(imm);
@@ -1726,7 +1726,7 @@ $.Immerse.registerComponent({
     // Get a handle on the Immerse object
     this.imm = imm;
 
-    if (this.imm._isMobile) { return false; }
+    if (this.imm._isTouch) { return false; }
 
     var $wrapper = $(wrapper),
         $video = $wrapper.find('video'),

@@ -31,7 +31,7 @@ $.Immerse.registerComponent({
     // Get a handle on the Immerse object
     this.imm = imm;
 
-    if (this.imm._isMobile) { return false; }
+    if (this.imm._isTouch) { return false; }
 
     var $wrapper = $(wrapper),
         $video = $wrapper.find('video'),
