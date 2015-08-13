@@ -131,6 +131,11 @@ Author URI: http://vil.es/
       }
     },
 
+    // Description: Get current section.
+    currentSection: function() {
+      return this._currentSection;
+    },
+
     // Description: Allow for changing section programmatically
     changeSection: function(goVar) {
       if (goVar === undefined) { return false; }
