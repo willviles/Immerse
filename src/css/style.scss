@@ -8,14 +8,6 @@ body::-webkit-scrollbar { width: 0 !important; }
 .imm-section { position: relative; overflow: hidden; }
 .imm-fullscreen { height: 100vh; }
 
-/* Video */
-
-.imm-video {
-  @include stretch(); overflow: hidden;
-  @include background-size(cover);
-  background-repeat: no-repeat;
-}
-
 /* Loading */
 
 @include keyframes(rotate) {
@@ -34,3 +26,4 @@ body::-webkit-scrollbar { width: 0 !important; }
 /* Default Components */
 
 @import 'components/tooltips';
+@import 'components/videos';

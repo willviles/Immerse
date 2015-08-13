@@ -12,21 +12,6 @@ body::-webkit-scrollbar {
   height: 100vh;
 }
 
-/* Video */
-.imm-video {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  overflow: hidden;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  -webkit-background-size: cover;
-  background-size: cover;
-  background-repeat: no-repeat;
-}
-
 /* Loading */
 @-moz-keyframes rotate {
   from {
@@ -190,6 +175,28 @@ Author URI: http://vil.es/
 
 .imm-tooltip-content {
   display: none;
+}
+
+/*
+Plugin: Immerse.js
+Component: Videos
+Description: Adds video backgrounds to any element with .imm-video class
+Version: 1.0.0
+Author: Will Viles
+Author URI: http://vil.es/
+*/
+.imm-video {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  overflow: hidden;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  -webkit-background-size: cover;
+  background-size: cover;
+  background-repeat: no-repeat;
 }
 
 /*# sourceMappingURL=immerse.css.map */

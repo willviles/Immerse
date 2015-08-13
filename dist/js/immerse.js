@@ -1356,10 +1356,8 @@ Author URI: http://vil.es/
         that.set.call(that, that.imm._windowWidth);
         $.Immerse.scrollController.updateSectionOffsets(that.imm);
         $.Immerse.scrollController.stickSection(that.imm);
-        // Resize background videos
-        if (!that.imm._isMobile && $.Immerse.componentRegistry.videos !== undefined) {
-          $.Immerse.componentRegistry.videos.resizeAll(that.imm);
-        }
+        // Call onResize function of each component
+        $.Immerse.componentController.resize(that.imm);
       });
     },
 
@@ -1450,11 +1448,23 @@ Author URI: http://vil.es/
     ///////////////////////////////////////////////////////
 
     init: function(imm, section) {
-      $.each($.Immerse.componentRegistry, function(n, obj) {
+      $.each($.Immerse.componentRegistry, function(name, component) {
         var opts = { immerse: imm.imm, section: section };
-        obj.init(opts);
+        component.init(opts);
       });
-    }
+    },
+
+    // Call onResize function of any component
+    ///////////////////////////////////////////////////////
+
+    resize: function(imm) {
+      if (imm._isMobile) { return false; }
+      $.each($.Immerse.componentRegistry, function(name, component) {
+        if (component.hasOwnProperty('onResize')) {
+          component.onResize(imm);
+        }
+      });
+    },
 
   }; // End of all plugin functions
 
@@ -1471,6 +1481,9 @@ Author URI: http://vil.es/
     },
     init: function(imm, section) {
       return new ImmerseComponentController(this).init(imm, section);
+    },
+    resize: function(imm) {
+      return new ImmerseComponentController(this).resize(imm);
     }
   }
 
@@ -1490,6 +1503,7 @@ $.Immerse.registerComponent({
 
   // Initialize function
   init: function(opts) {
+
     var section = opts.section,
         $section = $(section.element),
         that = this;
@@ -1626,7 +1640,7 @@ $.Immerse.registerComponent({
 /*
 Plugin: Immerse.js
 Component: Videos
-Description: Adds video backgrounds to any element with .imm-tooltip class
+Description: Adds video backgrounds to any element with .imm-video class
 Version: 1.0.0
 Author: Will Viles
 Author URI: http://vil.es/
@@ -1643,7 +1657,7 @@ $.Immerse.registerComponent({
 
     var sectionVideos = $section.find('[data-imm-video]');
     $.each(sectionVideos, function(i, wrapper) {
-      that.handler.call(that, opts.immerse, section, $(wrapper));
+      that.handler.call(that, opts.immerse, section, wrapper);
     });
 
     return this;
@@ -1651,14 +1665,15 @@ $.Immerse.registerComponent({
 
   // Initialize
   ///////////////////////////////////////////////////////
-  handler: function(imm, s, $wrapper) {
+  handler: function(imm, s, wrapper) {
 
     // Get a handle on the Immerse object
     this.imm = imm;
 
     if (this.imm._isMobile) { return false; }
 
-    var $video = $wrapper.find('video'),
+    var $wrapper = $(wrapper),
+        $video = $wrapper.find('video'),
         $s = $(s.element),
         that = this;
 
@@ -1670,7 +1685,7 @@ $.Immerse.registerComponent({
       $video
         .css({visibility: 'hidden'})
         .one('canplaythrough', function() {
-          that.resize.call(that, $wrapper, $video);
+          that.doResize(wrapper);
         })
         .one('playing', function() {
           $video.css('visibility', 'visible');
@@ -1680,7 +1695,7 @@ $.Immerse.registerComponent({
       if ($video[0].paused) {
         $video[0].play();
         // Just ensure it's the right size once and for all
-        that.resize.call(that, $wrapper, $video);
+        that.doResize(wrapper);
       }
 
     });
@@ -1697,23 +1712,18 @@ $.Immerse.registerComponent({
     return this;
   },
 
-  resizeAll: function(imm) {
-    this.imm = (this.imm === undefined) ? imm : this.imm;
+  onResize: function(imm) {
     var that = this;
-
-    $.each(this.imm.$elem.find('[data-imm-video]'), function(i, wrapper) {
-      var $wrapper = $(wrapper),
-          $video = $wrapper.find('video');
-      that.resize.call(that, $wrapper, $video);
+    $.each(imm.$elem.find('[data-imm-video]'), function(i, wrapper) {
+      that.doResize(wrapper);
     });
 
   },
 
-  resize: function(wrapper, video) {
-
+  doResize: function(wrapper) {
     // Get video elem
     var $wrapper = $(wrapper),
-        $video = $(video),
+        $video = $wrapper.find('video'),
         videoHeight = $video[0].videoHeight, // Get native video height
         videoWidth = $video[0].videoWidth, // Get native video width
         wrapperHeight = $wrapper.height(), // Wrapper height

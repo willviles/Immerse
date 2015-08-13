@@ -58,11 +58,23 @@
     ///////////////////////////////////////////////////////
 
     init: function(imm, section) {
-      $.each($.Immerse.componentRegistry, function(n, obj) {
+      $.each($.Immerse.componentRegistry, function(name, component) {
         var opts = { immerse: imm.imm, section: section };
-        obj.init(opts);
+        component.init(opts);
       });
-    }
+    },
+
+    // Call onResize function of any component
+    ///////////////////////////////////////////////////////
+
+    resize: function(imm) {
+      if (imm._isMobile) { return false; }
+      $.each($.Immerse.componentRegistry, function(name, component) {
+        if (component.hasOwnProperty('onResize')) {
+          component.onResize(imm);
+        }
+      });
+    },
 
   }; // End of all plugin functions
 
@@ -79,6 +91,9 @@
     },
     init: function(imm, section) {
       return new ImmerseComponentController(this).init(imm, section);
+    },
+    resize: function(imm) {
+      return new ImmerseComponentController(this).resize(imm);
     }
   }
 

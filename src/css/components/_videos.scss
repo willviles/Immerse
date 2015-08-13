@@ -1,0 +1,14 @@
+/*
+Plugin: Immerse.js
+Component: Videos
+Description: Adds video backgrounds to any element with .imm-video class
+Version: 1.0.0
+Author: Will Viles
+Author URI: http://vil.es/
+*/
+
+.imm-video {
+  @include stretch(); overflow: hidden;
+  @include background-size(cover);
+  background-repeat: no-repeat;
+}

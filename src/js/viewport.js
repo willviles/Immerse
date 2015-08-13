@@ -48,10 +48,8 @@
         that.set.call(that, that.imm._windowWidth);
         $.Immerse.scrollController.updateSectionOffsets(that.imm);
         $.Immerse.scrollController.stickSection(that.imm);
-        // Resize background videos
-        if (!that.imm._isMobile && $.Immerse.componentRegistry.videos !== undefined) {
-          $.Immerse.componentRegistry.videos.resizeAll(that.imm);
-        }
+        // Call onResize function of each component
+        $.Immerse.componentController.resize(that.imm);
       });
     },
 
