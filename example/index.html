@@ -169,7 +169,7 @@
           animations: {
             // Animation #1
             'headerInitAnimation': {
-              devices: ['desktop'], // default all
+              devices: ['touch'], // default touch & desktop
               runtime: ['init', 'enteredUp'], // Default enteringDown, enteringUp
               reset: ['exitedDown'], // Default exitedDown, exitedUp
 //               delay: 1,
@@ -200,8 +200,8 @@
           animations: {
             // Animation #1
             'section1Animation': {
-              devices: ['desktop'], // default all
-              orientation: ['portrait', 'landscape'],
+              devices: ['desktop'], // default touch & desktop
+              breakpoints: ['mobile', 'tablet', 'mdDesktop', 'lgDesktop'],
               runtime: ['enteredDown', 'enteredUp'], // Default enteringDown, enteringUp
               reset: ['exitedDown', 'exitedUp'], // Default exitedDown, exitedUp
               timeline: function(s) {
@@ -220,7 +220,8 @@
           actions: {
             // Action #1
             'actionName': {
-              devices: ['mobile', 'desktop'], // default mobile tablet mdDesktop lgDesktop
+              devices: ['touch', 'desktop'], // default mobile tablet mdDesktop lgDesktop
+              orientation: ['portrait', 'landscape'], // Only available when touch device is detected
               runtime: ['enteringDown'], // enterDown, enterUp, leaveDown, leaveUp
               action: function(s) {
                 // Execute custom action to occur at the runtime and on the device type selected
@@ -232,7 +233,7 @@
           // Custom Attributes get changed in the custom attributes dictionary. Fires an observer
           attributes: {
             'logoColor': {
-              devices: ['desktop', 'mobile'], // default all
+              devices: ['touch', 'desktop'], // default all
               runtime: ['enteringDown', 'enteringUp'],
               value: 'blue'
             }

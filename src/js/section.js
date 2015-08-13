@@ -35,7 +35,6 @@
 
       // Extend component defaults
       defaults = $.Immerse.componentController.extendDefaults(defaults);
-
       // Extend global component options
       defaults = $.Immerse.componentController.extendGlobalOptions(this.imm, defaults);
       // Extend global audio options
@@ -169,7 +168,7 @@
       actions: function(s, n, a) {
 
         // Proceed or kill based upon device selection
-        if ($.Immerse.viewportController.isView(this, a) === false) { return false };
+        if ($.Immerse.viewportController.isView(this.imm, a) === false) { return false };
 
         var action = a.action,
             d = !isNaN(a.delay) ? a.delay : 0,
