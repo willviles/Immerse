@@ -59,7 +59,7 @@
 
     init: function(imm, section) {
       $.each($.Immerse.componentRegistry, function(n, obj) {
-        var opts = { immerse: imm, section: section };
+        var opts = { immerse: imm.imm, section: section };
         obj.init(opts);
       });
     }

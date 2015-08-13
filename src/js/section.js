@@ -105,11 +105,6 @@
         $.each(s.attributes, function(name, attr) {
           that.register.attributes.call(that, $s, name, attr);
         });
-        // Register Videos
-        var sectionVideos = $s.find('[data-imm-video]');
-        $.each(sectionVideos, function(i, wrapper) {
-          $.Immerse.videoController.init(that.imm, s, $(wrapper));
-        });
       });
 
       // Update section offsets

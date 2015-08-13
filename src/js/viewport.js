@@ -49,8 +49,8 @@
         $.Immerse.scrollController.updateSectionOffsets(that.imm);
         $.Immerse.scrollController.stickSection(that.imm);
         // Resize background videos
-        if (!that.imm._isMobile) {
-          $.Immerse.videoController.resizeAll(that.imm);
+        if (!that.imm._isMobile && $.Immerse.componentRegistry.videos !== undefined) {
+          $.Immerse.componentRegistry.videos.resizeAll(that.imm);
         }
       });
     },
