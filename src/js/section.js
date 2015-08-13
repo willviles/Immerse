@@ -30,19 +30,22 @@
 
       this.imm = imm;
 
+      // Get defined defaults
       var defaults = this.sectionDefaults;
 
-      // Extend section to include component defaults
-      $.each($.Immerse.componentRegistry, function(name, component) {
-        if (component.hasOwnProperty('defaults')) {
-          defaults.components[name] = component.defaults;
-        };
-      });
+      // Extend component defaults
+      defaults = $.Immerse.componentController.extendDefaults(defaults);
 
+      // Extend global component options
+      defaults = $.Immerse.componentController.extendGlobalOptions(this.imm, defaults);
+
+      // Reassign defaults with component defaults/global options included
       this.sectionDefaults = defaults;
 
+      // Extend upon defaults with section options
       section = $.extend({}, defaults, section);
 
+      // Push section to Immerse setup sections object
       this.imm.setup.sections.push(section);
 
       return section;
@@ -61,8 +64,8 @@
           sectionDefaults = this.sectionDefaults,
           that = this;
 
+      // Generate all sections from DOM elements
       $.each($allSectionElems, function(i, $s) {
-        // Pass the generated section the section defaults
         var generatedSection = sectionDefaults,
             n = that.imm.utils.stringify($($s)[0].id),
             u = $($s).hasClass('imm-fullscreen') ? false : true,
@@ -73,51 +76,49 @@
                 unbindScroll: u
               }
             };
-
-        var extendedGeneratedSection = $.extend({}, generatedSection, newVals);
-
-        that.imm._sections.push(extendedGeneratedSection);
+        generatedSection = $.extend({}, generatedSection, newVals);
+        that.imm._sections.push(generatedSection);
       });
 
       // Setup all defined sections
       $.each(this.imm.setup.sections, function(i, s) {
 
-        // jQuerify section
         var $s = $(s.element);
 
-        // Replace selector created section
+        // Replace generated section if manually setup.
         // E.g If $(s.element) matches $(this.imm._sections[i].element), remove that record and replace with new one.
         $.each(that.imm._sections, function(i, _s) {
           that.imm._sections[i] = $(_s.element)[0] === $(s.element)[0] ? s : _s;
         });
 
-        // Animations
+        // Register Animations
         $.each(s.animations, function(name, animation) {
           that.register.animations.call(that, $s, name, animation);
         });
-        // Actions
+        // Register Actions
         $.each(s.actions, function(name, action) {
           that.register.actions.call(that, $s, name, action);
         });
-        // Attributes
+        // Register Attributes
         $.each(s.attributes, function(name, attr) {
           that.register.attributes.call(that, $s, name, attr);
         });
-        // Videos
+        // Register Videos
         var sectionVideos = $s.find('[data-imm-video]');
         $.each(sectionVideos, function(i, wrapper) {
           $.Immerse.videoController.init(that.imm, s, $(wrapper));
         });
       });
 
+      // Update section offsets
       $.Immerse.scrollController.updateSectionOffsets(this.imm);
 
-      // Order sections by vertical order
+      // Order sections by vertical section offset
       this.imm._sections.sort(function(obj1, obj2) {
       	return obj1.scrollOffset - obj2.scrollOffset;
       });
 
-      // Loop over all sections objects, both defined and generated
+      // Initiate all components on all sections
       $.each(this.imm._sections, function(n, s) {
         $.Immerse.componentController.init(that, s);
       });

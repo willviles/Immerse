@@ -11,7 +11,7 @@
 
   ImmerseComponentController.prototype = {
 
-    // Initialize
+    // Add component to global registry
     ///////////////////////////////////////////////////////
 
     add: function(opts) {
@@ -22,6 +22,40 @@
 
       return this;
     },
+
+    // Extend component defaults into Immerse section defaults
+    ///////////////////////////////////////////////////////
+
+    extendDefaults: function(defaults) {
+      $.each($.Immerse.componentRegistry, function(name, component) {
+        if (component.hasOwnProperty('defaults')) {
+          defaults.components[name] = component.defaults;
+        };
+      });
+
+      return defaults;
+    },
+
+    // Extend global component options
+    ///////////////////////////////////////////////////////
+
+    extendGlobalOptions: function(imm, defaults) {
+
+      var componentSetupOpts = imm.setup.components;
+
+      if (componentSetupOpts !== undefined) {
+        $.each($.Immerse.componentRegistry, function(name, component) {
+          if (componentSetupOpts.hasOwnProperty(name)) {
+            defaults.components[name] = componentSetupOpts[name];
+          };
+        });
+      }
+
+      return defaults;
+    },
+
+    // Initialize Component on a section
+    ///////////////////////////////////////////////////////
 
     init: function(imm, section) {
       $.each($.Immerse.componentRegistry, function(n, obj) {
@@ -37,8 +71,11 @@
     add: function(opts) {
       return new ImmerseComponentController(this).add(opts);
     },
-    defaults: function(imm, section) {
-      return new ImmerseComponentController(this).defaults(imm, section);
+    extendDefaults: function(defaults) {
+      return new ImmerseComponentController(this).extendDefaults(defaults);
+    },
+    extendGlobalOptions: function(imm, defaults) {
+      return new ImmerseComponentController(this).extendGlobalOptions(imm, defaults);
     },
     init: function(imm, section) {
       return new ImmerseComponentController(this).init(imm, section);

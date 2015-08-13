@@ -184,19 +184,22 @@ Author URI: http://vil.es/
 
       this.imm = imm;
 
+      // Get defined defaults
       var defaults = this.sectionDefaults;
 
-      // Extend section to include component defaults
-      $.each($.Immerse.componentRegistry, function(name, component) {
-        if (component.hasOwnProperty('defaults')) {
-          defaults.components[name] = component.defaults;
-        };
-      });
+      // Extend component defaults
+      defaults = $.Immerse.componentController.extendDefaults(defaults);
 
+      // Extend global component options
+      defaults = $.Immerse.componentController.extendGlobalOptions(this.imm, defaults);
+
+      // Reassign defaults with component defaults/global options included
       this.sectionDefaults = defaults;
 
+      // Extend upon defaults with section options
       section = $.extend({}, defaults, section);
 
+      // Push section to Immerse setup sections object
       this.imm.setup.sections.push(section);
 
       return section;
@@ -215,8 +218,8 @@ Author URI: http://vil.es/
           sectionDefaults = this.sectionDefaults,
           that = this;
 
+      // Generate all sections from DOM elements
       $.each($allSectionElems, function(i, $s) {
-        // Pass the generated section the section defaults
         var generatedSection = sectionDefaults,
             n = that.imm.utils.stringify($($s)[0].id),
             u = $($s).hasClass('imm-fullscreen') ? false : true,
@@ -227,51 +230,49 @@ Author URI: http://vil.es/
                 unbindScroll: u
               }
             };
-
-        var extendedGeneratedSection = $.extend({}, generatedSection, newVals);
-
-        that.imm._sections.push(extendedGeneratedSection);
+        generatedSection = $.extend({}, generatedSection, newVals);
+        that.imm._sections.push(generatedSection);
       });
 
       // Setup all defined sections
       $.each(this.imm.setup.sections, function(i, s) {
 
-        // jQuerify section
         var $s = $(s.element);
 
-        // Replace selector created section
+        // Replace generated section if manually setup.
         // E.g If $(s.element) matches $(this.imm._sections[i].element), remove that record and replace with new one.
         $.each(that.imm._sections, function(i, _s) {
           that.imm._sections[i] = $(_s.element)[0] === $(s.element)[0] ? s : _s;
         });
 
-        // Animations
+        // Register Animations
         $.each(s.animations, function(name, animation) {
           that.register.animations.call(that, $s, name, animation);
         });
-        // Actions
+        // Register Actions
         $.each(s.actions, function(name, action) {
           that.register.actions.call(that, $s, name, action);
         });
-        // Attributes
+        // Register Attributes
         $.each(s.attributes, function(name, attr) {
           that.register.attributes.call(that, $s, name, attr);
         });
-        // Videos
+        // Register Videos
         var sectionVideos = $s.find('[data-imm-video]');
         $.each(sectionVideos, function(i, wrapper) {
           $.Immerse.videoController.init(that.imm, s, $(wrapper));
         });
       });
 
+      // Update section offsets
       $.Immerse.scrollController.updateSectionOffsets(this.imm);
 
-      // Order sections by vertical order
+      // Order sections by vertical section offset
       this.imm._sections.sort(function(obj1, obj2) {
       	return obj1.scrollOffset - obj2.scrollOffset;
       });
 
-      // Loop over all sections objects, both defined and generated
+      // Initiate all components on all sections
       $.each(this.imm._sections, function(n, s) {
         $.Immerse.componentController.init(that, s);
       });
@@ -1492,7 +1493,7 @@ Author URI: http://vil.es/
 
   ImmerseComponentController.prototype = {
 
-    // Initialize
+    // Add component to global registry
     ///////////////////////////////////////////////////////
 
     add: function(opts) {
@@ -1503,6 +1504,40 @@ Author URI: http://vil.es/
 
       return this;
     },
+
+    // Extend component defaults into Immerse section defaults
+    ///////////////////////////////////////////////////////
+
+    extendDefaults: function(defaults) {
+      $.each($.Immerse.componentRegistry, function(name, component) {
+        if (component.hasOwnProperty('defaults')) {
+          defaults.components[name] = component.defaults;
+        };
+      });
+
+      return defaults;
+    },
+
+    // Extend global component options
+    ///////////////////////////////////////////////////////
+
+    extendGlobalOptions: function(imm, defaults) {
+
+      var componentSetupOpts = imm.setup.components;
+
+      if (componentSetupOpts !== undefined) {
+        $.each($.Immerse.componentRegistry, function(name, component) {
+          if (componentSetupOpts.hasOwnProperty(name)) {
+            defaults.components[name] = componentSetupOpts[name];
+          };
+        });
+      }
+
+      return defaults;
+    },
+
+    // Initialize Component on a section
+    ///////////////////////////////////////////////////////
 
     init: function(imm, section) {
       $.each($.Immerse.componentRegistry, function(n, obj) {
@@ -1518,8 +1553,11 @@ Author URI: http://vil.es/
     add: function(opts) {
       return new ImmerseComponentController(this).add(opts);
     },
-    defaults: function(imm, section) {
-      return new ImmerseComponentController(this).defaults(imm, section);
+    extendDefaults: function(defaults) {
+      return new ImmerseComponentController(this).extendDefaults(defaults);
+    },
+    extendGlobalOptions: function(imm, defaults) {
+      return new ImmerseComponentController(this).extendGlobalOptions(imm, defaults);
     },
     init: function(imm, section) {
       return new ImmerseComponentController(this).init(imm, section);
