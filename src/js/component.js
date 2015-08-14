@@ -28,6 +28,10 @@
 
     extendDefaults: function(defaults) {
       $.each($.Immerse.componentRegistry, function(name, component) {
+        if (component.hasOwnProperty('hasSectionObject') && component.hasSectionObject === true) {
+          defaults.components[name] = {};
+        }
+
         if (component.hasOwnProperty('defaults')) {
           defaults.components[name] = component.defaults;
         };

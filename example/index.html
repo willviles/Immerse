@@ -24,6 +24,17 @@
         <div class="row text-center">
           <h1>HEADER</h1>
           <p>An animation for the header</p>
+          <p><button data-imm-modal-open="header-modal">Open 'header-modal'</button></p>
+        </div>
+      </div>
+
+      <div data-imm-modal-id="header-modal">
+        <div class="container-fluid">
+          <div class="row text-center">
+            <p><button data-imm-modal-action="close">Close</button></p>
+            <p><button data-imm-modal-action="cancel">Cancel</button></p>
+            <p><button data-imm-modal-action="confirm">Confirm</button></p>
+          </div>
         </div>
       </div>
     </header>
@@ -147,6 +158,12 @@
           components: {
             stacks: {
               option1: 'Default global option'// Allow overriding of component defaults globally
+            },
+
+            modals: {
+              'headerModal': {
+                closeOnCancel: false
+              }
             }
           }
         });

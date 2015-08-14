@@ -83,7 +83,7 @@ Author URI: http://vil.es/
 
       stringify: function(str) {
         return str.replace(/[-_]/g, ' ').replace(/([a-z])([A-Z])/g, '$1 $2').toLowerCase().replace(/\b[a-z]/g, function(letter) {
-            return letter.toUpperCase();
+          return letter.toUpperCase();
         });
       },
 
@@ -95,6 +95,15 @@ Author URI: http://vil.es/
         }
 
         return namespacedString;
+      },
+
+      datatagify: function(str, val) {
+
+        if (val === undefined) {
+          return '[data-' + str + ']';
+        } else {
+          return '[data-' + str + '="' + val + '"]';
+        }
       },
 
       cookies: {

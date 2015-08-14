@@ -25,5 +25,6 @@ body::-webkit-scrollbar { width: 0 !important; }
 
 /* Default Components */
 
+@import 'components/modals';
 @import 'components/tooltips';
 @import 'components/videos';

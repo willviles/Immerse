@@ -1,0 +1,10 @@
+.imm-modal-wrapper {
+  @include stretch();
+  position: fixed;
+  @include translateX(-100%);
+  background-color: rgba(black, 50%);
+  z-index: 9999;
+  &.opened {
+    @include translateX(0);
+  }
+}
