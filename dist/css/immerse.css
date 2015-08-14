@@ -79,7 +79,6 @@ body::-webkit-scrollbar {
 
 /* Default Components */
 .imm-modal-wrapper {
-  display: none;
   position: absolute;
   top: 0;
   bottom: 0;
@@ -94,7 +93,6 @@ body::-webkit-scrollbar {
   z-index: 9999;
 }
 .imm-modal-wrapper.opened {
-  display: block;
   -moz-transform: translateX(0);
   -ms-transform: translateX(0);
   -webkit-transform: translateX(0);
@@ -115,6 +113,9 @@ body::-webkit-scrollbar {
   background-color: white;
   overflow-x: scroll;
   cursor: default;
+}
+[data-imm-modal-id]:focus {
+  outline: 0;
 }
 
 /*

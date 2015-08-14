@@ -1642,6 +1642,7 @@ $.Immerse.registerComponent({
 
     // Prepare modal sections
     $.each($section.find(this.modalIdDataTag), function(i, modal) {
+
       var id = $(this).data(that.modalId),
           niceId = $.camelCase(id),
           userSettings, extendedSettings,
@@ -1661,6 +1662,9 @@ $.Immerse.registerComponent({
       }
       // Wrap section
       that.wrap.call(that, this, id);
+
+      // Fix to add keyboard focus to modal
+      $(modal).attr('tabindex', 0);
     });
 
     // Open buttons
@@ -1716,14 +1720,18 @@ $.Immerse.registerComponent({
   actions: {
 
     open: function(id) {
-      var modal = this.imm.utils.datatagify.call(this.imm, this.modalId, id);
-      $(modal).closest('.' + this.modalWrapper).addClass('opened');
+      var $modal = $(this.imm.utils.datatagify.call(this.imm, this.modalId, id));
+      $modal.closest('.' + this.modalWrapper).addClass('opened');
       $.Immerse.scrollController.htmlScroll(this.imm, 'lock');
+      $modal.focus();
     },
 
     close: function(modal, id) {
-      $(modal).closest('.' + this.modalWrapper).removeClass('opened');
+      var $modal = $(this.imm.utils.datatagify.call(this.imm, this.modalId, id)),
+          $wrapper = $modal.closest('.' + this.modalWrapper).removeClass('opened');
       $.Immerse.scrollController.htmlScroll(this.imm, 'unlock');
+      this.imm._scrollContainer.focus();
+      $modal.scrollTop(0);
     }
 
   }
