@@ -20,6 +20,7 @@ $.Immerse.registerComponent({
     this.modalIdDataTag = this.imm.utils.datatagify.call(this.imm, this.modalId);
     this.modalOpen = this.imm.utils.namespacify.call(this.imm, 'modal-open');
     this.modalOpenDataTag = this.imm.utils.datatagify.call(this.imm, this.modalOpen);
+    this.modalAction = this.imm.utils.namespacify.call(this.imm, 'modal-action');
 
     var section = opts.section,
         $section = $(section.element),
@@ -33,7 +34,7 @@ $.Immerse.registerComponent({
           userSettings, extendedSettings,
           modalDefaults = {
             element: $(this),
-            onConfirm: 'close', onCancel: 'close', onEscape: 'close', onOutsideClick: 'close'
+            onConfirm: 'close', onCancel: 'close', onClose: 'close', onEscape: 'close', onWrapperClick: 'close'
           };
 
       // If no user settings defined, just add our modal defaults
@@ -55,11 +56,8 @@ $.Immerse.registerComponent({
       that.actions.open.call(that, modalId);
     });
 
-    // Namespacify modal action
-    this.modalAction = this.imm.utils.namespacify.call(this.imm, 'modal-action');
-
     // get all .imm-modal-close, .imm-modal-cancel, .imm-modal-confirm buttons
-    var allActions = ['close', 'cancel', 'confirm'],
+    var allActions = ['close', 'cancel', 'confirm', 'wrapperClick'],
         allButtons = [];
 
     $.each(allActions, function(i, name) {
@@ -69,14 +67,18 @@ $.Immerse.registerComponent({
     });
 
     // On modal button clicks
-    $section.find(allButtons.toString()).on('click', function(i, modalBtn) {
+    $section.find(allButtons.toString()).on('click', function(e, modalBtn) {
 
-      var action = $(this).data(that.modalAction),
-          actionNiceName = action.charAt(0).toUpperCase() + action.slice(1),
-          modal = $(this).closest(that.modalIdDataTag),
+      // Action type
+      var action = $(this).data(that.modalAction);
+
+      // Ensure wrapperClick doesn't fire on modal itself
+      if (e.target != this && action === 'wrapperClick')  { return };
+
+      var actionNiceName = action.charAt(0).toUpperCase() + action.slice(1),
+          modal = (action === 'wrapperClick') ? $(this).find(that.modalIdDataTag) : $(this).closest(that.modalIdDataTag),
           id = modal.data(that.modalId),
-          niceId = $.camelCase(id),
-          shouldClose = true;
+          niceId = $.camelCase(id);
 
       $(section.components.modals[niceId].element).trigger(action);
 
@@ -85,7 +87,7 @@ $.Immerse.registerComponent({
       if (actionObj === 'close') {
         that.actions.close.call(that, modal, id);
       } else if ($.isFunction(actionObj)) {
-        actionObj(modal, id);
+        actionObj(modal);
       }
 
     });
@@ -94,7 +96,8 @@ $.Immerse.registerComponent({
   },
 
   wrap: function(modal, id) {
-    $(modal).wrap('<div class="' + this.modalWrapper + '"></div>');
+    $wrapper = $('<div class="' + this.modalWrapper + '" data-' + this.modalAction + '="wrapperClick"></div>');
+    $(modal).wrap($wrapper);
   },
 
   actions: {
@@ -102,10 +105,12 @@ $.Immerse.registerComponent({
     open: function(id) {
       var modal = this.imm.utils.datatagify.call(this.imm, this.modalId, id);
       $(modal).closest('.' + this.modalWrapper).addClass('opened');
+      $.Immerse.scrollController.htmlScroll(this.imm, 'lock');
     },
 
     close: function(modal, id) {
       $(modal).closest('.' + this.modalWrapper).removeClass('opened');
+      $.Immerse.scrollController.htmlScroll(this.imm, 'unlock');
     }
 
   }

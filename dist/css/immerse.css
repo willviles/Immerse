@@ -79,6 +79,7 @@ body::-webkit-scrollbar {
 
 /* Default Components */
 .imm-modal-wrapper {
+  display: none;
   position: absolute;
   top: 0;
   bottom: 0;
@@ -89,14 +90,31 @@ body::-webkit-scrollbar {
   -ms-transform: translateX(-100%);
   -webkit-transform: translateX(-100%);
   transform: translateX(-100%);
-  background-color: black;
+  background-color: rgba(0, 0, 0, 0.5);
   z-index: 9999;
 }
 .imm-modal-wrapper.opened {
+  display: block;
   -moz-transform: translateX(0);
   -ms-transform: translateX(0);
   -webkit-transform: translateX(0);
   transform: translateX(0);
+  cursor: pointer;
+}
+
+[data-imm-modal-id] {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 80%;
+  height: 80%;
+  -moz-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  background-color: white;
+  overflow-x: scroll;
+  cursor: default;
 }
 
 /*

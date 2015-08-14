@@ -73,6 +73,7 @@
       scroll: {
 
         detect: function(e) {
+          if (!this.imm._canScroll) { return false; }
           if (this.imm._scrollUnbound) {
             // Enable browser scroll
             this.handlers.scroll.toggle('enable', e);
@@ -218,7 +219,7 @@
 
     ifCanThenGo: function(imm, goVar) {
       this.imm = (this.imm === undefined) ? imm : this.imm;
-      if (this.imm._isScrolling === false && this.imm._canScroll === true) {
+      if (this.imm._isScrolling === false && this.imm._canScroll === true && this.imm._htmlScrollLocked !== true) {
         this.imm._isScrolling = true;
         this.go.fire.call(this, goVar);
 
@@ -444,6 +445,18 @@
       isKeydownEvent: function(e) {
         return e.type === 'keydown';
       }
+    },
+
+    htmlScroll: function(imm, status) {
+      this.imm = (this.imm === undefined) ? imm : this.imm;
+
+      if (status === 'lock') {
+        $('html').css('overflow', 'hidden');
+        this.imm._htmlScrollLocked = true;
+      } else {
+        $('html').css('overflow', 'scroll');
+        this.imm._htmlScrollLocked = false;
+      }
     }
 
   }; // End of all plugin functions
@@ -467,6 +480,9 @@
       var controller = new ImmerseScrollController(this);
       controller.stick.call(controller, imm);
       return controller;
+    },
+    htmlScroll: function(imm, status) {
+      return new ImmerseScrollController(this).htmlScroll(imm, status);
     }
   }
 

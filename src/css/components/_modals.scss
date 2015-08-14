@@ -1,10 +1,23 @@
 .imm-modal-wrapper {
+  display: none;
   @include stretch();
   position: fixed;
   @include translateX(-100%);
-  background-color: rgba(black, 50%);
+  background-color: rgba(black, .5);
   z-index: 9999;
   &.opened {
+    display: block;
     @include translateX(0);
+    cursor: pointer;
   }
+}
+
+[data-imm-modal-id] {
+  position: absolute;
+  left: 50%; top: 50%;
+  width: 80%; height: 80%;
+  @include translate(-50%, -50%);
+  background-color: white;
+  overflow-x: scroll;
+  cursor: default;
 }
