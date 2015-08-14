@@ -1669,7 +1669,7 @@ $.Immerse.registerComponent({
 
     // On modal button clicks
     $section.find(allButtons.toString()).on('click', function(e) {
-      that.handleBtnClick.call(that, e, $(this), section);
+      that.handleBtnClick.call(that, e, this, section);
     });
 
     return this;
@@ -1720,7 +1720,7 @@ $.Immerse.registerComponent({
     var action = $(button).data(this.modalAction);
 
     // Ensure wrapperClick doesn't fire on modal itself
-    if (action === 'wrapperClick' && e.target != button[0])  { return };
+    if (action === 'wrapperClick' && e.target != button)  { return };
 
     var actionNiceName = action.charAt(0).toUpperCase() + action.slice(1),
         modal = (action === 'wrapperClick') ? $(button).find(this.modalIdDataTag) : $(button).closest(this.modalIdDataTag),
