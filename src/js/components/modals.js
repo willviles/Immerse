@@ -17,6 +17,8 @@ $.Immerse.registerComponent({
   init: function(opts) {
 
     this.imm = opts.immerse;
+
+    // Ensure all elements are namespaced
     this.modalWrapper = this.imm.utils.namespacify.call(this.imm, 'modal-wrapper');
     this.modalId = this.imm.utils.namespacify.call(this.imm, 'modal-id');
     this.modalIdDataTag = this.imm.utils.datatagify.call(this.imm, this.modalId);
@@ -103,7 +105,7 @@ $.Immerse.registerComponent({
     var action = $(button).data(this.modalAction);
 
     // Ensure wrapperClick doesn't fire on modal itself
-    if (e.target != this && action === 'wrapperClick')  { return };
+    if (action === 'wrapperClick' && e.target != button[0])  { return };
 
     var actionNiceName = action.charAt(0).toUpperCase() + action.slice(1),
         modal = (action === 'wrapperClick') ? $(button).find(this.modalIdDataTag) : $(button).closest(this.modalIdDataTag),
