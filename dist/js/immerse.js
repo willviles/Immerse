@@ -1628,17 +1628,18 @@ $.Immerse.registerComponent({
       var id = $(this).data(that.modalId),
           niceId = $.camelCase(id),
           userSettings, extendedSettings,
-          sectionDefaults = {
+          modalDefaults = {
             element: $(this),
-            closeOnConfirm: true, closeOnCancel: true, closeOnEscape: true, closeOnOutsideClick: true
+            onConfirm: 'close', onCancel: 'close', onEscape: 'close', onOutsideClick: 'close'
           };
 
-      // Extend section with reference to the modal.
+      // If no user settings defined, just add our modal defaults
       if (!section.components[pluginName].hasOwnProperty(niceId)) {
-        section.components[pluginName][niceId] = sectionDefaults;
+        section.components[pluginName][niceId] = modalDefaults;
+      // However, if user has specified in section setup, extend settings over the defaults
       } else {
         userSettings = section.components[pluginName][niceId];
-        extendedSettings = $.extend({}, sectionDefaults, userSettings);
+        extendedSettings = $.extend({}, modalDefaults, userSettings);
         section.components[pluginName][niceId] = extendedSettings;
       }
       // Wrap section
@@ -1664,18 +1665,24 @@ $.Immerse.registerComponent({
       allButtons.push(that['modal' + niceName + 'DataTag']);
     });
 
-    // On modal open clicks
+    // On modal button clicks
     $section.find(allButtons.toString()).on('click', function(i, modalBtn) {
 
       var action = $(this).data(that.modalAction),
+          actionNiceName = action.charAt(0).toUpperCase() + action.slice(1),
           modal = $(this).closest(that.modalIdDataTag),
           id = modal.data(that.modalId),
+          niceId = $.camelCase(id),
           shouldClose = true;
 
-      $(section.components.modals[id][element]).trigger(action);
+      $(section.components.modals[niceId].element).trigger(action);
 
-      if (shouldClose) {
+      var actionObj = section.components[pluginName][niceId]['on' + actionNiceName];
+
+      if (actionObj === 'close') {
         that.actions.close.call(that, modal, id);
+      } else if ($.isFunction(actionObj)) {
+        actionObj(modal, id);
       }
 
     });
@@ -1695,7 +1702,7 @@ $.Immerse.registerComponent({
     },
 
     close: function(modal, id) {
-      console.log('Inside close');
+      $(modal).closest('.' + this.modalWrapper).removeClass('opened');
     }
 
   }
