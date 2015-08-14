@@ -11,7 +11,9 @@ $.Immerse.registerComponent({
   name: 'modals',
   hasSectionObject: true,
 
-  // Initialize function
+  // Initialize component
+  ///////////////////////////////////////////////////////
+
   init: function(opts) {
 
     this.imm = opts.immerse;
@@ -21,37 +23,15 @@ $.Immerse.registerComponent({
     this.modalOpen = this.imm.utils.namespacify.call(this.imm, 'modal-open');
     this.modalOpenDataTag = this.imm.utils.datatagify.call(this.imm, this.modalOpen);
     this.modalAction = this.imm.utils.namespacify.call(this.imm, 'modal-action');
+    this.pluginName = this.name;
 
     var section = opts.section,
         $section = $(section.element),
-        pluginName = this.name,
         that = this;
 
     // Prepare modal sections
     $.each($section.find(this.modalIdDataTag), function(i, modal) {
-
-      var id = $(this).data(that.modalId),
-          niceId = $.camelCase(id),
-          userSettings, extendedSettings,
-          modalDefaults = {
-            element: $(this),
-            onConfirm: 'close', onCancel: 'close', onClose: 'close', onEscape: 'close', onWrapperClick: 'close'
-          };
-
-      // If no user settings defined, just add our modal defaults
-      if (!section.components[pluginName].hasOwnProperty(niceId)) {
-        section.components[pluginName][niceId] = modalDefaults;
-      // However, if user has specified in section setup, extend settings over the defaults
-      } else {
-        userSettings = section.components[pluginName][niceId];
-        extendedSettings = $.extend({}, modalDefaults, userSettings);
-        section.components[pluginName][niceId] = extendedSettings;
-      }
-      // Wrap section
-      that.wrap.call(that, this, id);
-
-      // Fix to add keyboard focus to modal
-      $(modal).attr('tabindex', 0);
+      that.prepare.call(that, modal, section);
     });
 
     // Open buttons
@@ -71,38 +51,78 @@ $.Immerse.registerComponent({
     });
 
     // On modal button clicks
-    $section.find(allButtons.toString()).on('click', function(e, modalBtn) {
-
-      // Action type
-      var action = $(this).data(that.modalAction);
-
-      // Ensure wrapperClick doesn't fire on modal itself
-      if (e.target != this && action === 'wrapperClick')  { return };
-
-      var actionNiceName = action.charAt(0).toUpperCase() + action.slice(1),
-          modal = (action === 'wrapperClick') ? $(this).find(that.modalIdDataTag) : $(this).closest(that.modalIdDataTag),
-          id = modal.data(that.modalId),
-          niceId = $.camelCase(id);
-
-      $(section.components.modals[niceId].element).trigger(action);
-
-      var actionObj = section.components[pluginName][niceId]['on' + actionNiceName];
-
-      if (actionObj === 'close') {
-        that.actions.close.call(that, modal, id);
-      } else if ($.isFunction(actionObj)) {
-        actionObj(modal);
-      }
-
+    $section.find(allButtons.toString()).on('click', function(e) {
+      that.handleBtnClick.call(that, e, $(this), section);
     });
 
     return this;
   },
 
+  // Prepare Modal
+  ///////////////////////////////////////////////////////
+
+  prepare: function(modal, section) {
+
+    var id = $(modal).data(this.modalId),
+        niceId = $.camelCase(id),
+        userSettings, extendedSettings,
+        modalDefaults = {
+          element: $(this),
+          onConfirm: 'close', onCancel: 'close', onClose: 'close', onEscape: 'close', onWrapperClick: 'close'
+        };
+
+    // If no user settings defined, just add our modal defaults
+    if (!section.components[this.pluginName].hasOwnProperty(niceId)) {
+      section.components[this.pluginName][niceId] = modalDefaults;
+    // However, if user has specified in section setup, extend settings over the defaults
+    } else {
+      userSettings = section.components[this.pluginName][niceId];
+      extendedSettings = $.extend({}, modalDefaults, userSettings);
+      section.components[this.pluginName][niceId] = extendedSettings;
+    }
+    // Wrap section
+    this.wrap.call(this, modal, id);
+
+    // Fix to add keyboard focus to modal
+    $(modal).attr('tabindex', 0);
+  },
+
+  // Wrap Modal
+  ///////////////////////////////////////////////////////
+
   wrap: function(modal, id) {
     $wrapper = $('<div class="' + this.modalWrapper + '" data-' + this.modalAction + '="wrapperClick"></div>');
     $(modal).wrap($wrapper);
   },
+
+  // Handle clicks
+  ///////////////////////////////////////////////////////
+
+  handleBtnClick: function(e, button, section) {
+    // Action type
+    var action = $(button).data(this.modalAction);
+
+    // Ensure wrapperClick doesn't fire on modal itself
+    if (e.target != this && action === 'wrapperClick')  { return };
+
+    var actionNiceName = action.charAt(0).toUpperCase() + action.slice(1),
+        modal = (action === 'wrapperClick') ? $(button).find(this.modalIdDataTag) : $(button).closest(this.modalIdDataTag),
+        id = modal.data(this.modalId),
+        niceId = $.camelCase(id);
+
+    $(section.components.modals[niceId].element).trigger(action);
+
+    var actionObj = section.components[this.pluginName][niceId]['on' + actionNiceName];
+
+    if (actionObj === 'close') {
+      this.actions.close.call(this, modal, id);
+    } else if ($.isFunction(actionObj)) {
+      actionObj(modal);
+    }
+  },
+
+  // Modal actions
+  ///////////////////////////////////////////////////////
 
   actions: {
 
