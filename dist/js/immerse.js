@@ -1733,7 +1733,7 @@ $.Immerse.registerComponent({
 /*
 Plugin: Immerse.js
 Component: Videos
-Description: Adds video backgrounds to any element with .imm-video class
+Description: Adds video backgrounds to any element with -video class and data tag
 Version: 1.0.0
 Author: Will Viles
 Author URI: http://vil.es/
@@ -1744,11 +1744,14 @@ $.Immerse.registerComponent({
 
   // Initialize function
   init: function(opts) {
+    this.imm = opts.immerse;
+    this.videoDataTag = this.imm.utils.namespacify.call(this.imm, 'video');
+
     var section = opts.section,
         $section = $(section.element),
         that = this;
 
-    var sectionVideos = $section.find('[data-imm-video]');
+    var sectionVideos = $section.find('[data-' + this.videoDataTag + ']');
     $.each(sectionVideos, function(i, wrapper) {
       that.handler.call(that, opts.immerse, section, wrapper);
     });
@@ -1807,7 +1810,7 @@ $.Immerse.registerComponent({
 
   onResize: function(imm) {
     var that = this;
-    $.each(imm.$elem.find('[data-imm-video]'), function(i, wrapper) {
+    $.each(imm.$elem.find('[data-' + this.videoDataTag + ']'), function(i, wrapper) {
       that.doResize(wrapper);
     });
 
