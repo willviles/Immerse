@@ -22,7 +22,7 @@ Author URI: http://vil.es/
       this.defaults = {
         options: {
           // Set a default for the section selector
-          sectionSelector: '.imm-section',
+          namespace: 'imm',
           // Set breakpoints
           breakpoints: {
             mobile: 480,
@@ -85,6 +85,16 @@ Author URI: http://vil.es/
         return str.replace(/[-_]/g, ' ').replace(/([a-z])([A-Z])/g, '$1 $2').toLowerCase().replace(/\b[a-z]/g, function(letter) {
             return letter.toUpperCase();
         });
+      },
+
+      namespacify: function() {
+        var namespacedString = this.setup.options.namespace;
+
+        for (var i = 0; i < arguments.length; ++i) {
+          namespacedString += '-' + arguments[i];
+        }
+
+        return namespacedString;
       },
 
       cookies: {
@@ -214,15 +224,17 @@ Author URI: http://vil.es/
       // Get a handle on the Immerse object
       this.imm = imm;
 
-      var $allSectionElems = $(this.imm.setup.options.sectionSelector),
+      var sectionSelector = this.imm.utils.namespacify.call(this.imm, 'section'),
+          $allSectionElems = $('.' + sectionSelector),
           sectionDefaults = this.sectionDefaults,
+          fullscreenClass = this.imm.utils.namespacify.call(this.imm, 'fullscreen'),
           that = this;
 
       // Generate all sections from DOM elements
       $.each($allSectionElems, function(i, $s) {
         var generatedSection = sectionDefaults,
             n = that.imm.utils.stringify($($s)[0].id),
-            u = $($s).hasClass('imm-fullscreen') ? false : true,
+            u = $($s).hasClass(fullscreenClass) ? false : true,
             newVals = {
               element: $($s),
               name: n,
@@ -957,10 +969,11 @@ Author URI: http://vil.es/
     muteBtns: {
       init: function() {
 
-        var that = this;
+        var muteClass = this.imm.utils.namespacify.call(this.imm, 'mute'),
+            that = this;
 
         // Get a handle on all mute buttons
-        this.imm._$muteBtns = this.imm.$elem.find('.imm-mute');
+        this.imm._$muteBtns = this.imm.$elem.find('.' + muteClass);
 
         // Set initial value based on state
         if (this.imm.utils.cookies.get('immAudioState') === 'muted') {
@@ -977,14 +990,16 @@ Author URI: http://vil.es/
       },
 
       change: function(state) {
-        var s;
+        var mutedClass = this.imm.utils.namespacify.call(this.imm, 'muted'),
+            s;
+
         if (state === 'off') {
           s = this.imm.setup.options.muteButton.muted;
-          this.imm._$muteBtns.addClass('imm-muted').html(s);
+          this.imm._$muteBtns.addClass(mutedClass).html(s);
           this.imm._muted = true;
         } else {
           s = this.imm.setup.options.muteButton.unmuted;
-          this.imm._$muteBtns.removeClass('imm-muted').html(s);
+          this.imm._$muteBtns.removeClass(mutedClass).html(s);
           this.imm._muted = false;
         }
       },
@@ -1070,42 +1085,65 @@ Author URI: http://vil.es/
 
     init: function(imm) {
       this.imm = imm;
-
+      this.navListClass = this.imm.utils.namespacify.call(this.imm, 'nav-list');
+      this.navLinkClass = this.imm.utils.namespacify.call(this.imm, 'nav-link');
+      this.sectionDataTag = this.imm.utils.namespacify.call(this.imm, 'section');
       var that = this;
-
-      // Add nav items to do
+      // Generate Nav list
       this.addToDOM.call(this);
       // Set current
-      var navItem = $('.imm-nav-list li a[data-imm-section="#' + this.imm._currentSection.element[0].id + '"]');
-      this.update.call(that, navItem);
-      // On nav list click
-      $('.imm-nav-list li a', 'body').on('click', function() {
-        var $target = $($(this).data('imm-section'));
+      var navItem = $('.' + this.navListClass + ' li a[data-' + this.sectionDataTag + '="#' + this.imm._currentSection.element[0].id + '"]');
+      this.update.call(this, navItem);
+      // Handle nav item click
+      this.handleClick.call(this);
+      // Handle on section change
+      this.sectionChange.call(this);
+    },
+
+    // Handle a click on a nav item
+    ///////////////////////////////////////////////////////
+
+    handleClick: function() {
+      var that = this;
+      $('.' + this.navListClass + ' li a', 'body').on('click', function() {
+        var $target = $($(this).data(that.sectionDataTag));
         $.Immerse.scrollController.doScroll(that.imm, $target);
       });
-      // Handle on section change
+    },
+
+    // Handle navigation change when section changes
+    ///////////////////////////////////////////////////////
+
+    sectionChange: function() {
+      var that = this;
       this.imm.$elem.on('sectionChanged', function(e, d) {
-        var navItem = $('.imm-nav-list li a[data-imm-section="#' + d.current.element[0].id + '"]');
+        var navItem = $('.' + that.navListClass + ' li a[data-' + that.sectionDataTag + '="#' + d.current.element[0].id + '"]');
         that.update.call(that, navItem);
       });
     },
 
-    addToDOM: function() {
-      var nav = $('.imm-nav-list');
-      if (nav.length === 0) { return false; }
+    // Generate nav list and add to DOM
+    ///////////////////////////////////////////////////////
 
-      var str = '';
+    addToDOM: function() {
+      var nav = $('.' + this.navListClass);
+      if (nav.length === 0) { return false; }
+      var str = '',
+          that = this;
+
       $.each(this.imm._sections, function(i, s) {
         if (!s.options.hideFromNav) {
-          str = str + '<li><a class="imm-nav-link" data-imm-section="#' + s.element[0].id + '"><span>' + s.name + '</span></a></li>';
+          str = str + '<li><a class="' + that.navLinkClass + '" data-' + that.sectionDataTag + '="#' + s.element[0].id + '"><span>' + s.name + '</span></a></li>';
         }
       });
-      // Add list to any elem with .imm-nav-sections class
       nav.html(str);
     },
 
+    // Update nav
+    ///////////////////////////////////////////////////////
+
     update: function($e) {
-      $('.imm-nav-list li a').removeClass('current');
+      $('.' + this.navListClass + ' li a').removeClass('current');
       if ($e.length > 0) { $e.addClass('current'); }
     }
 
@@ -1225,13 +1263,14 @@ Author URI: http://vil.es/
 
         var l = a.loop == true ? 'loop' : '',
             fileTypes = ($.isArray(a.fileTypes)) ? a.fileTypes : ['mp3'],
+            audioClass = this.imm.utils.namespacify.call(this.imm, 'audio'),
             sourceStr = '';
 
         $.each(fileTypes, function(i, ft) {
           sourceStr = sourceStr + '<source src="' + a.path + '.' + ft +'" type="audio/' + ft + '">';
         });
 
-        this.imm.$elem.append('<audio id="' + n + '" class="imm-audio" ' + l + '>' + sourceStr + '</audio>');
+        this.imm.$elem.append('<audio id="' + n + '" class="' + audioClass + '" ' + l + '>' + sourceStr + '</audio>');
         this.imm._allAudio.push(n);
         return true;
       },
@@ -1241,7 +1280,8 @@ Author URI: http://vil.es/
 
         if (o.path === undefined ) { console.log("Asset Error: Must define a path for video asset '" + n + "'"); o.error = true; return false };
 
-        var $wrapper = this.imm.$elem.find('[data-imm-video="' + n + '"]'),
+        var videoDataTag = this.imm.utils.namespacify.call(this.imm, 'video'),
+            $wrapper = this.imm.$elem.find('[data-' + videoDataTag + '="' + n + '"]'),
             fileTypes = ($.isArray(o.fileTypes)) ? o.fileTypes : ['mp4', 'ogv', 'webm'],
             loop = (o.loop === false) ? '' : 'loop="loop" ',
             sourceStr = '';
@@ -1267,6 +1307,7 @@ Author URI: http://vil.es/
     loading: function(imm) {
 
       this.imm = imm;
+      var loadingOverlayClass = this.imm.utils.namespacify.call(this.imm, 'loading');
 
       $.when(this.imm._assetQueue).then(
         function(s) {
@@ -1274,13 +1315,10 @@ Author URI: http://vil.es/
           $.each(that.imm._sections, function(i, s) {
             $(s.element).trigger('init');
           });
-
+          // Trigger init of whole plugin
           that.imm.$elem.trigger('immInit');
-
           // Hide loading
-          // TODO: Allow for custom loading animation sequences. Consider how to introduce a percentage bar
-          $('.imm-loading').hide();
-
+          $('.' + loadingOverlayClass).hide();
         },
         function(s) {
           alert('Asset loading failed');

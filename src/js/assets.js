@@ -103,13 +103,14 @@
 
         var l = a.loop == true ? 'loop' : '',
             fileTypes = ($.isArray(a.fileTypes)) ? a.fileTypes : ['mp3'],
+            audioClass = this.imm.utils.namespacify.call(this.imm, 'audio'),
             sourceStr = '';
 
         $.each(fileTypes, function(i, ft) {
           sourceStr = sourceStr + '<source src="' + a.path + '.' + ft +'" type="audio/' + ft + '">';
         });
 
-        this.imm.$elem.append('<audio id="' + n + '" class="imm-audio" ' + l + '>' + sourceStr + '</audio>');
+        this.imm.$elem.append('<audio id="' + n + '" class="' + audioClass + '" ' + l + '>' + sourceStr + '</audio>');
         this.imm._allAudio.push(n);
         return true;
       },
@@ -119,7 +120,8 @@
 
         if (o.path === undefined ) { console.log("Asset Error: Must define a path for video asset '" + n + "'"); o.error = true; return false };
 
-        var $wrapper = this.imm.$elem.find('[data-imm-video="' + n + '"]'),
+        var videoDataTag = this.imm.utils.namespacify.call(this.imm, 'video'),
+            $wrapper = this.imm.$elem.find('[data-' + videoDataTag + '="' + n + '"]'),
             fileTypes = ($.isArray(o.fileTypes)) ? o.fileTypes : ['mp4', 'ogv', 'webm'],
             loop = (o.loop === false) ? '' : 'loop="loop" ',
             sourceStr = '';
@@ -145,6 +147,7 @@
     loading: function(imm) {
 
       this.imm = imm;
+      var loadingOverlayClass = this.imm.utils.namespacify.call(this.imm, 'loading');
 
       $.when(this.imm._assetQueue).then(
         function(s) {
@@ -152,13 +155,10 @@
           $.each(that.imm._sections, function(i, s) {
             $(s.element).trigger('init');
           });
-
+          // Trigger init of whole plugin
           that.imm.$elem.trigger('immInit');
-
           // Hide loading
-          // TODO: Allow for custom loading animation sequences. Consider how to introduce a percentage bar
-          $('.imm-loading').hide();
-
+          $('.' + loadingOverlayClass).hide();
         },
         function(s) {
           alert('Asset loading failed');

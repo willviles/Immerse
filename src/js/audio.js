@@ -102,10 +102,11 @@
     muteBtns: {
       init: function() {
 
-        var that = this;
+        var muteClass = this.imm.utils.namespacify.call(this.imm, 'mute'),
+            that = this;
 
         // Get a handle on all mute buttons
-        this.imm._$muteBtns = this.imm.$elem.find('.imm-mute');
+        this.imm._$muteBtns = this.imm.$elem.find('.' + muteClass);
 
         // Set initial value based on state
         if (this.imm.utils.cookies.get('immAudioState') === 'muted') {
@@ -122,14 +123,16 @@
       },
 
       change: function(state) {
-        var s;
+        var mutedClass = this.imm.utils.namespacify.call(this.imm, 'muted'),
+            s;
+
         if (state === 'off') {
           s = this.imm.setup.options.muteButton.muted;
-          this.imm._$muteBtns.addClass('imm-muted').html(s);
+          this.imm._$muteBtns.addClass(mutedClass).html(s);
           this.imm._muted = true;
         } else {
           s = this.imm.setup.options.muteButton.unmuted;
-          this.imm._$muteBtns.removeClass('imm-muted').html(s);
+          this.imm._$muteBtns.removeClass(mutedClass).html(s);
           this.imm._muted = false;
         }
       },

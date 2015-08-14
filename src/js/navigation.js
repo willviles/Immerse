@@ -14,42 +14,65 @@
 
     init: function(imm) {
       this.imm = imm;
-
+      this.navListClass = this.imm.utils.namespacify.call(this.imm, 'nav-list');
+      this.navLinkClass = this.imm.utils.namespacify.call(this.imm, 'nav-link');
+      this.sectionDataTag = this.imm.utils.namespacify.call(this.imm, 'section');
       var that = this;
-
-      // Add nav items to do
+      // Generate Nav list
       this.addToDOM.call(this);
       // Set current
-      var navItem = $('.imm-nav-list li a[data-imm-section="#' + this.imm._currentSection.element[0].id + '"]');
-      this.update.call(that, navItem);
-      // On nav list click
-      $('.imm-nav-list li a', 'body').on('click', function() {
-        var $target = $($(this).data('imm-section'));
+      var navItem = $('.' + this.navListClass + ' li a[data-' + this.sectionDataTag + '="#' + this.imm._currentSection.element[0].id + '"]');
+      this.update.call(this, navItem);
+      // Handle nav item click
+      this.handleClick.call(this);
+      // Handle on section change
+      this.sectionChange.call(this);
+    },
+
+    // Handle a click on a nav item
+    ///////////////////////////////////////////////////////
+
+    handleClick: function() {
+      var that = this;
+      $('.' + this.navListClass + ' li a', 'body').on('click', function() {
+        var $target = $($(this).data(that.sectionDataTag));
         $.Immerse.scrollController.doScroll(that.imm, $target);
       });
-      // Handle on section change
+    },
+
+    // Handle navigation change when section changes
+    ///////////////////////////////////////////////////////
+
+    sectionChange: function() {
+      var that = this;
       this.imm.$elem.on('sectionChanged', function(e, d) {
-        var navItem = $('.imm-nav-list li a[data-imm-section="#' + d.current.element[0].id + '"]');
+        var navItem = $('.' + that.navListClass + ' li a[data-' + that.sectionDataTag + '="#' + d.current.element[0].id + '"]');
         that.update.call(that, navItem);
       });
     },
 
-    addToDOM: function() {
-      var nav = $('.imm-nav-list');
-      if (nav.length === 0) { return false; }
+    // Generate nav list and add to DOM
+    ///////////////////////////////////////////////////////
 
-      var str = '';
+    addToDOM: function() {
+      var nav = $('.' + this.navListClass);
+      if (nav.length === 0) { return false; }
+      var str = '',
+          that = this;
+
       $.each(this.imm._sections, function(i, s) {
         if (!s.options.hideFromNav) {
-          str = str + '<li><a class="imm-nav-link" data-imm-section="#' + s.element[0].id + '"><span>' + s.name + '</span></a></li>';
+          str = str + '<li><a class="' + that.navLinkClass + '" data-' + that.sectionDataTag + '="#' + s.element[0].id + '"><span>' + s.name + '</span></a></li>';
         }
       });
-      // Add list to any elem with .imm-nav-sections class
       nav.html(str);
     },
 
+    // Update nav
+    ///////////////////////////////////////////////////////
+
     update: function($e) {
-      $('.imm-nav-list li a').removeClass('current');
+      $('.' + this.navListClass + ' li a').removeClass('current');
       if ($e.length > 0) { $e.addClass('current'); }
     }
 

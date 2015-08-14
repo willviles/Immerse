@@ -61,15 +61,17 @@
       // Get a handle on the Immerse object
       this.imm = imm;
 
-      var $allSectionElems = $(this.imm.setup.options.sectionSelector),
+      var sectionSelector = this.imm.utils.namespacify.call(this.imm, 'section'),
+          $allSectionElems = $('.' + sectionSelector),
           sectionDefaults = this.sectionDefaults,
+          fullscreenClass = this.imm.utils.namespacify.call(this.imm, 'fullscreen'),
           that = this;
 
       // Generate all sections from DOM elements
       $.each($allSectionElems, function(i, $s) {
         var generatedSection = sectionDefaults,
             n = that.imm.utils.stringify($($s)[0].id),
-            u = $($s).hasClass('imm-fullscreen') ? false : true,
+            u = $($s).hasClass(fullscreenClass) ? false : true,
             newVals = {
               element: $($s),
               name: n,

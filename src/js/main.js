@@ -22,7 +22,7 @@ Author URI: http://vil.es/
       this.defaults = {
         options: {
           // Set a default for the section selector
-          sectionSelector: '.imm-section',
+          namespace: 'imm',
           // Set breakpoints
           breakpoints: {
             mobile: 480,
@@ -85,6 +85,16 @@ Author URI: http://vil.es/
         return str.replace(/[-_]/g, ' ').replace(/([a-z])([A-Z])/g, '$1 $2').toLowerCase().replace(/\b[a-z]/g, function(letter) {
             return letter.toUpperCase();
         });
+      },
+
+      namespacify: function() {
+        var namespacedString = this.setup.options.namespace;
+
+        for (var i = 0; i < arguments.length; ++i) {
+          namespacedString += '-' + arguments[i];
+        }
+
+        return namespacedString;
       },
 
       cookies: {
