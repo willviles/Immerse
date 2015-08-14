@@ -1,7 +1,7 @@
 /*
 Plugin: Immerse.js
 Component: Tooltips
-Description: Adds tooltips to any element with .imm-tooltip class
+Description: Adds tooltips to any element with -tooltip class
 Version: 1.0.0
 Author: Will Viles
 Author URI: http://vil.es/
@@ -12,20 +12,23 @@ $.Immerse.registerComponent({
 
   // Initialize function
   init: function(opts) {
+    this.imm = opts.immerse;
+    this.tooltipClass = this.imm.utils.namespacify.call(this.imm, 'tooltip');
+
     var section = opts.section,
         $section = $(section.element),
         that = this;
 
     // Get each tooltip in section
-    $.each($section.find('[data-imm-tooltip]'), function(i, tooltip) {
+    $.each($section.find('[data-' + this.tooltipClass + ']'), function(i, tooltip) {
 
       var $tooltip = $(tooltip),
-          content = $tooltip.data('imm-tooltip'),
+          content = $tooltip.data(that.tooltipClass),
           content = content.charAt(0) === '#' ? $(content) : content,
           content = (content.jquery) ? $(content).html() : content;
 
       // Append correct tooltip content
-      var $content = $('<span class="imm-tooltip">' + content + '</span>');
+      var $content = $('<span class="' + that.tooltipClass + '">' + content + '</span>');
       $tooltip.append($content);
 
       $tooltip.on('mouseover', function() {
