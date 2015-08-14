@@ -645,6 +645,8 @@ Author URI: http://vil.es/
           a.nextSection = $.grep(this.imm._sections, function(s) { return o[0].id == s.element[0].id; })[0];
           // Determine direction
           a.direction = a.currentSection.scrollOffset > a.nextSection.scrollOffset ? 'UP' : 'DOWN';
+          // Just do scroll
+          a.justDoScroll = true;
 
         // Else if we've just passed the scroll direction, find the next section
         } else if (o === 'UP' || o === 'DOWN') {
@@ -678,6 +680,12 @@ Author URI: http://vil.es/
           this.imm._isScrolling = false;
           this.imm._canScroll = true;
           return false;
+        }
+
+        // If we've passed a direct trigger, just do the scroll and don't worry about bound status
+        if (opts.justDoScroll === true) {
+          this.go.animate.call(this, opts);
+          return;
         }
 
         // SCROLL LOGIC:
