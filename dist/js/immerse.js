@@ -443,10 +443,12 @@ Author URI: http://vil.es/
 
     events: {
       scroll: function() {
-        this.imm._scrollContainer.on('mousewheel wheel DOMMouseScroll', this.handlers.scroll.detect.bind(this));
+        this.imm._scrollContainer.off('mousewheel wheel DOMMouseScroll')
+                                  .on('mousewheel wheel DOMMouseScroll', this.handlers.scroll.detect.bind(this));
       },
 
       keys: function() {
+        $(document).off('keydown keyup');
         $(document).on('keydown', this.handlers.keys.down.bind(this));
         $(document).on('keyup', this.handlers.keys.up.bind(this));
       },
