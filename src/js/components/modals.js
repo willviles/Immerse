@@ -71,8 +71,6 @@ $.Immerse.registerComponent({
 
     modalDefaults.element = $(this);
 
-//     console.log(modalDefaults);
-
     // If no user settings defined, just add our modal defaults
     if (!section.components[this.pluginName].hasOwnProperty(niceId)) {
       section.components[this.pluginName][niceId] = modalDefaults;
