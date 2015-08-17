@@ -214,10 +214,8 @@ Author URI: http://vil.es/
 
       // Extend component defaults
       defaults = $.Immerse.componentController.extendDefaults(defaults);
-      if (section.name = 'Boards') { console.log(defaults); }
       // Extend global component options
       defaults = $.Immerse.componentController.extendGlobalOptions(this.imm, defaults);
-      if (section.name = 'Boards') { console.log(defaults); }
       // Extend global audio options
       defaults = $.Immerse.audioController.extendGlobalOptions(this.imm, defaults);
 
@@ -301,8 +299,6 @@ Author URI: http://vil.es/
       $.each(this.imm._sections, function(n, s) {
         $.Immerse.componentController.init(that, s);
       });
-
-      console.log(this.imm._sections);
 
       return this;
     },
@@ -1599,8 +1595,6 @@ Author URI: http://vil.es/
     extendGlobalOptions: function(imm, defaults) {
 
       var componentSetupOpts = imm.setup.components;
-
-
 
       if (componentSetupOpts !== undefined) {
         $.each($.Immerse.componentRegistry, function(name, component) {

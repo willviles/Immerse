@@ -46,8 +46,6 @@
 
       var componentSetupOpts = imm.setup.components;
 
-
-
       if (componentSetupOpts !== undefined) {
         $.each($.Immerse.componentRegistry, function(name, component) {
           if (componentSetupOpts.hasOwnProperty(name)) {
