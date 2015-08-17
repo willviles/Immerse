@@ -121,7 +121,7 @@ body::-webkit-scrollbar {
 /*
 Plugin: Immerse.js
 Component: Tooltips
-Description: Adds tooltips to any element with .imm-tooltip class
+Description: Adds tooltips to any element with -tooltip class
 Version: 1.0.0
 Author: Will Viles
 Author URI: http://vil.es/
@@ -220,7 +220,7 @@ Author URI: http://vil.es/
 /*
 Plugin: Immerse.js
 Component: Videos
-Description: Adds video backgrounds to any element with .imm-video class
+Description: Adds video backgrounds to any element with -video class
 Version: 1.0.0
 Author: Will Viles
 Author URI: http://vil.es/

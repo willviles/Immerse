@@ -1,12 +1,14 @@
 @import 'compass';
 @import 'compass/layout';
 
+$prefix: 'imm';
+
 /* Scaffold */
 
 body::-webkit-scrollbar { width: 0 !important; }
 
-.imm-section { position: relative; overflow: hidden; }
-.imm-fullscreen { height: 100vh; }
+.#{$prefix}-section { position: relative; overflow: hidden; }
+.#{$prefix}-fullscreen { height: 100vh; }
 
 /* Loading */
 
@@ -15,7 +17,7 @@ body::-webkit-scrollbar { width: 0 !important; }
   to { @include transform(rotate(360deg)); }
 }
 
-.imm-loading {
+.#{$prefix}-loading {
   @include stretch(); position: fixed; background-color: white;
   .imm-spinner {
     position: absolute; top: 50%; left: 50%; @include translate(-50%, -50%);

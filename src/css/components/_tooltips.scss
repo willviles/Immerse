@@ -1,15 +1,15 @@
 /*
 Plugin: Immerse.js
 Component: Tooltips
-Description: Adds tooltips to any element with .imm-tooltip class
+Description: Adds tooltips to any element with -tooltip class
 Version: 1.0.0
 Author: Will Viles
 Author URI: http://vil.es/
 */
 
-[data-imm-tooltip] {
+[data-#{$prefix}-tooltip] {
   position: relative; cursor: pointer; border-bottom: 2px solid darken(white, 10%);
-  .imm-tooltip {
+  .#{$prefix}-tooltip {
     display: none;
     position: absolute; width: auto;
     padding: 1em; background-color: white; @include border-radius(5px);
@@ -55,9 +55,9 @@ Author URI: http://vil.es/
       }
     }
   }
-  &:hover .imm-tooltip {
+  &:hover .#{$prefix}-tooltip {
     display: block;
   }
 }
 
-.imm-tooltip-content { display: none; }
+.#{$prefix}-tooltip-content { display: none; }
