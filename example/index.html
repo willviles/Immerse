@@ -23,6 +23,7 @@
           <div class="row text-center">
             <h1>Learn to surf.</h1>
             <p>A super simple Immerse.js example page.</p>
+            <p><button data-imm-modal-open="https://www.youtube.com/watch?v=7RYzCWWZpBA">Watch Video</button></p>
             <p><button data-imm-scroll-to="boards">Let's Go</button></p>
           </div>
         </div>
@@ -123,7 +124,7 @@
       </div>
     </section>
 
-    <section id="section-3" class="imm-section">
+    <section id="academy" class="imm-section">
       <div class="container-fluid">
         <div class="row text-center">
           <h1>Join the surfing academy.</h1>
@@ -208,7 +209,7 @@
           // Define animations
           animations: {
             // Animation #1
-            'headerInitAnimation': {
+            'init': {
               runtime: ['init', 'enteredUp'], // Default enteringDown, enteringUp
               reset: ['exitedDown'], // Default exitedDown, exitedUp
 //               delay: 1,
@@ -230,7 +231,6 @@
         ///////////////////////////////////////////
 
         pageName.section({
-
           // Unique name for the section
           name: 'Boards',
           // Set the element. Must be able to take either a string, javascript or jquery selector
@@ -238,7 +238,7 @@
           // Define animations
           animations: {
             // Animation #1
-            'section1Animation': {
+            'boards': {
               devices: ['desktop'], // default touch & desktop
               breakpoints: ['mobile', 'tablet', 'mdDesktop', 'lgDesktop'],
               runtime: ['enteredDown', 'enteredUp'], // Default enteringDown, enteringUp
@@ -263,7 +263,7 @@
               value: 'blue'
             }
           },
-
+          // Component settings
           components: {
             stacks: {
               option1: 'THIS SHOULD ONLY BE VISIBLE IN BOARDS SECTION'

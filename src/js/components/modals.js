@@ -24,21 +24,44 @@ $.Immerse.registerComponent({
     this.modalOpen = this.imm.utils.namespacify.call(this.imm, 'modal-open');
     this.modalOpenDataTag = this.imm.utils.datatagify.call(this.imm, this.modalOpen);
     this.modalAction = this.imm.utils.namespacify.call(this.imm, 'modal-action');
+    this.modalYouTube = this.imm.utils.namespacify.call(this.imm, 'modal-youtube');
     this.pluginName = this.name;
 
     var section = opts.section,
         $section = $(section.element),
         that = this;
 
+    // Each modal open button
+    $.each($section.find(this.modalOpenDataTag), function(i, button) {
+      // Prepare button details
+      var openStr = $(button).data(that.modalOpen),
+          isYoutubeURL = openStr.match(that.youtube.test);
+
+      if (isYoutubeURL) {
+        var modalYouTube = that.imm.utils.namespacify.call(that.imm, 'modal-youtube');
+        $(button).attr('data-' + modalYouTube, 'true');
+        that.youtube.appendModal.call(that, section, button, openStr);
+      }
+    });
+
+    // On modal open button click
+    $(this.modalOpenDataTag, section.element).on('click', function(e) {
+
+      var openModal = that.modalOpen,
+          modalYouTube = that.modalYouTube,
+          openStr = $(this).attr('data-' + openModal),
+          isYoutubeURL = $(this).attr('data-' + modalYouTube);
+
+      if (isYoutubeURL) {
+        that.youtube.open.call(that, openStr);
+      } else {
+        that.actions.open.call(that, openStr);
+      }
+    });
+
     // Prepare modal sections
     $.each($section.find(this.modalIdDataTag), function(i, modal) {
       that.prepare.call(that, modal, section);
-    });
-
-    // Open buttons
-    $section.find(this.modalOpenDataTag).on('click', function(i, modalBtn) {
-      var modalId = $(this).data(that.modalOpen);
-      that.actions.open.call(that, modalId);
     });
 
     // get all .imm-modal-close, .imm-modal-cancel, .imm-modal-confirm buttons
@@ -121,6 +144,65 @@ $.Immerse.registerComponent({
     }
   },
 
+  youtube: {
+
+    players: [],
+
+    test: '^(https?\:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$',
+
+    parseId: function(url) {
+      var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/,
+          match = url.match(regExp);
+      if (match&&match[7].length==11){ return match[7]; }
+    },
+
+    setupAPI: function() {
+      var tag = document.createElement('script');
+      tag.src = "https://www.youtube.com/iframe_api";
+      var firstScriptTag = document.getElementsByTagName('script')[0];
+      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+    },
+
+    appendModal: function(section, button, url) {
+      var videoId = this.youtube.parseId(url),
+          $section = $(section.element),
+          that = this;
+
+      $(button).attr('data-' + this.modalOpen, 'youtube-' + videoId);
+      var youTubeModal = $('<div data-' + this.modalId + '="youtube-' + videoId + '"><div id="youtube-player-' + videoId + '"></div></div>')
+                        .appendTo($section);
+
+      this.youtube.setupAPI();
+
+      window.onYouTubeIframeAPIReady = function() {
+        that.youtube.players[videoId] = new YT.Player('youtube-player-' + videoId, {
+          height: '100%',
+          width: '100%',
+          videoId: videoId,
+          events: {
+            'onStateChange': videoStateChange
+          }
+        });
+      }
+
+      function videoStateChange(e) {
+        if (e.data == 0) { that.actions.close.call(that, youTubeModal, 'youtube-' + videoId); }
+      }
+
+    },
+
+    open: function(openStr) {
+      var videoId = openStr.replace('youtube-','');
+      this.youtube.players[videoId].playVideo();
+      this.actions.open.call(this, openStr);
+    },
+
+    close: function(modal, id) {
+      var videoId = id.replace('youtube-','');
+      this.youtube.players[videoId].stopVideo().seekTo(0, true);
+    }
+  },
+
   // Modal actions
   ///////////////////////////////////////////////////////
 
@@ -136,6 +218,8 @@ $.Immerse.registerComponent({
     close: function(modal, id) {
       var $modal = $(this.imm.utils.datatagify.call(this.imm, this.modalId, id)),
           $wrapper = $modal.closest('.' + this.modalWrapper).removeClass('opened');
+
+      if ($modal.data(this.modalYouTube) !== null) { this.youtube.close.call(this, modal, id); }
       $.Immerse.scrollController.htmlScroll(this.imm, 'unlock');
       this.imm._scrollContainer.focus();
       $modal.scrollTop(0);
