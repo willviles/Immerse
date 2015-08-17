@@ -33,12 +33,13 @@ Author URI: http://vil.es/
           muteButton: {
             unmuted: 'Audio On',
             muted: 'Audio Off',
-          }
+          },
+          devMode: false
         },
         sections: []
       };
 
-      this.setup = $.extend(true, this.defaults, setup);
+      this.setup = $.extend(true, {}, this.defaults, setup);
 
       return this;
     },
@@ -130,6 +131,12 @@ Author URI: http://vil.es/
           this.utils.cookies.set.call(this, e, '', -1);
         }
 
+      },
+
+      log: function(imm, thingToLog) {
+        if (imm.setup.options.devMode === true) {
+          console.log(thingToLog);
+        }
       }
     },
 
@@ -325,12 +332,12 @@ Author URI: http://vil.es/
         $.each(a.reset, function(i, r) { resetStr = resetStr + ' ' + r; });
 
         s.on(runtimeStr, function() {
-          console.log('Running ' + n);
+          that.imm.utils.log(that.imm, "Running animation '" + n + "'");
           t.play();
         });
 
         s.on(resetStr, function() {
-          console.log('Resetting ' + n);
+          that.imm.utils.log(that.imm, "Resetting animation '" + n + "'");
           t.pause(0, true);
         });
 
@@ -354,6 +361,7 @@ Author URI: http://vil.es/
 
         s.on(runtimeStr, function() {
           setTimeout(function() {
+            that.imm.utils.log(that.imm, "Running action: '" + n + "'");
             action.call(that, s);
           }, d);
         });
@@ -378,6 +386,7 @@ Author URI: http://vil.es/
 
         s.on(runtimeStr, function() {
           setTimeout(function() {
+            that.imm.utils.log(that.imm, "Attribute '" + n + "' updated to '" + value + "'");
             that.imm.$elem.trigger(n, value);
           }, d);
         });
@@ -776,16 +785,28 @@ Author URI: http://vil.es/
 
     unbound: function(e) {
 
-      var isAbove = this.imm._isTouch ?
-                    this.imm._scrollContainer.scrollTop() < this.imm._currentSection.scrollOffset :
-                    this.imm._scrollContainer.scrollTop() <= this.imm._currentSection.scrollOffset,
-          // If next section is not also unbound, ensure it scrolls to new section from a window height away
-          belowVal = this.imm._sectionBelow.options.unbindScroll === false ?
-                     this.imm._sectionBelow.scrollOffset - this.imm._windowHeight :
-                     this.imm._sectionBelow.scrollOffset,
-          isBelow = this.imm._isTouch ?
-                    this.imm._scrollContainer.scrollTop() > belowVal :
-                    this.imm._scrollContainer.scrollTop() >= belowVal;
+      if (this.imm._sectionAbove === undefined) {
+        var isAbove = false;
+      } else {
+        var isAbove = this.imm._isTouch ?
+                      this.imm._scrollContainer.scrollTop() < this.imm._currentSection.scrollOffset :
+                      this.imm._scrollContainer.scrollTop() <= this.imm._currentSection.scrollOffset;
+      }
+
+      // If next section is not also unbound, ensure it scrolls to new section from a window height away
+      if (this.imm._sectionBelow === undefined) {
+        var belowVal = false, isBelow = false;
+      // If next section is not also unbound, ensure it scrolls to new section from a window height away
+      } else {
+        var belowVal = this.imm._sectionBelow.options.unbindScroll === false ?
+                       this.imm._sectionBelow.scrollOffset - this.imm._windowHeight :
+                       this.imm._sectionBelow.scrollOffset,
+            isBelow = this.imm._isTouch ?
+                      this.imm._scrollContainer.scrollTop() > belowVal :
+                      this.imm._scrollContainer.scrollTop() >= belowVal;
+      }
+
+
 
       // If scrollTop is above current section
       if (isAbove) {
@@ -1230,7 +1251,10 @@ Author URI: http://vil.es/
 
           if (that.imm._isTouch && (a.type === 'video' || a.type === 'audio')) { return; }
           // Catch any error in instantiating asset
-          if (a.error) { console.log("Asset Failure: Could not preload " + a.type + " asset '" + n + "'"); return; }
+          if (a.error) {
+            that.imm.utils.log(that.imm, "Asset Failure: Could not preload " + a.type + " asset '" + n + "'");
+            return;
+          }
           assetQueue.push({name: n, asset: a});
         }
 
@@ -1294,7 +1318,11 @@ Author URI: http://vil.es/
       // Audio
       audio: function(n, a) {
 
-        if (a.path === undefined ) { console.log("Asset Error: Must define a path for audio asset '" + n + "'"); a.error = true; return false };
+        if (a.path === undefined ) {
+          this.imm.utils.log(this.imm, "Asset Error: Must define a path for audio asset '" + n + "'");
+          a.error = true;
+          return false
+        };
 
         var l = a.loop == true ? 'loop' : '',
             fileTypes = ($.isArray(a.fileTypes)) ? a.fileTypes : ['mp3'],
@@ -1313,7 +1341,11 @@ Author URI: http://vil.es/
       // Video
       video: function(n, o) {
 
-        if (o.path === undefined ) { console.log("Asset Error: Must define a path for video asset '" + n + "'"); o.error = true; return false };
+        if (o.path === undefined ) {
+          this.imm.utils.log(this.imm, "Asset Error: Must define a path for video asset '" + n + "'");
+          o.error = true;
+          return false
+        };
 
         var videoDataTag = this.imm.utils.namespacify.call(this.imm, 'video'),
             $wrapper = this.imm.$elem.find('[data-' + videoDataTag + '="' + n + '"]'),

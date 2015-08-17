@@ -35,7 +35,10 @@
 
           if (that.imm._isTouch && (a.type === 'video' || a.type === 'audio')) { return; }
           // Catch any error in instantiating asset
-          if (a.error) { console.log("Asset Failure: Could not preload " + a.type + " asset '" + n + "'"); return; }
+          if (a.error) {
+            that.imm.utils.log(that.imm, "Asset Failure: Could not preload " + a.type + " asset '" + n + "'");
+            return;
+          }
           assetQueue.push({name: n, asset: a});
         }
 
@@ -99,7 +102,11 @@
       // Audio
       audio: function(n, a) {
 
-        if (a.path === undefined ) { console.log("Asset Error: Must define a path for audio asset '" + n + "'"); a.error = true; return false };
+        if (a.path === undefined ) {
+          this.imm.utils.log(this.imm, "Asset Error: Must define a path for audio asset '" + n + "'");
+          a.error = true;
+          return false
+        };
 
         var l = a.loop == true ? 'loop' : '',
             fileTypes = ($.isArray(a.fileTypes)) ? a.fileTypes : ['mp3'],
@@ -118,7 +125,11 @@
       // Video
       video: function(n, o) {
 
-        if (o.path === undefined ) { console.log("Asset Error: Must define a path for video asset '" + n + "'"); o.error = true; return false };
+        if (o.path === undefined ) {
+          this.imm.utils.log(this.imm, "Asset Error: Must define a path for video asset '" + n + "'");
+          o.error = true;
+          return false
+        };
 
         var videoDataTag = this.imm.utils.namespacify.call(this.imm, 'video'),
             $wrapper = this.imm.$elem.find('[data-' + videoDataTag + '="' + n + '"]'),

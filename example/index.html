@@ -159,7 +159,8 @@
             muteButton: {
               unmuted: '<i class="fa fa-volume-up"></i> On',
               muted: '<i class="fa fa-volume-off"></i> Off',
-            }
+            },
+            devMode: true
           },
 
           // Assets to preload
@@ -246,20 +247,6 @@
                 ]
               }
             }
-          },
-          // Define actions
-          actions: {
-            // Action #1
-            'actionName': {
-              devices: ['touch', 'desktop'], // default mobile tablet mdDesktop lgDesktop
-              orientation: ['portrait', 'landscape'], // Only available when touch device is detected
-              runtime: ['enteringDown'], // enterDown, enterUp, leaveDown, leaveUp
-              action: function(s) {
-                // Execute custom action to occur at the runtime and on the device type selected
-                console.log('Section 1 Action running!');
-              }
-            }
-
           },
           // Custom Attributes get changed in the custom attributes dictionary. Fires an observer
           attributes: {

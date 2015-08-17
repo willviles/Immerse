@@ -153,12 +153,12 @@
         $.each(a.reset, function(i, r) { resetStr = resetStr + ' ' + r; });
 
         s.on(runtimeStr, function() {
-          console.log('Running ' + n);
+          that.imm.utils.log(that.imm, "Running animation '" + n + "'");
           t.play();
         });
 
         s.on(resetStr, function() {
-          console.log('Resetting ' + n);
+          that.imm.utils.log(that.imm, "Resetting animation '" + n + "'");
           t.pause(0, true);
         });
 
@@ -182,6 +182,7 @@
 
         s.on(runtimeStr, function() {
           setTimeout(function() {
+            that.imm.utils.log(that.imm, "Running action: '" + n + "'");
             action.call(that, s);
           }, d);
         });
@@ -206,6 +207,7 @@
 
         s.on(runtimeStr, function() {
           setTimeout(function() {
+            that.imm.utils.log(that.imm, "Attribute '" + n + "' updated to '" + value + "'");
             that.imm.$elem.trigger(n, value);
           }, d);
         });

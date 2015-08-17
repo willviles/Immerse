@@ -33,12 +33,13 @@ Author URI: http://vil.es/
           muteButton: {
             unmuted: 'Audio On',
             muted: 'Audio Off',
-          }
+          },
+          devMode: false
         },
         sections: []
       };
 
-      this.setup = $.extend(true, this.defaults, setup);
+      this.setup = $.extend(true, {}, this.defaults, setup);
 
       return this;
     },
@@ -130,6 +131,12 @@ Author URI: http://vil.es/
           this.utils.cookies.set.call(this, e, '', -1);
         }
 
+      },
+
+      log: function(imm, thingToLog) {
+        if (imm.setup.options.devMode === true) {
+          console.log(thingToLog);
+        }
       }
     },
 
