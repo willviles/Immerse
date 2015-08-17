@@ -1825,7 +1825,7 @@ $.Immerse.registerComponent({
           that = this;
 
       $(button).attr('data-' + this.modalOpen, 'youtube-' + videoId);
-      var youTubeModal = $('<div data-' + this.modalId + '="youtube-' + videoId + '"><div id="youtube-player-' + videoId + '"></div></div>')
+      var youTubeModal = $('<div data-' + this.modalId + '="youtube-' + videoId + '" data-'+ this.modalYouTube +'="true"><div id="youtube-player-' + videoId + '"></div></div>')
                         .appendTo($section);
 
       this.youtube.setupAPI();
@@ -1875,7 +1875,7 @@ $.Immerse.registerComponent({
       var $modal = $(this.imm.utils.datatagify.call(this.imm, this.modalId, id)),
           $wrapper = $modal.closest('.' + this.modalWrapper).removeClass('opened');
 
-      if ($modal.data(this.modalYouTube) !== null) { this.youtube.close.call(this, modal, id); }
+      if ($modal.data(this.modalYouTube) == true) { this.youtube.close.call(this, modal, id); }
       $.Immerse.scrollController.htmlScroll(this.imm, 'unlock');
       this.imm._scrollContainer.focus();
       $modal.scrollTop(0);
