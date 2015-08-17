@@ -9,7 +9,6 @@ Author URI: http://vil.es/
 
 $.Immerse.registerComponent({
   name: 'modals',
-  hasSectionObject: true,
 
   // Initialize component
   ///////////////////////////////////////////////////////
@@ -68,10 +67,11 @@ $.Immerse.registerComponent({
     var id = $(modal).data(this.modalId),
         niceId = $.camelCase(id),
         userSettings, extendedSettings,
-        modalDefaults = {
-          element: $(this),
-          onConfirm: 'close', onCancel: 'close', onClose: 'close', onEscape: 'close', onWrapperClick: 'close'
-        };
+        modalDefaults = section.components[this.pluginName].default;
+
+    modalDefaults.element = $(this);
+
+//     console.log(modalDefaults);
 
     // If no user settings defined, just add our modal defaults
     if (!section.components[this.pluginName].hasOwnProperty(niceId)) {
@@ -143,6 +143,12 @@ $.Immerse.registerComponent({
       $modal.scrollTop(0);
     }
 
+  },
+
+  defaults: {
+    'default': {
+      onConfirm: 'close', onCancel: 'close', onClose: 'close', onEscape: 'close', onWrapperClick: 'close'
+    }
   }
 
 });

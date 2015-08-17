@@ -46,10 +46,14 @@
 
       var componentSetupOpts = imm.setup.components;
 
+
+
       if (componentSetupOpts !== undefined) {
         $.each($.Immerse.componentRegistry, function(name, component) {
           if (componentSetupOpts.hasOwnProperty(name)) {
-            defaults.components[name] = componentSetupOpts[name];
+            var componentDefaults = defaults.components[name],
+                userSettings = componentSetupOpts[name];
+            defaults.components[name] = $.extend(true, {}, componentDefaults, userSettings);
           };
         });
       }

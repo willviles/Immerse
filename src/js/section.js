@@ -35,8 +35,10 @@
 
       // Extend component defaults
       defaults = $.Immerse.componentController.extendDefaults(defaults);
+      if (section.name = 'Boards') { console.log(defaults); }
       // Extend global component options
       defaults = $.Immerse.componentController.extendGlobalOptions(this.imm, defaults);
+      if (section.name = 'Boards') { console.log(defaults); }
       // Extend global audio options
       defaults = $.Immerse.audioController.extendGlobalOptions(this.imm, defaults);
 
@@ -120,6 +122,8 @@
       $.each(this.imm._sections, function(n, s) {
         $.Immerse.componentController.init(that, s);
       });
+
+      console.log(this.imm._sections);
 
       return this;
     },

@@ -180,6 +180,13 @@
           components: {
             stacks: {
               option1: 'Default global option'// Allow overriding of component defaults globally
+            },
+            modals: {
+              'default': {
+                onCancel: function(modal) {
+                  alert('Custom cancel action fired from global settings');
+                }
+              }
             }
           }
         });
@@ -262,22 +269,20 @@
               option1: 'THIS SHOULD ONLY BE VISIBLE IN BOARDS SECTION'
             },
             modals: {
+              'default': {
+                onCancel: function(modal) {
+                  alert('Custom cancel action fired from section default!');
+                }
+              },
               'boardOne': {
                 onCancel: function(modal) {
-                  // This is how you override modal settings
-                  alert('Custom cancel action fired!');
+                  alert('Custom cancel action fired from boardOne!');
                 }
               },
               'boardTwo': {
                 onCancel: function(modal) {
                   // This is how you override modal settings
-                  alert('Custom cancel action fired!');
-                }
-              },
-              'boardThree': {
-                onCancel: function(modal) {
-                  // This is how you override modal settings
-                  alert('Custom cancel action fired!');
+                  alert('Custom cancel action fired from boardTwo!');
                 }
               }
             }

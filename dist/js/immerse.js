@@ -214,8 +214,10 @@ Author URI: http://vil.es/
 
       // Extend component defaults
       defaults = $.Immerse.componentController.extendDefaults(defaults);
+      if (section.name = 'Boards') { console.log(defaults); }
       // Extend global component options
       defaults = $.Immerse.componentController.extendGlobalOptions(this.imm, defaults);
+      if (section.name = 'Boards') { console.log(defaults); }
       // Extend global audio options
       defaults = $.Immerse.audioController.extendGlobalOptions(this.imm, defaults);
 
@@ -299,6 +301,8 @@ Author URI: http://vil.es/
       $.each(this.imm._sections, function(n, s) {
         $.Immerse.componentController.init(that, s);
       });
+
+      console.log(this.imm._sections);
 
       return this;
     },
@@ -1596,10 +1600,14 @@ Author URI: http://vil.es/
 
       var componentSetupOpts = imm.setup.components;
 
+
+
       if (componentSetupOpts !== undefined) {
         $.each($.Immerse.componentRegistry, function(name, component) {
           if (componentSetupOpts.hasOwnProperty(name)) {
-            defaults.components[name] = componentSetupOpts[name];
+            var componentDefaults = defaults.components[name],
+                userSettings = componentSetupOpts[name];
+            defaults.components[name] = $.extend(true, {}, componentDefaults, userSettings);
           };
         });
       }
@@ -1663,7 +1671,6 @@ Author URI: http://vil.es/
 
 $.Immerse.registerComponent({
   name: 'modals',
-  hasSectionObject: true,
 
   // Initialize component
   ///////////////////////////////////////////////////////
@@ -1722,10 +1729,11 @@ $.Immerse.registerComponent({
     var id = $(modal).data(this.modalId),
         niceId = $.camelCase(id),
         userSettings, extendedSettings,
-        modalDefaults = {
-          element: $(this),
-          onConfirm: 'close', onCancel: 'close', onClose: 'close', onEscape: 'close', onWrapperClick: 'close'
-        };
+        modalDefaults = section.components[this.pluginName].default;
+
+    modalDefaults.element = $(this);
+
+//     console.log(modalDefaults);
 
     // If no user settings defined, just add our modal defaults
     if (!section.components[this.pluginName].hasOwnProperty(niceId)) {
@@ -1797,6 +1805,12 @@ $.Immerse.registerComponent({
       $modal.scrollTop(0);
     }
 
+  },
+
+  defaults: {
+    'default': {
+      onConfirm: 'close', onCancel: 'close', onClose: 'close', onEscape: 'close', onWrapperClick: 'close'
+    }
   }
 
 });
