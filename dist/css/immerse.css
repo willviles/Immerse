@@ -12,6 +12,17 @@ body::-webkit-scrollbar {
   height: 100vh;
 }
 
+.imm-vertcenter {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  -webkit-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+
 /* Loading */
 @-moz-keyframes rotate {
   from {

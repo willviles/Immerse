@@ -112,7 +112,7 @@ $.Immerse.registerComponent({
         id = modal.data(this.modalId),
         niceId = $.camelCase(id);
 
-    $(section.components.modals[niceId].element).trigger(action);
+    $(section.components[this.pluginName][niceId].element).trigger(action);
 
     var actionObj = section.components[this.pluginName][niceId]['on' + actionNiceName];
 

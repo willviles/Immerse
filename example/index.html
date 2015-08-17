@@ -1,18 +1,16 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Immerse Example</title>
-    <!-- Dependencies -->
+    <title>Learn To Surf &mdash; Immerse Example</title>
+    <!-- Include Dependencies -->
     <script src="../bower_components/jquery/jquery.min.js"></script>
     <script src="../bower_components/gsap/src/minified/TweenMax.min.js"></script>
-
     <!-- Include Immerse.js -->
     <script src="../dist/js/immerse.js"></script>
-
     <link rel="stylesheet" type="text/css" href="../dist/css/immerse.css">
+    <!-- Include Custom Styles -->
     <link rel="stylesheet" type="text/css" href="../example/css/bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../example/style.css">
-
     <meta name="viewport" content="user-scalable=no,width=device-width" />
   </head>
 
@@ -20,59 +18,44 @@
 
     <header id="header" class="imm-fullscreen imm-section">
       <div class="imm-video" data-imm-video="sun"></div>
-      <div class="container-fluid">
-        <div class="row text-center">
-          <h1>HEADER</h1>
-          <p>An animation for the header</p>
-          <p><button data-imm-modal-open="header-modal">Open 'header-modal'</button></p>
-        </div>
-      </div>
-
-      <div data-imm-modal-id="header-modal">
+      <div class="imm-vertcenter">
         <div class="container-fluid">
           <div class="row text-center">
-            <p><button data-imm-modal-action="close">Close</button></p>
-            <p><button data-imm-modal-action="cancel">Cancel</button></p>
-            <p><button data-imm-modal-action="confirm">Confirm</button></p>
+            <h1>Learn to surf.</h1>
+            <p>A super simple Immerse.js example page.</p>
+            <p><button data-imm-scroll-to="boards">Let's Go</button></p>
           </div>
         </div>
       </div>
     </header>
 
-
-
-    <section id="section-1" class="imm-fullscreen imm-section">
-      <div class="container-fluid">
-        <div class="row text-center">
-          <h1>SECTION 1</h1>
-          <div id="section-1-tooltip" class="imm-tooltip-content">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</div>
-          <p><span data-imm-tooltip="#section-1-tooltip">section 1</span></p>
-        </div>
-      </div>
-    </section>
-
-    <section id="section-2" class="imm-fullscreen imm-section">
-      <div class="imm-video" data-imm-video="sun"></div>
-      <div class="container-fluid">
-        <div class="row text-center">
-          <h1>SECTION 2</h1>
-          <p>An animation for section 2</p>
-        </div>
-      </div>
-    </section>
-
-    <section id="section-3" class="imm-section">
-      <div class="container-fluid">
-        <div class="row text-center">
-          <h1>SECTION 3</h1>
-          <p>An animation for section 3</p>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quae cum praeponunt, ut sit aliqua rerum selectio, naturam videntur sequi; Qui enim existimabit posse se miserum esse beatus non erit. An vero, inquit, quisquam potest probare, quod perceptfum, quod. Quamquam non negatis nos intellegere quid sit voluptas, sed quid ille dicat. Multa sunt dicta ab antiquis de contemnendis ac despiciendis rebus humanis;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Familiares nostros, credo, Sironem dicis et Philodemum, cum optimos viros, tum homines doctissimos. Prioris generis est docilitas, memoria; Iam in altera philosophiae parte. Egone quaeris, inquit, quid sentiam? Zenonis est, inquam, hoc Stoici. Non quam nostram quidem, inquit Pomponius iocans;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Occultum facinus esse potuerit, gaudebit; Qualem igitur hominem natura inchoavit? Duo Reges: constructio interrete. Hoc est non modo cor non habere, sed ne palatum quidem. Respondent extrema primis, media utrisque, omnia omnibus. Dicet pro me ipsa virtus nec dubitabit isti vestro beato M. Quem Tiberina descensio festo illo die tanto gaudio affecit, quanto L. Neminem videbis ita laudatum, ut artifex callidus comparandarum voluptatum diceretur. In schola desinis. Quid ergo hoc loco intellegit honestum? Quia dolori non voluptas contraria est, sed doloris privatio.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ait enim se, si uratur, Quam hoc suave! dicturum. Cur igitur, inquam, res tam dissimiles eodem nomine appellas? Qui est in parvis malis. Duo Reges: constructio interrete. In qua quid est boni praeter summam voluptatem, et eam sempiternam? Illud mihi a te nimium festinanter dictum videtur, sapientis omnis esse semper beatos;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Certe, nisi voluptatem tanti aestimaretis. Sed residamus, inquit, si placet. Hoc loco tenere se Triarius non potuit. An potest cupiditas finiri?</p>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quae cum praeponunt, ut sit aliqua rerum selectio, naturam videntur sequi; Qui enim existimabit posse se miserum esse beatus non erit. An vero, inquit, quisquam potest probare, quod perceptfum, quod. Quamquam non negatis nos intellegere quid sit voluptas, sed quid ille dicat. Multa sunt dicta ab antiquis de contemnendis ac despiciendis rebus humanis;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Familiares nostros, credo, Sironem dicis et Philodemum, cum optimos viros, tum homines doctissimos. Prioris generis est docilitas, memoria; Iam in altera philosophiae parte. Egone quaeris, inquit, quid sentiam? Zenonis est, inquam, hoc Stoici. Non quam nostram quidem, inquit Pomponius iocans;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Occultum facinus esse potuerit, gaudebit; Qualem igitur hominem natura inchoavit? Duo Reges: constructio interrete. Hoc est non modo cor non habere, sed ne palatum quidem. Respondent extrema primis, media utrisque, omnia omnibus. Dicet pro me ipsa virtus nec dubitabit isti vestro beato M. Quem Tiberina descensio festo illo die tanto gaudio affecit, quanto L. Neminem videbis ita laudatum, ut artifex callidus comparandarum voluptatum diceretur. In schola desinis. Quid ergo hoc loco intellegit honestum? Quia dolori non voluptas contraria est, sed doloris privatio.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ait enim se, si uratur, Quam hoc suave! dicturum. Cur igitur, inquam, res tam dissimiles eodem nomine appellas? Qui est in parvis malis. Duo Reges: constructio interrete. In qua quid est boni praeter summam voluptatem, et eam sempiternam? Illud mihi a te nimium festinanter dictum videtur, sapientis omnis esse semper beatos;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Certe, nisi voluptatem tanti aestimaretis. Sed residamus, inquit, si placet. Hoc loco tenere se Triarius non potuit. An potest cupiditas finiri?</p>
-          <p><button data-imm-modal-open="sectionThreeModal">Open 'sectionThreeModal'</button></p>
+    <section id="boards" class="imm-fullscreen imm-section">
+      <div class="imm-vertcenter">
+        <div class="container-fluid">
+          <div class="row text-center">
+            <h1>Grab a board.</h1>
+          </div>
+          <ul class="row">
+            <li class="col-sm-4">
+              <button data-imm-modal-open="board-one">
+                Board One
+              </button>
+            </li>
+            <li class="col-sm-4">
+              <button data-imm-modal-open="board-two">
+                Board Two
+              </button>
+            </li>
+            <li class="col-sm-4">
+              <button data-imm-modal-open="board-three">
+                Board Three
+              </button>
+            </li>
+          </ul>
         </div>
       </div>
 
-      <div data-imm-modal-id="sectionThreeModal">
+      <div data-imm-modal-id="board-one">
         <div class="container-fluid">
           <div class="row text-center">
             <p><button data-imm-modal-action="close">Close</button></p>
@@ -81,52 +64,71 @@
           </div>
           <div class="row">
             <div class="col-xs-4 col-xs-offset-4">
-              <h1>SECTION 3 and a bit more</h1>
-              <p>An animation for section 3 and a bit more</p>
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quae cum praeponunt, ut sit aliqua rerum selectio, naturam videntur sequi; Qui enim existimabit posse se miserum esse beatus non erit. An vero, inquit, quisquam potest probare, quod perceptfum, quod. Quamquam non negatis nos intellegere quid sit voluptas, sed quid ille dicat. Multa sunt dicta ab antiquis de contemnendis ac despiciendis rebus humanis;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Familiares nostros, credo, Sironem dicis et Philodemum, cum optimos viros, tum homines doctissimos. Prioris generis est docilitas, memoria; Iam in altera philosophiae parte. Egone quaeris, inquit, quid sentiam? Zenonis est, inquam, hoc Stoici. Non quam nostram quidem, inquit Pomponius iocans;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Occultum facinus esse potuerit, gaudebit; Qualem igitur hominem natura inchoavit? Duo Reges: constructio interrete. Hoc est non modo cor non habere, sed ne palatum quidem. Respondent extrema primis, media utrisque, omnia omnibus. Dicet pro me ipsa virtus nec dubitabit isti vestro beato M. Quem Tiberina descensio festo illo die tanto gaudio affecit, quanto L. Neminem videbis ita laudatum, ut artifex callidus comparandarum voluptatum diceretur. In schola desinis. Quid ergo hoc loco intellegit honestum? Quia dolori non voluptas contraria est, sed doloris privatio.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ait enim se, si uratur, Quam hoc suave! dicturum. Cur igitur, inquam, res tam dissimiles eodem nomine appellas? Qui est in parvis malis. Duo Reges: constructio interrete. In qua quid est boni praeter summam voluptatem, et eam sempiternam? Illud mihi a te nimium festinanter dictum videtur, sapientis omnis esse semper beatos;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Certe, nisi voluptatem tanti aestimaretis. Sed residamus, inquit, si placet. Hoc loco tenere se Triarius non potuit. An potest cupiditas finiri?</p>
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quae cum praeponunt, ut sit aliqua rerum selectio, naturam videntur sequi; Qui enim existimabit posse se miserum esse beatus non erit. An vero, inquit, quisquam potest probare, quod perceptfum, quod. Quamquam non negatis nos intellegere quid sit voluptas, sed quid ille dicat. Multa sunt dicta ab antiquis de contemnendis ac despiciendis rebus humanis;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Familiares nostros, credo, Sironem dicis et Philodemum, cum optimos viros, tum homines doctissimos. Prioris generis est docilitas, memoria; Iam in altera philosophiae parte. Egone quaeris, inquit, quid sentiam? Zenonis est, inquam, hoc Stoici. Non quam nostram quidem, inquit Pomponius iocans;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Occultum facinus esse potuerit, gaudebit; Qualem igitur hominem natura inchoavit? Duo Reges: constructio interrete. Hoc est non modo cor non habere, sed ne palatum quidem. Respondent extrema primis, media utrisque, omnia omnibus. Dicet pro me ipsa virtus nec dubitabit isti vestro beato M. Quem Tiberina descensio festo illo die tanto gaudio affecit, quanto L. Neminem videbis ita laudatum, ut artifex callidus comparandarum voluptatum diceretur. In schola desinis. Quid ergo hoc loco intellegit honestum? Quia dolori non voluptas contraria est, sed doloris privatio.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ait enim se, si uratur, Quam hoc suave! dicturum. Cur igitur, inquam, res tam dissimiles eodem nomine appellas? Qui est in parvis malis. Duo Reges: constructio interrete. In qua quid est boni praeter summam voluptatem, et eam sempiternam? Illud mihi a te nimium festinanter dictum videtur, sapientis omnis esse semper beatos;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Certe, nisi voluptatem tanti aestimaretis. Sed residamus, inquit, si placet. Hoc loco tenere se Triarius non potuit. An potest cupiditas finiri?</p>
+              <h1>Board One</h1>
+              <p>Awesome board.</p>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quae cum praeponunt, ut sit aliqua rerum selectio, naturam videntur sequi; Qui enim existimabit posse se miserum esse beatus non erit. An vero, inquit, quisquam potest probare, quod perceptfum, quod. Quamquam non negatis nos intellegere quid sit voluptas, sed quid ille dicat. Multa sunt dicta ab antiquis de contemnendis ac despiciendis rebus humanis;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Familiares nostros, credo, Sironem dicis et Philodemum, cum optimos viros, tum homines doctissimos.</p>
             </div>
           </div>
         </div>
       </div>
-    </section>
 
-    <section id="section-3-and-a-bit" class="imm-section">
-      <div class="container-fluid">
-        <div class="row text-center">
-          <h1>SECTION 3 and a bit</h1>
-          <p>An animation for section 3 and a bit</p>
+      <div data-imm-modal-id="board-two">
+        <div class="container-fluid">
+          <div class="row text-center">
+            <p><button data-imm-modal-action="close">Close</button></p>
+            <p><button data-imm-modal-action="cancel">Cancel</button></p>
+            <p><button data-imm-modal-action="confirm">Confirm</button></p>
+          </div>
+          <div class="row">
+            <div class="col-xs-4 col-xs-offset-4">
+              <h1>Board Two</h1>
+              <p>Awesome board.</p>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quae cum praeponunt, ut sit aliqua rerum selectio, naturam videntur sequi; Qui enim existimabit posse se miserum esse beatus non erit. An vero, inquit, quisquam potest probare, quod perceptfum, quod. Quamquam non negatis nos intellegere quid sit voluptas, sed quid ille dicat. Multa sunt dicta ab antiquis de contemnendis ac despiciendis rebus humanis;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Familiares nostros, credo, Sironem dicis et Philodemum, cum optimos viros, tum homines doctissimos.</p>
+            </div>
+          </div>
         </div>
       </div>
+
+      <div data-imm-modal-id="board-three">
+        <div class="container-fluid">
+          <div class="row text-center">
+            <p><button data-imm-modal-action="close">Close</button></p>
+            <p><button data-imm-modal-action="cancel">Cancel</button></p>
+            <p><button data-imm-modal-action="confirm">Confirm</button></p>
+          </div>
+          <div class="row">
+            <div class="col-xs-4 col-xs-offset-4">
+              <h1>Board Three</h1>
+              <p>Awesome board.</p>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quae cum praeponunt, ut sit aliqua rerum selectio, naturam videntur sequi; Qui enim existimabit posse se miserum esse beatus non erit. An vero, inquit, quisquam potest probare, quod perceptfum, quod. Quamquam non negatis nos intellegere quid sit voluptas, sed quid ille dicat. Multa sunt dicta ab antiquis de contemnendis ac despiciendis rebus humanis;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Familiares nostros, credo, Sironem dicis et Philodemum, cum optimos viros, tum homines doctissimos.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </section>
 
-    <section id="section-3-and-a-bit-more" class="imm-section">
-      <div class="container-fluid">
-        <div class="row text-center">
-          <div class="col-xs-4 col-xs-offset-4">
-            <h1>SECTION 3 and a bit more</h1>
-            <p>An animation for section 3 and a bit more</p>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quae cum praeponunt, ut sit aliqua rerum selectio, naturam videntur sequi; Qui enim existimabit posse se miserum esse beatus non erit. An vero, inquit, quisquam potest probare, quod perceptfum, quod. Quamquam non negatis nos intellegere quid sit voluptas, sed quid ille dicat. Multa sunt dicta ab antiquis de contemnendis ac despiciendis rebus humanis;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Familiares nostros, credo, Sironem dicis et Philodemum, cum optimos viros, tum homines doctissimos. Prioris generis est docilitas, memoria; Iam in altera philosophiae parte. Egone quaeris, inquit, quid sentiam? Zenonis est, inquam, hoc Stoici. Non quam nostram quidem, inquit Pomponius iocans;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Occultum facinus esse potuerit, gaudebit; Qualem igitur hominem natura inchoavit? Duo Reges: constructio interrete. Hoc est non modo cor non habere, sed ne palatum quidem. Respondent extrema primis, media utrisque, omnia omnibus. Dicet pro me ipsa virtus nec dubitabit isti vestro beato M. Quem Tiberina descensio festo illo die tanto gaudio affecit, quanto L. Neminem videbis ita laudatum, ut artifex callidus comparandarum voluptatum diceretur. In schola desinis. Quid ergo hoc loco intellegit honestum? Quia dolori non voluptas contraria est, sed doloris privatio.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ait enim se, si uratur, Quam hoc suave! dicturum. Cur igitur, inquam, res tam dissimiles eodem nomine appellas? Qui est in parvis malis. Duo Reges: constructio interrete. In qua quid est boni praeter summam voluptatem, et eam sempiternam? Illud mihi a te nimium festinanter dictum videtur, sapientis omnis esse semper beatos;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Certe, nisi voluptatem tanti aestimaretis. Sed residamus, inquit, si placet. Hoc loco tenere se Triarius non potuit. An potest cupiditas finiri?</p>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quae cum praeponunt, ut sit aliqua rerum selectio, naturam videntur sequi; Qui enim existimabit posse se miserum esse beatus non erit. An vero, inquit, quisquam potest probare, quod perceptfum, quod. Quamquam non negatis nos intellegere quid sit voluptas, sed quid ille dicat. Multa sunt dicta ab antiquis de contemnendis ac despiciendis rebus humanis;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Familiares nostros, credo, Sironem dicis et Philodemum, cum optimos viros, tum homines doctissimos. Prioris generis est docilitas, memoria; Iam in altera philosophiae parte. Egone quaeris, inquit, quid sentiam? Zenonis est, inquam, hoc Stoici. Non quam nostram quidem, inquit Pomponius iocans;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Occultum facinus esse potuerit, gaudebit; Qualem igitur hominem natura inchoavit? Duo Reges: constructio interrete. Hoc est non modo cor non habere, sed ne palatum quidem. Respondent extrema primis, media utrisque, omnia omnibus. Dicet pro me ipsa virtus nec dubitabit isti vestro beato M. Quem Tiberina descensio festo illo die tanto gaudio affecit, quanto L. Neminem videbis ita laudatum, ut artifex callidus comparandarum voluptatum diceretur. In schola desinis. Quid ergo hoc loco intellegit honestum? Quia dolori non voluptas contraria est, sed doloris privatio.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ait enim se, si uratur, Quam hoc suave! dicturum. Cur igitur, inquam, res tam dissimiles eodem nomine appellas? Qui est in parvis malis. Duo Reges: constructio interrete. In qua quid est boni praeter summam voluptatem, et eam sempiternam? Illud mihi a te nimium festinanter dictum videtur, sapientis omnis esse semper beatos;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Certe, nisi voluptatem tanti aestimaretis. Sed residamus, inquit, si placet. Hoc loco tenere se Triarius non potuit. An potest cupiditas finiri?</p>
+    <section id="lessons" class="imm-fullscreen imm-section">
+      <div class="imm-video" data-imm-video="sun"></div>
+      <div class="imm-vertcenter">
+        <div class="container-fluid">
+          <div class="row text-center">
+            <h1>Get some lessons.</h1>
+            <div id="steve-tooltip" class="imm-tooltip-content">A little bio for Steve the surfer.</div>
+            <p><span data-imm-tooltip="#steve-tooltip">Steve</span></p>
+            <div id="sarah-tooltip" class="imm-tooltip-content">A little bio for Sarah the surfer.</div>
+            <p><span data-imm-tooltip="#sarah-tooltip">Sarah</span></p>
           </div>
         </div>
       </div>
     </section>
 
-    <section id="section-4" class="imm-fullscreen imm-section">
+    <section id="section-3" class="imm-section">
       <div class="container-fluid">
         <div class="row text-center">
-          <h1>SECTION 4</h1>
-          <p>An animation for section 4</p>
-        </div>
-      </div>
-    </section>
+          <h1>Join the surfing academy.</h1>
+          <p>An animation for section 3</p>
 
-    <section id="section-5" class="imm-fullscreen imm-section">
-      <div class="container-fluid">
-        <div class="row text-center">
-          <h1>SECTION 5</h1>
-          <p>An animation for section 5</p>
         </div>
       </div>
     </section>
@@ -213,16 +215,6 @@
                 ]
               }
             }
-          },
-          components: {
-            modals: {
-              'headerModal': {
-                onCancel: function(modal) {
-                  // This is how you override modal settings
-                  alert('Custom cancel action fired!');
-                }
-              }
-            }
           }
         });
 
@@ -232,9 +224,9 @@
         pageName.section({
 
           // Unique name for the section
-          name: 'Section 1',
+          name: 'Boards',
           // Set the element. Must be able to take either a string, javascript or jquery selector
-          element: $('#section-1'),
+          element: $('#boards'),
           // Define animations
           animations: {
             // Animation #1
@@ -280,43 +272,28 @@
 
           components: {
             stacks: {
-              option1: 'THIS SHOULD ONLY BE VISIBLE IN COMPONENT 1'
+              option1: 'THIS SHOULD ONLY BE VISIBLE IN BOARDS SECTION'
+            },
+            modals: {
+              'boardOne': {
+                onCancel: function(modal) {
+                  // This is how you override modal settings
+                  alert('Custom cancel action fired!');
+                }
+              },
+              'boardTwo': {
+                onCancel: function(modal) {
+                  // This is how you override modal settings
+                  alert('Custom cancel action fired!');
+                }
+              },
+              'boardThree': {
+                onCancel: function(modal) {
+                  // This is how you override modal settings
+                  alert('Custom cancel action fired!');
+                }
+              }
             }
-          }
-        });
-
-        // Setup #section-2
-        ///////////////////////////////////////////
-
-        pageName.section({
-
-          // Unique name for the section
-          name: 'Section 2',
-          // Set the element. Must be able to take either a string, javascript or jquery selector
-          element: $('#section-2'),
-          // Define audio change
-          audio: {
-            'gnossienne': { volume: .2, changeDuration: 1 }, // Audio #1
-            'city': { volume: .1, changeDuration: .5 }
-          }
-        });
-
-        // Setup #section-3
-        ///////////////////////////////////////////
-
-        pageName.section({
-
-          // Unique name for the section
-          name: 'Section 3',
-          // Set the element. Must be able to take either a string, javascript or jquery selector
-          element: $('#section-3'),
-          // Section options
-          options: {
-            unbindScroll: true  // Make unbound
-          },
-          // Define audio change
-          audio: {
-            'gnossienne': { volume: .2, changeDuration: 1 }
           }
         });
 

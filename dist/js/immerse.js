@@ -216,7 +216,7 @@ Author URI: http://vil.es/
       this.sectionDefaults = defaults;
 
       // Extend upon defaults with section options
-      section = $.extend({}, defaults, section);
+      section = $.extend(true, {}, defaults, section);
 
       // Push section to Immerse setup sections object
       this.imm.setup.sections.push(section);
@@ -1549,7 +1549,6 @@ Author URI: http://vil.es/
         if (component.hasOwnProperty('hasSectionObject') && component.hasSectionObject === true) {
           defaults.components[name] = {};
         }
-
         if (component.hasOwnProperty('defaults')) {
           defaults.components[name] = component.defaults;
         };
@@ -1735,7 +1734,7 @@ $.Immerse.registerComponent({
         id = modal.data(this.modalId),
         niceId = $.camelCase(id);
 
-    $(section.components.modals[niceId].element).trigger(action);
+    $(section.components[this.pluginName][niceId].element).trigger(action);
 
     var actionObj = section.components[this.pluginName][niceId]['on' + actionNiceName];
 
@@ -1766,6 +1765,43 @@ $.Immerse.registerComponent({
       $modal.scrollTop(0);
     }
 
+  }
+
+});
+
+/*
+Plugin: Immerse.js
+Component: ScrollTo
+Description: Easily enables sections to be scrolled to from buttons containing the -scroll-to class
+Version: 1.0.0
+Author: Will Viles
+Author URI: http://vil.es/
+*/
+
+$.Immerse.registerComponent({
+  name: 'scroll-to',
+
+  // Initialize function
+  init: function(opts) {
+    this.imm = opts.immerse;
+    this.scrollToNamespace = this.imm.utils.namespacify.call(this.imm, 'scroll-to');
+    this.scrollToDataTag = this.imm.utils.datatagify.call(this.imm, this.scrollToNamespace);
+
+    var section = opts.section,
+        $section = $(section.element),
+        that = this;
+
+    // On any click of a scroll-to button
+
+    $section.find(this.scrollToDataTag).on('click', function(e) {
+      var $button = $(this),
+          target = $button.data(that.scrollToNamespace),
+          $target = (target.charAt(0) === '#') ? $(target) : $('#' + target);
+
+      $.Immerse.scrollController.doScroll(that.imm, $target);
+    });
+
+    return this;
   }
 
 });

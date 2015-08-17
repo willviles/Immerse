@@ -44,7 +44,7 @@
       this.sectionDefaults = defaults;
 
       // Extend upon defaults with section options
-      section = $.extend({}, defaults, section);
+      section = $.extend(true, {}, defaults, section);
 
       // Push section to Immerse setup sections object
       this.imm.setup.sections.push(section);
