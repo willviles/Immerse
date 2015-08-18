@@ -138,7 +138,7 @@
       <div class="imm-vertcenter">
         <div class="container-fluid">
           <div class="row text-center">
-            <h3><span class="white-text">Choose a</span> tutor.</h3>
+            <h3><span class="white-text">Meet the</span> tutors.</h3>
             <div id="steve-tooltip" class="imm-tooltip-content">A little bio for Steve the surfer.</div>
             <p><span data-imm-tooltip="#steve-tooltip">Steve</span></p>
             <div id="sarah-tooltip" class="imm-tooltip-content">A little bio for Sarah the surfer.</div>
@@ -148,12 +148,11 @@
       </div>
     </section>
 
-    <section id="academy" class="imm-section">
+    <section id="join" class="imm-section">
       <div class="container-fluid">
         <div class="row text-center">
-          <h1>Join the surfing academy.</h1>
+          <h3>Join the <span class="yellow-text">academy.</span></h3>
           <p>An animation for section 3</p>
-
         </div>
       </div>
     </section>
@@ -343,35 +342,17 @@
 
         pageName.init($('body'));
 
-        // Manipulate Immerse after init
-/*
-        setTimeout(function() {
-          pageName.changeSection('DOWN');
-        }, 3000);
-*/
-
-/*
-        setTimeout(function() {
-          if (pageName.audio() === false) {
-            pageName.audio('unmute');
-          } else if (pageName.audio() === true) {
-            pageName.audio('mute');
-          }
-        }, 3000);
-*/
+        // Change nav colors
 
         $('body').on('navColor', function(obj, value) {
 
           var $navs = $('.side-nav, .top-nav');
-
           $.each($navs, function(i, nav) {
             var $nav = $(nav),
                 currentColor = $nav.data('color');
-
             $nav.removeClass(currentColor).addClass(value).data('color', value);
-          })
+          });
 
-          console.log('navColor is ' + value);
         });
 
 
