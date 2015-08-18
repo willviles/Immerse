@@ -8,7 +8,7 @@ Author URI: http://vil.es/
 */
 
 [data-#{$prefix}-tooltip] {
-  position: relative; cursor: pointer; border-bottom: 2px solid darken(white, 10%);
+  position: relative; cursor: pointer; // border-bottom: 2px solid darken(white, 10%);
   .#{$prefix}-tooltip {
     display: none;
     position: absolute; width: auto;

@@ -1863,6 +1863,19 @@ button.fullwidth {
 .button.fullwidth {
   display: block;
 }
+.button.small {
+  padding: 0 1em 0 1em;
+  line-height: 2;
+  -moz-border-radius: 1em;
+  -webkit-border-radius: 1em;
+  border-radius: 1em;
+  -moz-box-shadow: 0px 0px 0px 3px #d0deec inset;
+  -webkit-box-shadow: 0px 0px 0px 3px #d0deec inset;
+  box-shadow: 0px 0px 0px 3px #d0deec inset;
+}
+.button.small span {
+  font-size: .9em;
+}
 .button:hover {
   -moz-box-shadow: 0px 0px 0px 4px #acc4dd inset;
   -webkit-box-shadow: 0px 0px 0px 4px #acc4dd inset;
@@ -1871,6 +1884,26 @@ button.fullwidth {
   -o-transition: all 0.1s linear;
   -webkit-transition: all 0.1s linear;
   transition: all 0.1s linear;
+}
+.button.white {
+  -moz-box-shadow: 0px 0px 0px 4px #f2f2f2 inset;
+  -webkit-box-shadow: 0px 0px 0px 4px #f2f2f2 inset;
+  box-shadow: 0px 0px 0px 4px #f2f2f2 inset;
+}
+.button.white:hover {
+  -moz-box-shadow: 0px 0px 0px 4px white inset;
+  -webkit-box-shadow: 0px 0px 0px 4px white inset;
+  box-shadow: 0px 0px 0px 4px white inset;
+}
+.button.white.small {
+  -moz-box-shadow: 0px 0px 0px 3px #f2f2f2 inset;
+  -webkit-box-shadow: 0px 0px 0px 3px #f2f2f2 inset;
+  box-shadow: 0px 0px 0px 3px #f2f2f2 inset;
+}
+.button.white.small:hover {
+  -moz-box-shadow: 0px 0px 0px 3px white inset;
+  -webkit-box-shadow: 0px 0px 0px 3px white inset;
+  box-shadow: 0px 0px 0px 3px white inset;
 }
 
 nav.side-nav {
@@ -2182,6 +2215,59 @@ nav.top-nav.white-grey div button {
 
 #tutors {
   background: #f5da55;
+}
+#tutors .title {
+  padding-top: 5vh;
+  padding-bottom: 7vh;
+}
+#tutors .next {
+  padding-top: 5vh;
+}
+#tutors .steve, #tutors .sarah {
+  position: relative;
+}
+#tutors .steve img, #tutors .sarah img {
+  height: 100%;
+  width: auto;
+  max-width: 100%;
+}
+#tutors .steve .name, #tutors .sarah .name {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  font-family: 'HeavyItalic', sans-serif;
+  font-style: italic;
+  font-weight: 800;
+  color: white;
+  line-height: 2;
+}
+#tutors .steve {
+  height: 35vh;
+  float: right;
+  margin-right: -30px;
+}
+#tutors .steve img {
+  float: right;
+}
+#tutors .steve .name {
+  bottom: 100%;
+  margin-bottom: 1em;
+  border-bottom: 2px solid white;
+}
+#tutors .sarah {
+  height: 40vh;
+  float: left;
+  margin-top: 40px;
+  margin-left: -120px;
+}
+#tutors .sarah img {
+  float: left;
+}
+#tutors .sarah .name {
+  top: 100%;
+  margin-top: .5em;
+  border-top: 2px solid white;
+  text-align: right;
 }
 
 /*# sourceMappingURL=style.css.map */

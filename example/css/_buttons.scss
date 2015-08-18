@@ -37,6 +37,13 @@ button {
 
   // Fullwidth
   &.fullwidth { display: block; }
+  &.small {
+    padding: 0 1em 0 1em;
+    line-height: 2;
+    @include border-radius(1em);
+    span { font-size: .9em; }
+    @include box-shadow(0px 0px 0px 3px $btn-color inset);
+  }
 
   // Outline style
   color: inherit;
@@ -46,6 +53,19 @@ button {
   &:hover {
     @include box-shadow(0px 0px 0px 4px darken($btn-color, 10%) inset);
     @include transition(all .1s linear);
+  }
+
+  &.white {
+    @include box-shadow(0px 0px 0px 4px darken(white, 5%) inset);
+    &:hover {
+      @include box-shadow(0px 0px 0px 4px white inset);
+    }
+    &.small {
+      @include box-shadow(0px 0px 0px 3px darken(white, 5%) inset);
+      &:hover {
+        @include box-shadow(0px 0px 0px 3px white inset);
+      }
+    }
   }
 
 }

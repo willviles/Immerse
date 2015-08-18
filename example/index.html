@@ -51,7 +51,7 @@
           <div class="row text-center">
             <h3><span class="yellow-text">Grab a</span> board.</h3>
             <p>
-              <button data-imm-scroll-to="tutors" class="button">
+              <button data-imm-scroll-to="tutors" class="button small">
                 <span><i class="fa fa-angle-down"></i> Next</span>
               </button>
             </p>
@@ -63,19 +63,13 @@
         <div class="container">
           <ul class="row">
             <li class="col-sm-4">
-              <button data-imm-modal-open="board-one">
-                Board One
-              </button>
+              <button data-imm-modal-open="board-one"></button>
             </li>
             <li class="col-sm-4">
-              <button data-imm-modal-open="board-two">
-                Board Two
-              </button>
+              <button data-imm-modal-open="board-two"></button>
             </li>
             <li class="col-sm-4">
-              <button data-imm-modal-open="board-three">
-                Board Three
-              </button>
+              <button data-imm-modal-open="board-three"></button>
             </li>
           </ul>
         </div>
@@ -138,11 +132,28 @@
       <div class="imm-vertcenter">
         <div class="container-fluid">
           <div class="row text-center">
-            <h3><span class="white-text">Meet the</span> tutors.</h3>
-            <div id="steve-tooltip" class="imm-tooltip-content">A little bio for Steve the surfer.</div>
-            <p><span data-imm-tooltip="#steve-tooltip">Steve</span></p>
-            <div id="sarah-tooltip" class="imm-tooltip-content">A little bio for Sarah the surfer.</div>
-            <p><span data-imm-tooltip="#sarah-tooltip">Sarah</span></p>
+            <h3 class="title"><span class="white-text">Meet the</span> tutors.</h3>
+          </div>
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="steve">
+                <span class="name">Steve</span>
+                <img src="assets/images/tutor-steve.jpg" />
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="sarah">
+                <span class="name">Sarah</span>
+                <img src="assets/images/tutor-sarah.jpg" />
+              </div>
+            </div>
+          </div>
+          <div class="row text-center">
+            <p class="next">
+              <button data-imm-scroll-to="join" class="button small white">
+                <span><i class="fa fa-angle-down"></i> Next</span>
+              </button>
+            </p>
           </div>
         </div>
       </div>
@@ -277,13 +288,13 @@
               timeline: function(s) {
                 return [
                   TweenMax.from(s.find('.example-boards li:nth-of-type(1)'), 2, {
-                    opacity: 0, y: -70, delay: .5, ease: Elastic.easeOut.config(1, 0.3)
+                    opacity: 0, y: -70, delay: .2, ease: Elastic.easeOut.config(1, 0.3)
                   }),
                   TweenMax.from(s.find('.example-boards li:nth-of-type(2)'), 2, {
-                    opacity: 0, y: -70, delay: .5, ease: Elastic.easeOut.config(1, 0.3)
+                    opacity: 0, y: -70, delay: .4, ease: Elastic.easeOut.config(1, 0.3)
                   }),
                   TweenMax.from(s.find('.example-boards li:nth-of-type(3)'), 2, {
-                    opacity: 0, y: -70, delay: .5, ease: Elastic.easeOut.config(1, 0.3)
+                    opacity: 0, y: -70, delay: .6, ease: Elastic.easeOut.config(1, 0.3)
                   })
                 ]
               }
@@ -329,6 +340,26 @@
           name: 'Tutors',
           // Set the element. Must be able to take either a string, javascript or jquery selector
           element: $('#tutors'),
+          // Define animations
+          animations: {
+            // Animation #1
+            'tutors': {
+              devices: ['desktop'], // default touch & desktop
+              breakpoints: ['mobile', 'tablet', 'mdDesktop', 'lgDesktop'],
+              runtime: ['enteringDown', 'enteringUp'], // Default enteringDown, enteringUp
+              reset: ['exitedDown', 'exitedUp'], // Default exitedDown, exitedUp
+              timeline: function(s) {
+                return [
+                  TweenMax.from(s.find('.steve'), 2, {
+                    opacity: 0, x: -70, delay: .5, ease: Elastic.easeOut.config(1, 0.3)
+                  }),
+                  TweenMax.from(s.find('.sarah'), 2, {
+                    opacity: 0, x: 70, delay: .5, ease: Elastic.easeOut.config(1, 0.3)
+                  })
+                ]
+              }
+            }
+          },
           // Custom Attributes get changed in the custom attributes dictionary. Fires an observer
           attributes: {
             'navColor': {

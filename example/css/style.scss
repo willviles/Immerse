@@ -58,4 +58,22 @@ $jumpBezier: cubic-bezier(.25,1.43,.55,.99);
 
 #tutors {
   background: $yellow;
+  .title { padding-top: 5vh; padding-bottom: 7vh; }
+  .next { padding-top: 5vh; }
+  .steve, .sarah {
+    position: relative;
+    img { height: 100%; width: auto; max-width: 100%; }
+    .name { position: absolute; left: 0; width: 100%; @include titlefont(); color: white; line-height: 2; }
+  }
+  .steve {
+    height: 35vh; float: right; margin-right: -30px;
+    img { float: right; }
+    .name { bottom: 100%; margin-bottom: 1em; border-bottom: 2px solid white; }
+  }
+  .sarah {
+    height: 40vh; float: left; margin-top: 40px; margin-left: -120px;
+    img { float: left; }
+    .name { top: 100%; margin-top: .5em; border-top: 2px solid white; text-align: right; }
+  }
+
 }
