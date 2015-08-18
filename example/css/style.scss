@@ -5,10 +5,13 @@ $ltblue: #d0deec;
 @import "compass/reset";
 @import 'compass';
 @import 'compass/layout';
+@import 'mixins';
 @import 'scaffold';
 @import 'global';
 @import 'buttons';
 @import 'navigation';
+
+$jumpBezier: cubic-bezier(.25,1.43,.55,.99);
 
 #header {
   color: white;
@@ -20,6 +23,39 @@ $ltblue: #d0deec;
   }
 }
 
-#lessons {
+#boards {
+  .imm-vertcenter {
+    padding-bottom: 50vh;
+  }
+  .example-boards {
+    position: absolute;
+    bottom: 0; left: 0; width: 100%;
+    li {
+      height: 60vh; position: relative;
+      button {
+        @include stretch(0, 0, -30px, 0); background-color: transparent;
+        @include transition(transform .4s $jumpBezier);
+      }
+      &:nth-of-type(1) button {
+        @include bg2x(assets/images/board-1, jpg, 160px, 584px);
+        background-position: top center;
+      }
+      &:nth-of-type(2) button {
+        @include bg2x(assets/images/board-2, jpg, 143px, 575px);
+        background-position: top center;
+      }
+      &:nth-of-type(3) button {
+        @include bg2x(assets/images/board-3, jpg, 139px, 580px);
+        background-position: top center;
+      }
+      &:hover button {
+        @include translateY(-20px);
+        @include transition(transform .4s $jumpBezier);
+      }
+    }
+  }
+}
+
+#tutors {
   background: $yellow;
 }

@@ -1,0 +1,27 @@
+@mixin noselect() {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+// Retina Graphics
+@mixin bg($file, $type, $width, $height) {
+  background-image: url($file + '.' + $type);
+  background-repeat: no-repeat;
+  background-position: center;
+  @include background-size($width $height);
+}
+@mixin bg2x($file, $type, $width, $height) {
+  background-image: url($file + '.' + $type);
+  background-repeat: no-repeat;
+  background-position: center;
+  @media (-webkit-min-device-pixel-ratio: 2), (-moz-min-device-pixel-ratio: 2) {
+    & {
+      background-image: url($file + '@2x.' + $type);
+      @include background-size($width $height);
+    }
+  }
+}

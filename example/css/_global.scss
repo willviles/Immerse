@@ -41,7 +41,7 @@ body {
   font-weight: 800;
 }
 
-h1 { font-size: 5em; letter-spacing: -.025em; line-height: 1;}
+h1 { font-size: 5.5em; letter-spacing: -.025em; line-height: 1;}
 h2 {font-size: 3em; line-height: 1.5; letter-spacing: -.02em; }
 h3 {font-size: 2.5em; line-height: 1.75; letter-spacing: -.02em; }
 h4 {font-size: 1.4em; line-height: 1.75; letter-spacing: -.01em;}
@@ -61,6 +61,8 @@ h1, h2, h3, h4, h5, h6 {
 
 p { line-height: 2.25; padding-bottom: 1em; }
 .text-justify { text-align: justify; }
+.white-text { color: white; }
+.yellow-text { color: $yellow; }
 
 a, a:visited, a:hover, a:active, a:focus {text-decoration: none; color: inherit; }
 b { font-weight: 700; }

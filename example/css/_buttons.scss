@@ -30,7 +30,7 @@ button {
 
   // Icon alignment
   i {
-    color: lighten($btn-color, 10%);
+    color: inherit;
     &.left { margin-right: .5em; }
     &.right { margin-left: .5em; }
   }

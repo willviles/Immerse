@@ -26,8 +26,8 @@
       <div class="imm-vertcenter">
         <div class="container-fluid">
           <div class="row text-center">
-            <h1>Learn <span>to surf.</span></h1>
-            <h4 class="body-font">A super simple Immerse.js example page.</h4>
+            <h1 class="title">Learn <span class="yellow-text">to surf.</span></h1>
+            <h4 class="subtitle body-font">A super simple Immerse.js example page.</h4>
           </div>
           <div class="buttons row">
             <div class="col-sm-3 col-sm-offset-3">
@@ -49,8 +49,18 @@
       <div class="imm-vertcenter">
         <div class="container-fluid">
           <div class="row text-center">
-            <h3>Grab a board.</h3>
+            <h3><span class="yellow-text">Grab a</span> board.</h3>
+            <p>
+              <button data-imm-scroll-to="tutors" class="button">
+                <span><i class="fa fa-angle-down"></i> Next</span>
+              </button>
+            </p>
           </div>
+        </div>
+      </div>
+
+      <div class="example-boards">
+        <div class="container">
           <ul class="row">
             <li class="col-sm-4">
               <button data-imm-modal-open="board-one">
@@ -124,11 +134,11 @@
 
     </section>
 
-    <section id="lessons" class="imm-fullscreen imm-section">
+    <section id="tutors" class="imm-fullscreen imm-section">
       <div class="imm-vertcenter">
         <div class="container-fluid">
           <div class="row text-center">
-            <h3>Get some lessons.</h3>
+            <h3><span class="white-text">Choose a</span> tutor.</h3>
             <div id="steve-tooltip" class="imm-tooltip-content">A little bio for Steve the surfer.</div>
             <p><span data-imm-tooltip="#steve-tooltip">Steve</span></p>
             <div id="sarah-tooltip" class="imm-tooltip-content">A little bio for Sarah the surfer.</div>
@@ -225,14 +235,17 @@
             'init': {
               runtime: ['init', 'enteredUp'], // Default enteringDown, enteringUp
               reset: ['exitedDown'], // Default exitedDown, exitedUp
-//               delay: 1,
+              delay: .5,
               timeline: function(s) {
                 return [
-                  TweenMax.from(s.find('h1'), 2, {
-                    opacity: 0, x: -70, delay: .5, ease: Elastic.easeOut.config(1, 0.3)
+                  TweenMax.from(s.find('.title'), 2, {
+                    opacity: 0, x: -70, ease: Elastic.easeOut.config(1, 0.3)
                   }),
-                  TweenMax.from(s.find('p'), 2, {
-                    opacity: 0, x: -40, delay: 1, ease: Elastic.easeOut.config(1, 0.3)
+                  TweenMax.from(s.find('.subtitle'), 3, {
+                    opacity: 0, x: -70, delay: 1, ease: Power4.easeOut
+                  }),
+                  TweenMax.from(s.find('.buttons'), 3, {
+                    opacity: 0, y: 20, delay: 1.25, ease: Power4.easeOut
                   })
                 ]
               }
@@ -260,18 +273,19 @@
             'boards': {
               devices: ['desktop'], // default touch & desktop
               breakpoints: ['mobile', 'tablet', 'mdDesktop', 'lgDesktop'],
-              runtime: ['enteredDown', 'enteredUp'], // Default enteringDown, enteringUp
+              runtime: ['enteringDown', 'enteringUp'], // Default enteringDown, enteringUp
               reset: ['exitedDown', 'exitedUp'], // Default exitedDown, exitedUp
               timeline: function(s) {
                 return [
-/*
-                  TweenMax.from(s.find('h1'), 2, {
-                    opacity: 0, x: -70, delay: .5, ease: Elastic.easeOut.config(1, 0.3)
+                  TweenMax.from(s.find('.example-boards li:nth-of-type(1)'), 2, {
+                    opacity: 0, y: -70, delay: .5, ease: Elastic.easeOut.config(1, 0.3)
                   }),
-                  TweenMax.from(s.find('p'), 2, {
-                    opacity: 0, x: -40, delay: 1, ease: Elastic.easeOut.config(1, 0.3)
+                  TweenMax.from(s.find('.example-boards li:nth-of-type(2)'), 2, {
+                    opacity: 0, y: -70, delay: .5, ease: Elastic.easeOut.config(1, 0.3)
+                  }),
+                  TweenMax.from(s.find('.example-boards li:nth-of-type(3)'), 2, {
+                    opacity: 0, y: -70, delay: .5, ease: Elastic.easeOut.config(1, 0.3)
                   })
-*/
                 ]
               }
             }
@@ -313,9 +327,9 @@
 
         pageName.section({
           // Unique name for the section
-          name: 'Lessons',
+          name: 'Tutors',
           // Set the element. Must be able to take either a string, javascript or jquery selector
-          element: $('#lessons'),
+          element: $('#tutors'),
           // Custom Attributes get changed in the custom attributes dictionary. Fires an observer
           attributes: {
             'navColor': {
