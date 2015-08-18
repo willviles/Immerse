@@ -36,7 +36,9 @@
       var that = this;
       $('.' + this.navListClass + ' li a', 'body').on('click', function() {
         var $target = $($(this).data(that.sectionDataTag));
-        $.Immerse.scrollController.doScroll(that.imm, $target);
+        if ($target[0] !== that.imm._currentSection.element[0]) {
+          $.Immerse.scrollController.doScroll(that.imm, $target);
+        }
       });
     },
 

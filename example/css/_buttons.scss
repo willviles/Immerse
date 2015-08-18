@@ -1,0 +1,51 @@
+$btn-color: $ltblue;
+
+// Button DOM Element Overrides
+button {
+  border: none; width: 100%; padding: 0 0 0 0;
+  &:focus { outline:0; }
+  &.fullwidth { width: 100%; }
+}
+
+// Base Styles
+.button {
+  outline: 0 !important;
+  cursor: pointer;
+  color: inherit ;
+  padding: 0 2em 0 2em;
+  line-height: 3;
+  display: inline-block;
+  width: auto;
+  position: relative;
+  overflow: hidden;
+
+  // Background color
+  background-color: transparent;
+
+  // Border radius
+  @include border-radius(1.5em);
+
+  // Button content
+  span { display: inline-block; text-align: center; text-transform: uppercase; font-weight: bold; letter-spacing: .2em; }
+
+  // Icon alignment
+  i {
+    color: lighten($btn-color, 10%);
+    &.left { margin-right: .5em; }
+    &.right { margin-left: .5em; }
+  }
+
+  // Fullwidth
+  &.fullwidth { display: block; }
+
+  // Outline style
+  color: inherit;
+  @include box-shadow(0px 0px 0px 4px $btn-color inset);
+  @include transition(all .3s linear);
+
+  &:hover {
+    @include box-shadow(0px 0px 0px 4px darken($btn-color, 10%) inset);
+    @include transition(all .1s linear);
+  }
+
+}

@@ -5,6 +5,11 @@
     <!-- Include Dependencies -->
     <script src="../bower_components/jquery/jquery.min.js"></script>
     <script src="../bower_components/gsap/src/minified/TweenMax.min.js"></script>
+    <script src="../bower_components/gsap/src/minified/plugins/ScrollToPlugin.min.js"></script>
+    <!-- Google Fonts -->
+    <link href='http://fonts.googleapis.com/css?family=Lato:300,300italic,900,900italic' rel='stylesheet' type='text/css'>
+    <!-- Fontawesome -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
     <!-- Include Immerse.js -->
     <script src="../dist/js/immerse.js"></script>
     <link rel="stylesheet" type="text/css" href="../dist/css/immerse.css">
@@ -17,14 +22,24 @@
   <body id="imm-demo-sections" class="imm-scroll-container">
 
     <header id="header" class="imm-fullscreen imm-section">
-      <div class="imm-video" data-imm-video="sun"></div>
+      <div class="imm-video" data-imm-video="surf"></div>
       <div class="imm-vertcenter">
         <div class="container-fluid">
           <div class="row text-center">
-            <h1>Learn to surf.</h1>
-            <p>A super simple Immerse.js example page.</p>
-            <p><button data-imm-modal-open="https://www.youtube.com/watch?v=7RYzCWWZpBA">Watch Video</button></p>
-            <p><button data-imm-scroll-to="boards">Let's Go</button></p>
+            <h1>Learn <span>to surf.</span></h1>
+            <h4 class="body-font">A super simple Immerse.js example page.</h4>
+          </div>
+          <div class="buttons row">
+            <div class="col-sm-3 col-sm-offset-3">
+              <button data-imm-modal-open="https://www.youtube.com/watch?v=7RYzCWWZpBA" class="button fullwidth">
+                <span>Watch Video <i class="fa fa-play-circle right"></i></span>
+              </button>
+            </div>
+            <div class="col-sm-3">
+              <button data-imm-scroll-to="boards" class="button fullwidth">
+                <span><i class="fa fa-angle-down"></i> Let's Go</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -34,7 +49,7 @@
       <div class="imm-vertcenter">
         <div class="container-fluid">
           <div class="row text-center">
-            <h1>Grab a board.</h1>
+            <h3>Grab a board.</h3>
           </div>
           <ul class="row">
             <li class="col-sm-4">
@@ -110,11 +125,10 @@
     </section>
 
     <section id="lessons" class="imm-fullscreen imm-section">
-      <div class="imm-video" data-imm-video="sun"></div>
       <div class="imm-vertcenter">
         <div class="container-fluid">
           <div class="row text-center">
-            <h1>Get some lessons.</h1>
+            <h3>Get some lessons.</h3>
             <div id="steve-tooltip" class="imm-tooltip-content">A little bio for Steve the surfer.</div>
             <p><span data-imm-tooltip="#steve-tooltip">Steve</span></p>
             <div id="sarah-tooltip" class="imm-tooltip-content">A little bio for Sarah the surfer.</div>
@@ -134,9 +148,13 @@
       </div>
     </section>
 
-    <nav class="imm-nav">
-      <button class="imm-mute"></button>
+    <nav class="side-nav imm-nav">
       <ul class="imm-nav-list"></ul>
+    </nav>
+
+    <nav class="top-nav">
+      <div><button class="imm-mute"></button></div>
+      <div><button class="open-menu"><i class="fa fa-bars"></i></button></div>
     </nav>
 
     <div class="imm-loading">
@@ -158,8 +176,8 @@
               type: 'scroll'
             },
             muteButton: {
-              unmuted: '<i class="fa fa-volume-up"></i> On',
-              muted: '<i class="fa fa-volume-off"></i> Off',
+              unmuted: '<i class="fa fa-volume-up"></i>',
+              muted: '<i class="fa fa-volume-off"></i>',
             },
             devMode: true
           },
@@ -168,8 +186,7 @@
           assets: {
             'gnossienne': { type: 'audio', path: 'assets/audio/gnossienne', loop: true, wait: true },
             'city': { type: 'audio', path: 'assets/audio/city', loop: true, wait: true },
-            'sunImg': { type: 'image', path: 'assets/video/sun', fileTypes: ['jpg', 'png'], wait: true },
-            'sun': { type: 'video', path: 'assets/video/sun', loop: true, position: '50% 50%' } // can set mute, autoplay, playbackRate
+            'surf': { type: 'video', path: 'assets/video/surf', loop: true, position: '50% 50%' } // can set mute, autoplay, playbackRate
           },
 
           // Define default audio
@@ -199,13 +216,9 @@
         pageName.section({
 
           // Unique name for the section
-          name: 'Header',
+          name: 'Intro',
           // Set the element. Must be able to take either a string, javascript or jquery selector
           element: $('#header'),
-          // Section options
-          options: {
-            hideFromNav: true,
-          },
           // Define animations
           animations: {
             // Animation #1
@@ -224,7 +237,13 @@
                 ]
               }
             }
-          }
+          },
+          // Custom Attributes get changed in the custom attributes dictionary. Fires an observer
+          attributes: {
+            'navColor': {
+              value: ''
+            }
+          },
         });
 
         // Setup #section-1
@@ -245,22 +264,22 @@
               reset: ['exitedDown', 'exitedUp'], // Default exitedDown, exitedUp
               timeline: function(s) {
                 return [
+/*
                   TweenMax.from(s.find('h1'), 2, {
                     opacity: 0, x: -70, delay: .5, ease: Elastic.easeOut.config(1, 0.3)
                   }),
                   TweenMax.from(s.find('p'), 2, {
                     opacity: 0, x: -40, delay: 1, ease: Elastic.easeOut.config(1, 0.3)
                   })
+*/
                 ]
               }
             }
           },
           // Custom Attributes get changed in the custom attributes dictionary. Fires an observer
           attributes: {
-            'logoColor': {
-              devices: ['touch', 'desktop'], // default all
-              runtime: ['enteringDown', 'enteringUp'],
-              value: 'blue'
+            'navColor': {
+              value: 'grey'
             }
           },
           // Component settings
@@ -289,6 +308,22 @@
           }
         });
 
+        // Setup #section-1
+        ///////////////////////////////////////////
+
+        pageName.section({
+          // Unique name for the section
+          name: 'Lessons',
+          // Set the element. Must be able to take either a string, javascript or jquery selector
+          element: $('#lessons'),
+          // Custom Attributes get changed in the custom attributes dictionary. Fires an observer
+          attributes: {
+            'navColor': {
+              value: 'white-grey'
+            }
+          }
+        });
+
         // Init immerse instance
         ///////////////////////////////////////////
 
@@ -311,11 +346,19 @@
         }, 3000);
 */
 
-/*
-        $('body').on('logoColor', function(obj, value) {
-          console.log('logoColor is ' + value);
+        $('body').on('navColor', function(obj, value) {
+
+          var $navs = $('.side-nav, .top-nav');
+
+          $.each($navs, function(i, nav) {
+            var $nav = $(nav),
+                currentColor = $nav.data('color');
+
+            $nav.removeClass(currentColor).addClass(value).data('color', value);
+          })
+
+          console.log('navColor is ' + value);
         });
-*/
 
 
 

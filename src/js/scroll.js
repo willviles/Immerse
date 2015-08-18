@@ -52,7 +52,8 @@
       },
 
       touch: function() {
-        if (this.imm._isDesktop) { return false; }
+        if (this.imm._isDesktop) { return false; };
+        if (this.imm._htmlScrollLocked) { return };
 
         $(document).off('touchstart touchmove touchend');
 
@@ -76,19 +77,24 @@
 
         detect: function(e) {
           if (!this.imm._canScroll) { return false; }
-          if (this.imm._scrollUnbound) {
-            // Enable browser scroll
+          // Always allow default scrolling on elements showing when main page is locked
+          if (this.imm._htmlScrollLocked) {
             this.handlers.scroll.toggle('enable', e);
-            this.unbound.call(this, e);
-
           } else {
-            // Disable browser scroll
-            this.handlers.scroll.toggle('disable', e);
-            // Fire animation to next section
-            if (e.originalEvent.wheelDelta >= 0) {
-              this.ifCanThenGo.call(this, this.imm, 'UP');
+            if (this.imm._scrollUnbound) {
+              // Enable browser scroll
+              this.handlers.scroll.toggle('enable', e);
+              this.unbound.call(this, e);
+
             } else {
-              this.ifCanThenGo.call(this, this.imm, 'DOWN');
+              // Disable browser scroll
+              this.handlers.scroll.toggle('disable', e);
+              // Fire animation to next section
+              if (e.originalEvent.wheelDelta >= 0) {
+                this.ifCanThenGo.call(this, this.imm, 'UP');
+              } else {
+                this.ifCanThenGo.call(this, this.imm, 'DOWN');
+              }
             }
           }
         },
@@ -124,10 +130,15 @@
       // Scroll Keys Handler
       keys: {
         down: function(e) {
+
+          // if HTML scroll is locked, just behave normally
+          if (this.imm._htmlScrollLocked) { return };
+
           if (!this.imm._scrollUnbound && this.imm._lastKey && this.imm._lastKey.which == e.which) {
             e.preventDefault();
             return;
           }
+
           this.imm._lastKey = e;
 
           switch(e.which) {
@@ -317,29 +328,31 @@
         opts.$currentSection.trigger(opts.triggers.exiting);
         // Set new section to entering
         opts.$nextSection.trigger(opts.triggers.entering);
+        // Set variables
+        that.imm._lastSection = opts.currentSection;
+        that.imm._currentSection = opts.nextSection;
+        // Set new section as current section
+        that.imm.$elem.trigger('sectionChanged', [{
+          last: that.imm._lastSection,
+          current: that.imm._currentSection,
+          below: that.imm._sectionBelow,
+          above: that.imm._sectionAbove
+        }]);
 
-        this.imm.$elem.animate({scrollTop: dist}, 1000, function() {
-          // Set new section to entered
-          opts.$nextSection.trigger(opts.triggers.entered);
-          // Set current section to exited
-          opts.$currentSection.trigger(opts.triggers.exited);
-          // Set variables
-          that.imm._lastSection = opts.currentSection;
-          that.imm._currentSection = opts.nextSection;
-          // We're done, so set new section as current section
-          that.imm.$elem.trigger('sectionChanged', [{
-            last: that.imm._lastSection,
-            current: that.imm._currentSection,
-            below: that.imm._sectionBelow,
-            above: that.imm._sectionAbove
-          }]);
-
-          setTimeout(function() {
-            // Reset flags
-            that.imm._isScrolling = false;
-            that.imm._canScroll = true;
-          }, 500);
-
+        TweenLite.to(this.imm.$elem, 1, {
+          scrollTo: { y: dist },
+          ease:Power4.easeOut,
+          onComplete: function() {
+            // Set new section to entered
+            opts.$nextSection.trigger(opts.triggers.entered);
+            // Set current section to exited
+            opts.$currentSection.trigger(opts.triggers.exited);
+            setTimeout(function() {
+              // Reset flags
+              that.imm._isScrolling = false;
+              that.imm._canScroll = true;
+            }, 500);
+          }
         });
       },
 
@@ -479,6 +492,7 @@
         $('html').css('overflow', 'scroll');
         this.imm._htmlScrollLocked = false;
       }
+
     }
 
   }; // End of all plugin functions

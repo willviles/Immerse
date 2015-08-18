@@ -122,7 +122,8 @@ body::-webkit-scrollbar {
   -webkit-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
   background-color: white;
-  overflow-x: scroll;
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
   cursor: default;
 }
 [data-imm-modal-id]:focus {

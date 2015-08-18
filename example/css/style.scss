@@ -1,58 +1,25 @@
 $grey: #43433b;
+$yellow: #f5da55;
+$ltblue: #d0deec;
 
-body#imm-demo-sections {
+@import "compass/reset";
+@import 'compass';
+@import 'compass/layout';
+@import 'scaffold';
+@import 'global';
+@import 'buttons';
+@import 'navigation';
 
-  background-color: $grey;
-
-  header {
-    background-color: #D1C4E9;
+#header {
+  color: white;
+  h1 {
+    span { color: $yellow; }
   }
-
-  #section-1 {
-    background-color: #2196F3;
+  .buttons {
+    padding-top: 2em;
   }
+}
 
-  #section-2 {
-    background-color: #536DFE;
-  }
-
-  #section-3 {
-    background-color: yellow;
-    padding: 100px 0;
-  }
-
-  #section-3-and-a-bit {
-    background-color: darken(yellow, 20%);
-    padding: 100px 0;
-  }
-
-  #section-4 {
-    background-color: lighten(#673AB7, 5%);
-  }
-
-  #section-5 {
-    background-color: #fbe8c7;
-  }
-
-  $nh: 50px;
-
-  nav {
-    position: fixed; top: 0; left: 0;
-    width: 100%; height: $nh;
-    .imm-mute { float: right; height: $nh;}
-    ul {
-      float: right;
-      li {
-        display: inline-block;
-        a {
-          display: inline-block; cursor: pointer;
-          height: $nh; line-height: $nh;
-          padding: 0 1em; color: white;
-          &.current {
-            font-weight: bold;
-          }
-        }
-      }
-    }
-  }
+#lessons {
+  background: $yellow;
 }

@@ -139,6 +139,7 @@
         var t = new TimelineMax({ paused: true }),
             c = a.timeline(s),
             d = !isNaN(a.delay) ? a.delay : null,
+            r = a.hasOwnProperty('runtime') ? a.runtime : ['enteringDown', 'enteringUp'],
             runtimeStr, resetStr,
             that = this;
 
@@ -148,7 +149,7 @@
         t.add(c);
 
         // Prepare runtimes
-        $.each(a.runtime, function(i, r) { runtimeStr = runtimeStr + ' ' + r; });
+        $.each(r, function(i, r) { runtimeStr = runtimeStr + ' ' + r; });
         // Prepare resets
         $.each(a.reset, function(i, r) { resetStr = resetStr + ' ' + r; });
 
@@ -175,10 +176,11 @@
         var action = a.action,
             d = !isNaN(a.delay) ? a.delay : 0,
             runtimeStr,
+            r = a.hasOwnProperty('runtime') ? a.runtime : ['enteringDown', 'enteringUp'],
             that = this;
 
         // Prepare runtimes
-        $.each(a.runtime, function(i, r) { runtimeStr = runtimeStr + ' ' + r; });
+        $.each(r, function(i, r) { runtimeStr = runtimeStr + ' ' + r; });
 
         s.on(runtimeStr, function() {
           setTimeout(function() {
@@ -200,10 +202,11 @@
         var value = a.value,
             d = !isNaN(a.delay) ? a.delay : 0,
             runtimeStr,
+            r = a.hasOwnProperty('runtime') ? a.runtime : ['enteringDown', 'enteringUp'],
             that = this;
 
         // Prepare runtimes
-        $.each(a.runtime, function(i, r) { runtimeStr = runtimeStr + ' ' + r; });
+        $.each(r, function(i, r) { runtimeStr = runtimeStr + ' ' + r; });
 
         s.on(runtimeStr, function() {
           setTimeout(function() {

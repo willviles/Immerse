@@ -318,6 +318,7 @@ Author URI: http://vil.es/
         var t = new TimelineMax({ paused: true }),
             c = a.timeline(s),
             d = !isNaN(a.delay) ? a.delay : null,
+            r = a.hasOwnProperty('runtime') ? a.runtime : ['enteringDown', 'enteringUp'],
             runtimeStr, resetStr,
             that = this;
 
@@ -327,7 +328,7 @@ Author URI: http://vil.es/
         t.add(c);
 
         // Prepare runtimes
-        $.each(a.runtime, function(i, r) { runtimeStr = runtimeStr + ' ' + r; });
+        $.each(r, function(i, r) { runtimeStr = runtimeStr + ' ' + r; });
         // Prepare resets
         $.each(a.reset, function(i, r) { resetStr = resetStr + ' ' + r; });
 
@@ -354,10 +355,11 @@ Author URI: http://vil.es/
         var action = a.action,
             d = !isNaN(a.delay) ? a.delay : 0,
             runtimeStr,
+            r = a.hasOwnProperty('runtime') ? a.runtime : ['enteringDown', 'enteringUp'],
             that = this;
 
         // Prepare runtimes
-        $.each(a.runtime, function(i, r) { runtimeStr = runtimeStr + ' ' + r; });
+        $.each(r, function(i, r) { runtimeStr = runtimeStr + ' ' + r; });
 
         s.on(runtimeStr, function() {
           setTimeout(function() {
@@ -379,10 +381,11 @@ Author URI: http://vil.es/
         var value = a.value,
             d = !isNaN(a.delay) ? a.delay : 0,
             runtimeStr,
+            r = a.hasOwnProperty('runtime') ? a.runtime : ['enteringDown', 'enteringUp'],
             that = this;
 
         // Prepare runtimes
-        $.each(a.runtime, function(i, r) { runtimeStr = runtimeStr + ' ' + r; });
+        $.each(r, function(i, r) { runtimeStr = runtimeStr + ' ' + r; });
 
         s.on(runtimeStr, function() {
           setTimeout(function() {
@@ -463,7 +466,8 @@ Author URI: http://vil.es/
       },
 
       touch: function() {
-        if (this.imm._isDesktop) { return false; }
+        if (this.imm._isDesktop) { return false; };
+        if (this.imm._htmlScrollLocked) { return };
 
         $(document).off('touchstart touchmove touchend');
 
@@ -487,19 +491,24 @@ Author URI: http://vil.es/
 
         detect: function(e) {
           if (!this.imm._canScroll) { return false; }
-          if (this.imm._scrollUnbound) {
-            // Enable browser scroll
+          // Always allow default scrolling on elements showing when main page is locked
+          if (this.imm._htmlScrollLocked) {
             this.handlers.scroll.toggle('enable', e);
-            this.unbound.call(this, e);
-
           } else {
-            // Disable browser scroll
-            this.handlers.scroll.toggle('disable', e);
-            // Fire animation to next section
-            if (e.originalEvent.wheelDelta >= 0) {
-              this.ifCanThenGo.call(this, this.imm, 'UP');
+            if (this.imm._scrollUnbound) {
+              // Enable browser scroll
+              this.handlers.scroll.toggle('enable', e);
+              this.unbound.call(this, e);
+
             } else {
-              this.ifCanThenGo.call(this, this.imm, 'DOWN');
+              // Disable browser scroll
+              this.handlers.scroll.toggle('disable', e);
+              // Fire animation to next section
+              if (e.originalEvent.wheelDelta >= 0) {
+                this.ifCanThenGo.call(this, this.imm, 'UP');
+              } else {
+                this.ifCanThenGo.call(this, this.imm, 'DOWN');
+              }
             }
           }
         },
@@ -535,10 +544,15 @@ Author URI: http://vil.es/
       // Scroll Keys Handler
       keys: {
         down: function(e) {
+
+          // if HTML scroll is locked, just behave normally
+          if (this.imm._htmlScrollLocked) { return };
+
           if (!this.imm._scrollUnbound && this.imm._lastKey && this.imm._lastKey.which == e.which) {
             e.preventDefault();
             return;
           }
+
           this.imm._lastKey = e;
 
           switch(e.which) {
@@ -728,29 +742,31 @@ Author URI: http://vil.es/
         opts.$currentSection.trigger(opts.triggers.exiting);
         // Set new section to entering
         opts.$nextSection.trigger(opts.triggers.entering);
+        // Set variables
+        that.imm._lastSection = opts.currentSection;
+        that.imm._currentSection = opts.nextSection;
+        // Set new section as current section
+        that.imm.$elem.trigger('sectionChanged', [{
+          last: that.imm._lastSection,
+          current: that.imm._currentSection,
+          below: that.imm._sectionBelow,
+          above: that.imm._sectionAbove
+        }]);
 
-        this.imm.$elem.animate({scrollTop: dist}, 1000, function() {
-          // Set new section to entered
-          opts.$nextSection.trigger(opts.triggers.entered);
-          // Set current section to exited
-          opts.$currentSection.trigger(opts.triggers.exited);
-          // Set variables
-          that.imm._lastSection = opts.currentSection;
-          that.imm._currentSection = opts.nextSection;
-          // We're done, so set new section as current section
-          that.imm.$elem.trigger('sectionChanged', [{
-            last: that.imm._lastSection,
-            current: that.imm._currentSection,
-            below: that.imm._sectionBelow,
-            above: that.imm._sectionAbove
-          }]);
-
-          setTimeout(function() {
-            // Reset flags
-            that.imm._isScrolling = false;
-            that.imm._canScroll = true;
-          }, 500);
-
+        TweenLite.to(this.imm.$elem, 1, {
+          scrollTo: { y: dist },
+          ease:Power4.easeOut,
+          onComplete: function() {
+            // Set new section to entered
+            opts.$nextSection.trigger(opts.triggers.entered);
+            // Set current section to exited
+            opts.$currentSection.trigger(opts.triggers.exited);
+            setTimeout(function() {
+              // Reset flags
+              that.imm._isScrolling = false;
+              that.imm._canScroll = true;
+            }, 500);
+          }
         });
       },
 
@@ -890,6 +906,7 @@ Author URI: http://vil.es/
         $('html').css('overflow', 'scroll');
         this.imm._htmlScrollLocked = false;
       }
+
     }
 
   }; // End of all plugin functions
@@ -1163,7 +1180,9 @@ Author URI: http://vil.es/
       var that = this;
       $('.' + this.navListClass + ' li a', 'body').on('click', function() {
         var $target = $($(this).data(that.sectionDataTag));
-        $.Immerse.scrollController.doScroll(that.imm, $target);
+        if ($target[0] !== that.imm._currentSection.element[0]) {
+          $.Immerse.scrollController.doScroll(that.imm, $target);
+        }
       });
     },
 
