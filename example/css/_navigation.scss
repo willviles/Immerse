@@ -39,8 +39,9 @@ nav.side-nav {
           	border-bottom: 4px solid transparent;
           }
         }
-        &:hover span {
-          display: block;
+        &:hover {
+          &:before { @include scale(.75); }
+          span { display: block; }
         }
       }
     }

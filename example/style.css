@@ -1948,6 +1948,12 @@ nav.side-nav ul li a span:before {
   border-top: 4px solid transparent;
   border-bottom: 4px solid transparent;
 }
+nav.side-nav ul li a:hover:before {
+  -moz-transform: scale(0.75, 0.75);
+  -ms-transform: scale(0.75, 0.75);
+  -webkit-transform: scale(0.75, 0.75);
+  transform: scale(0.75, 0.75);
+}
 nav.side-nav ul li a:hover span {
   display: block;
 }
