@@ -3,11 +3,16 @@
 ///////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////
 
-(function( $, window, document, undefined ){
+(function( $, window, document, undefined ) {
 
-  var ImmerseNavigationController = function() {};
+  var controller = { name: 'navigationController' };
 
-  ImmerseNavigationController.prototype = {
+  // Set controller name
+  var n = controller.name;
+  // Controller constructor
+  controller[n] = function() {};
+  // Controller prototype
+  controller[n].prototype = {
 
     // Initialize
     ///////////////////////////////////////////////////////
@@ -78,12 +83,16 @@
       if ($e.length > 0) { $e.addClass('current'); }
     }
 
-  }; // End of all plugin functions
+  // End of controller
+  ///////////////////////////////////////////////////////
+  };
 
-  // Functions to expose to rest of the plugin
-  $.Immerse.navigationController = {
+  // Register with Immerse
+  ///////////////////////////////////////////////////////
+
+  $.Immerse[n] = {
     init: function(imm) {
-      return new ImmerseNavigationController(this).init(imm);
+      return new controller[n](this).init(imm);
     }
   }
 
