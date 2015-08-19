@@ -433,11 +433,16 @@ Author URI: http://vil.es/
 ///////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////
 
-(function( $, window, document, undefined ){
+(function( $, window, document, undefined ) {
 
-  var ImmerseScrollController = function() {};
+  var controller = { name: 'scrollController' };
 
-  ImmerseScrollController.prototype = {
+  // Set controller name
+  var n = controller.name;
+  // Controller constructor
+  controller[n] = function() {};
+  // Controller prototype
+  controller[n].prototype = {
 
     // Initialize
     ///////////////////////////////////////////////////////
@@ -947,38 +952,37 @@ Author URI: http://vil.es/
         this.imm._htmlScrollLocked = false;
       }
 
-    },
-
-/*
-    trackFocus: function() {
-      this.imm._scrollContainer.on('focus')
     }
-*/
 
-  }; // End of all plugin functions
+  // End of controller
+  ///////////////////////////////////////////////////////
 
-  // Functions to expose to rest of the plugin
-  $.Immerse.scrollController = {
+  };
+
+  // Register with Immerse
+  ///////////////////////////////////////////////////////
+
+  $.Immerse[n] = {
     init: function(imm) {
-      return new ImmerseScrollController(this).init(imm);
+      return new controller[n](this).init(imm);
     },
     doScroll: function(imm, goVar) {
-      var controller = new ImmerseScrollController(this);
-      controller.ifCanThenGo.call(controller, imm, goVar);
-      return controller;
+      var c = new controller[n](this);
+      c.ifCanThenGo.call(c, imm, goVar);
+      return c;
     },
     updateSectionOffsets: function(imm) {
-      var controller = new ImmerseScrollController(this);
-      controller.sectionOffset.update.call(controller, imm);
-      return controller;
+      var c = new controller[n](this);
+      c.sectionOffset.update.call(c, imm);
+      return c;
     },
     stickSection: function(imm) {
-      var controller = new ImmerseScrollController(this);
-      controller.stick.call(controller, imm);
-      return controller;
+      var c = new controller[n](this);
+      c.stick.call(c, imm);
+      return c;
     },
     htmlScroll: function(imm, status) {
-      return new ImmerseScrollController(this).htmlScroll(imm, status);
+      return new controller[n](this).htmlScroll(imm, status);
     }
   }
 
