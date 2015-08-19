@@ -470,7 +470,6 @@ Author URI: http://vil.es/
       this.imm._sectionBelow = this.imm._sections[1];
       // Ensure page always starts at the top
       this.imm._scrollContainer.scrollTop(0);
-      this.imm._scrollContainer.attr('tabindex', 0);
       // Get bound/unbound status of first section
       this.imm._scrollUnbound = this.imm._currentSection.options.unbindScroll ? true : false;
       // Manage binding or unbind of scroll on sectionChange
