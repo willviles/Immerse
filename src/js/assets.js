@@ -177,7 +177,6 @@
           var remainingLoad = minLoadingTime - that._loadingTime,
               remainingLoad = (remainingLoad >= 0) ? remainingLoad : 0;
 
-          console.log(remainingLoad);
           clearInterval(timeSinceInit);
 
           setTimeout(function() {
