@@ -3,11 +3,16 @@
 ///////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////
 
-(function( $, window, document, undefined ){
+(function( $, window, document, undefined ) {
 
-  var ImmerseViewportController = function() {};
+  var controller = { name: 'viewportController' };
 
-  ImmerseViewportController.prototype = {
+  // Set controller name
+  var n = controller.name;
+  // Controller constructor
+  controller[n] = function() {};
+  // Controller prototype
+  controller[n].prototype = {
 
     // Initialize
     ///////////////////////////////////////////////////////
@@ -59,6 +64,9 @@
 
     },
 
+    // Set
+    ///////////////////////////////////////////////////////
+
     set: function(width) {
 
       // Detect breakpoints & devices
@@ -87,6 +95,9 @@
       }
     },
 
+    // Resize
+    ///////////////////////////////////////////////////////
+
     resize: function() {
       var that = this;
       $(window).on('resize', function() {
@@ -103,6 +114,9 @@
         $.Immerse.componentController.resize(that.imm);
       });
     },
+
+    // IsView
+    ///////////////////////////////////////////////////////
 
     isView: function(imm, a) {
 
@@ -123,15 +137,20 @@
       if ($.inArray(this.imm._breakpoint, a.breakpoints) === -1) { return false; }
     },
 
-  }; // End of all plugin functions
+  // End of controller
+  ///////////////////////////////////////////////////////
 
-  // Functions to expose to rest of the plugin
-  $.Immerse.viewportController = {
+  };
+
+  // Register with Immerse
+  ///////////////////////////////////////////////////////
+
+  $.Immerse[n] = {
     init: function(imm) {
-      return new ImmerseViewportController(this).init(imm);
+      return new controller[n](this).init(imm);
     },
     isView: function(imm, a) {
-      return new ImmerseViewportController(this).isView(imm, a);
+      return new controller[n](this).isView(imm, a);
     }
   }
 
