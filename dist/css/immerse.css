@@ -225,7 +225,7 @@ Author URI: http://vil.es/
   display: block;
 }
 
-.imm-tooltip-content {
+[data-imm-tooltip-content] {
   display: none;
 }
 

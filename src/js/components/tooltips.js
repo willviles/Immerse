@@ -14,6 +14,7 @@ $.Immerse.registerComponent({
   init: function(opts) {
     this.imm = opts.immerse;
     this.tooltipClass = this.imm.utils.namespacify.call(this.imm, 'tooltip');
+    this.tooltipContentClass = this.imm.utils.namespacify.call(this.imm, 'tooltip-content');
 
     var section = opts.section,
         $section = $(section.element),
@@ -23,9 +24,14 @@ $.Immerse.registerComponent({
     $.each($section.find('[data-' + this.tooltipClass + ']'), function(i, tooltip) {
 
       var $tooltip = $(tooltip),
-          content = $tooltip.data(that.tooltipClass),
-          content = content.charAt(0) === '#' ? $(content) : content,
-          content = (content.jquery) ? $(content).html() : content;
+          content = $tooltip.data(that.tooltipClass);
+
+      if (content.charAt(0) === '#') {
+        var tooltipContentDiv = $(that.imm.utils.datatagify.call(that.imm, that.tooltipContentClass, content.replace('#', '')));
+        content = tooltipContentDiv;
+      }
+
+      content = (content.jquery) ? $(content).html() : content;
 
       // Append correct tooltip content
       var $content = $('<span class="' + that.tooltipClass + '">' + content + '</span>');

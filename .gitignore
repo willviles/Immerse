@@ -5,4 +5,5 @@ config.codekit
 config.rb
 Icon
 *.bak.js
+*.bak.html
 *.log

@@ -60,4 +60,4 @@ Author URI: http://vil.es/
   }
 }
 
-.#{$prefix}-tooltip-content { display: none; }
+[data-#{$prefix}-tooltip-content] { display: none; }
