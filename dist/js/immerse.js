@@ -1288,11 +1288,16 @@ Author URI: http://vil.es/
 ///////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////
 
-(function( $, window, document, undefined ){
+(function( $, window, document, undefined ) {
 
-  var ImmerseAssetController = function() {};
+  var controller = { name: 'assetController' };
 
-  ImmerseAssetController.prototype = {
+  // Set controller name
+  var n = controller.name;
+  // Controller constructor
+  controller[n] = function() {};
+  // Controller prototype
+  controller[n].prototype = {
 
     // Register Assets
     ///////////////////////////////////////////////////////
@@ -1483,16 +1488,21 @@ Author URI: http://vil.es/
 
     }
 
-  }; // End of all plugin functions
+  // End of controller
+  ///////////////////////////////////////////////////////
 
-  // Functions to expose to rest of the plugin
-  $.Immerse.assetController = {
+  };
+
+  // Register with Immerse
+  ///////////////////////////////////////////////////////
+
+  $.Immerse[n] = {
     register: function(imm) {
-      return new ImmerseAssetController(this).register(imm);
+      return new controller[n](this).register(imm);
     },
 
     loading: function(imm) {
-      return new ImmerseAssetController(this).loading(imm);
+      return new controller[n](this).loading(imm);
     }
   }
 
