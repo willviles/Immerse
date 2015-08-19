@@ -75,5 +75,10 @@ $jumpBezier: cubic-bezier(.25,1.43,.55,.99);
     img { float: left; }
     .name { top: 100%; margin-top: .5em; border-top: 2px solid white; text-align: right; }
   }
+}
 
+#join {
+  padding-top: 100px;
+  padding-bottom: 500px;
+  p:first-of-type { margin-top: 3em; }
 }

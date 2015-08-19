@@ -135,7 +135,7 @@ Author URI: http://vil.es/
 
       log: function(imm, thingToLog) {
         if (imm.setup.options.devMode === true) {
-          console.log(thingToLog);
+          console.log('Immerse.js | ' + thingToLog);
         }
       }
     },
@@ -453,6 +453,9 @@ Author URI: http://vil.es/
       return this;
     },
 
+    // Events
+    ///////////////////////////////////////////////////////
+
     events: {
       scroll: function() {
         this.imm._scrollContainer.off('mousewheel wheel DOMMouseScroll')
@@ -484,6 +487,10 @@ Author URI: http://vil.es/
 
     },
 
+    // Handlers
+    ///////////////////////////////////////////////////////
+    //// Handles the scroll
+
     handlers: {
 
       // Scroll Handler
@@ -499,7 +506,6 @@ Author URI: http://vil.es/
               // Enable browser scroll
               this.handlers.scroll.toggle('enable', e);
               this.unbound.call(this, e);
-
             } else {
               // Disable browser scroll
               this.handlers.scroll.toggle('disable', e);
@@ -745,27 +751,27 @@ Author URI: http://vil.es/
         // Set variables
         that.imm._lastSection = opts.currentSection;
         that.imm._currentSection = opts.nextSection;
-        // Set new section as current section
-        that.imm.$elem.trigger('sectionChanged', [{
-          last: that.imm._lastSection,
-          current: that.imm._currentSection,
-          below: that.imm._sectionBelow,
-          above: that.imm._sectionAbove
-        }]);
 
         TweenLite.to(this.imm.$elem, 1, {
-          scrollTo: { y: dist },
+          scrollTo: { y: dist, autoKill: false },
           ease:Power4.easeOut,
           onComplete: function() {
             // Set new section to entered
             opts.$nextSection.trigger(opts.triggers.entered);
             // Set current section to exited
             opts.$currentSection.trigger(opts.triggers.exited);
+            // Set new section as current section
+            that.imm.$elem.trigger('sectionChanged', [{
+              last: that.imm._lastSection,
+              current: that.imm._currentSection,
+              below: that.imm._sectionBelow,
+              above: that.imm._sectionAbove
+            }]);
             setTimeout(function() {
               // Reset flags
               that.imm._isScrolling = false;
               that.imm._canScroll = true;
-            }, 500);
+            }, 1000);
           }
         });
       },
@@ -801,28 +807,8 @@ Author URI: http://vil.es/
 
     unbound: function(e) {
 
-      if (this.imm._sectionAbove === undefined) {
-        var isAbove = false;
-      } else {
-        var isAbove = this.imm._isTouch ?
-                      this.imm._scrollContainer.scrollTop() < this.imm._currentSection.scrollOffset :
-                      this.imm._scrollContainer.scrollTop() <= this.imm._currentSection.scrollOffset;
-      }
-
-      // If next section is not also unbound, ensure it scrolls to new section from a window height away
-      if (this.imm._sectionBelow === undefined) {
-        var belowVal = false, isBelow = false;
-      // If next section is not also unbound, ensure it scrolls to new section from a window height away
-      } else {
-        var belowVal = this.imm._sectionBelow.options.unbindScroll === false ?
-                       this.imm._sectionBelow.scrollOffset - this.imm._windowHeight :
-                       this.imm._sectionBelow.scrollOffset,
-            isBelow = this.imm._isTouch ?
-                      this.imm._scrollContainer.scrollTop() > belowVal :
-                      this.imm._scrollContainer.scrollTop() >= belowVal;
-      }
-
-
+      var isAbove = this.detectAbove.call(this),
+          isBelow = this.detectBelow.call(this);
 
       // If scrollTop is above current section
       if (isAbove) {
@@ -844,12 +830,10 @@ Author URI: http://vil.es/
       // If scrollTop is above current section
 
       } else if (isBelow) {
-
         // If it's a scroll event and we're not scrolling download (i.e, we're just at the bottom end of the section)
         if (this.utils.isScrollEvent(e) && e.originalEvent.wheelDelta >= 0) { return; };
         // If it's a keydown event and we're not pressing upwards
         if (this.utils.isKeydownEvent(e) && e.which !== 40) { return; }
-
         // If below section is also unbound
         if (this.imm._sectionBelow.options.unbindScroll) {
           // Just change section references.
@@ -861,6 +845,27 @@ Author URI: http://vil.es/
           this.ifCanThenGo.call(this, this.imm, 'DOWN');
         }
       }
+    },
+
+    detectAbove: function() {
+      if (this.imm._sectionAbove === undefined) { return false; }
+      return isAbove = this.imm._isTouch ?
+                      this.imm._scrollContainer.scrollTop() < this.imm._currentSection.scrollOffset :
+                      this.imm._scrollContainer.scrollTop() <= this.imm._currentSection.scrollOffset;
+    },
+
+    detectBelow: function() {
+
+      if (this.imm._sectionBelow === undefined) { return false; }
+
+      // If next section is not also unbound, ensure it scrolls to new section from a window height away
+      var belowVal = this.imm._sectionBelow.options.unbindScroll === false ?
+                     this.imm._sectionBelow.scrollOffset - this.imm._windowHeight :
+                     this.imm._sectionBelow.scrollOffset;
+
+      return isBelow = this.imm._isTouch ?
+                      this.imm._scrollContainer.scrollTop() > belowVal :
+                      this.imm._scrollContainer.scrollTop() >= belowVal;
     },
 
     sectionOffset: {

@@ -135,7 +135,7 @@ Author URI: http://vil.es/
 
       log: function(imm, thingToLog) {
         if (imm.setup.options.devMode === true) {
-          console.log(thingToLog);
+          console.log('Immerse.js | ' + thingToLog);
         }
       }
     },

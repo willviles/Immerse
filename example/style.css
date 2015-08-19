@@ -2270,4 +2270,12 @@ nav.top-nav.white-grey div button {
   text-align: right;
 }
 
+#join {
+  padding-top: 100px;
+  padding-bottom: 500px;
+}
+#join p:first-of-type {
+  margin-top: 3em;
+}
+
 /*# sourceMappingURL=style.css.map */
