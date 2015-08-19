@@ -170,7 +170,7 @@ Author URI: http://vil.es/
 }
 [data-imm-tooltip] .imm-tooltip.top:before, [data-imm-tooltip] .imm-tooltip.bottom:before {
   left: 50%;
-  margin-left: -5px;
+  margin-left: -8px;
 }
 [data-imm-tooltip] .imm-tooltip.left, [data-imm-tooltip] .imm-tooltip.right {
   top: 50%;
@@ -181,7 +181,7 @@ Author URI: http://vil.es/
 }
 [data-imm-tooltip] .imm-tooltip.left:before, [data-imm-tooltip] .imm-tooltip.right:before {
   top: 50%;
-  margin-top: -5px;
+  margin-top: -8px;
 }
 [data-imm-tooltip] .imm-tooltip.top {
   bottom: 100%;

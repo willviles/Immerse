@@ -22,11 +22,11 @@ $pointerSize: 8px;
     &:before { content: ''; position: absolute; width: 0; height: 0; }
     &.top, &.bottom {
       left: 50%; @include translateX(-50%);
-      &:before { left: 50%; margin-left: -5px; }
+      &:before { left: 50%; margin-left: -$pointerSize; }
     }
     &.left, &.right {
       top: 50%; @include translateY(-50%);
-      &:before { top: 50%; margin-top: -5px; }
+      &:before { top: 50%; margin-top: -$pointerSize; }
     }
     &.top {
       bottom: 100%; margin-bottom: $pointerSize;
