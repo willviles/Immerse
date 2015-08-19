@@ -390,20 +390,7 @@
                 onConfirm: function(modal) {
                   alert('Fire a custom script!');
                 }
-              },
-/*
-              'boardOne': {
-                onConfirm: function(modal) {
-                  alert('Custom cancel action fired from boardOne!');
-                }
-              },
-              'boardTwo': {
-                onConfirm: function(modal) {
-                  // This is how you override modal settings
-                  alert('Custom cancel action fired from boardTwo!');
-                }
               }
-*/
             }
           }
         });
@@ -455,13 +442,6 @@
               value: 'grey'
             }
           }
-        });
-
-        pageName.section({
-          // Unique name for the section
-          name: 'Join',
-          // Set the element. Must be able to take either a string, javascript or jquery selector
-          element: $('#join')
         });
 
         // Init immerse instance

@@ -36,8 +36,23 @@
       this.imm = imm;
 
       // Get defined defaults
-      var defaults = this.sectionDefaults;
+      var defaults = (this.sectionDefaultsExtended !== true) ? this.extendAllDefaults.call(this) : this.sectionDefaults;
 
+      // Extend upon defaults with section options
+      section = $.extend(true, {}, defaults, section);
+
+      // Push section to Immerse setup sections object
+      this.imm.setup.sections.push(section);
+
+      return section;
+
+    },
+
+    // Extend Defaults
+    ///////////////////////////////////////////////////////
+
+    extendAllDefaults: function() {
+      var defaults = this.sectionDefaults;
       // Extend component defaults
       defaults = $.Immerse.componentController.extendDefaults(defaults);
       // Extend global component options
@@ -50,14 +65,9 @@
       // Reassign defaults with component defaults/global options included
       this.sectionDefaults = defaults;
 
-      // Extend upon defaults with section options
-      section = $.extend(true, {}, defaults, section);
+      this.sectionDefaultsExtended = true;
 
-      // Push section to Immerse setup sections object
-      this.imm.setup.sections.push(section);
-
-      return section;
-
+      return defaults;
     },
 
     // Initialize
@@ -70,7 +80,8 @@
 
       var sectionSelector = this.imm.utils.namespacify.call(this.imm, 'section'),
           $allSectionElems = $('.' + sectionSelector),
-          sectionDefaults = this.sectionDefaults,
+          // FIX: If no sections have been defined (all generated), ensure defaults are extended
+          sectionDefaults = (this.sectionDefaultsExtended !== true) ? this.extendAllDefaults.call(this) : this.sectionDefaults,
           fullscreenClass = this.imm.utils.namespacify.call(this.imm, 'fullscreen'),
           that = this;
 
@@ -246,11 +257,15 @@
 
   $.Immerse[n] = {
     init: function(imm) {
-      return new controller[n](this).init(imm);
+      var c = new controller[n](this);
+      c.init.call(c, imm);
+      return c;
     },
 
     add: function(imm, section) {
-      return new controller[n](this).add(imm, section);
+      var c = new controller[n](this);
+      c.add.call(c, imm, section);
+      return c;
     }
   }
 
