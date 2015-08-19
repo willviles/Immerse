@@ -3,11 +3,16 @@
 ///////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////
 
-(function( $, window, document, undefined ){
+(function( $, window, document, undefined ) {
 
-  var ImmerseAudioController = function() {};
+  var controller = { name: 'audioController' };
 
-  ImmerseAudioController.prototype = {
+  // Set controller name
+  var n = controller.name;
+  // Controller constructor
+  controller[n] = function() {};
+  // Controller prototype
+  controller[n].prototype = {
 
     // Extend global audio options
     ///////////////////////////////////////////////////////
@@ -48,6 +53,9 @@
       return this;
     },
 
+    // Handle Change
+    ///////////////////////////////////////////////////////
+
     handleChange: function(that, audioObj) {
 
       if (this.imm._muted) { return false; }
@@ -63,6 +71,9 @@
       this.mute.call(this, audioToMute);
 
     },
+
+    // Start
+    ///////////////////////////////////////////////////////
 
     start: function(audioObj) {
 
@@ -87,6 +98,9 @@
 
     },
 
+    // Mute
+    ///////////////////////////////////////////////////////
+
     mute: function(audioToMute) {
       // Mute audio
       $.each(audioToMute, function(i, name) {
@@ -99,7 +113,14 @@
 
     },
 
+    // MuteBtns
+    ///////////////////////////////////////////////////////
+
     muteBtns: {
+
+      // MuteBtns Init
+      ///////////////////////////////////////////////////////
+
       init: function() {
 
         var muteClass = this.imm.utils.namespacify.call(this.imm, 'mute'),
@@ -122,6 +143,9 @@
 
       },
 
+      // MuteBtns Change
+      ///////////////////////////////////////////////////////
+
       change: function(state) {
         var mutedClass = this.imm.utils.namespacify.call(this.imm, 'muted'),
             s;
@@ -137,6 +161,9 @@
         }
       },
 
+      // MuteBtns MuteAll
+      ///////////////////////////////////////////////////////
+
       muteAll: function(imm) {
         this.imm = (this.imm === undefined) ? imm : this.imm;
         var audioToMute = this.imm._audioPlaying;
@@ -145,6 +172,9 @@
         this.imm.utils.cookies.set.call(this, 'immAudioState', 'muted', 3650);
       },
 
+      // MuteBtns UnmuteAll
+      ///////////////////////////////////////////////////////
+
       unmuteAll: function(imm) {
         this.imm = (this.imm === undefined) ? imm : this.imm;
         var currentAudio = this.imm._currentSection.audio;
@@ -152,6 +182,9 @@
         this.muteBtns.change.call(this, 'on');
         this.imm.utils.cookies.set.call(this, 'immAudioState', '', 3650);
       },
+
+      // MuteBtns Click
+      ///////////////////////////////////////////////////////
 
       click: function() {
         // If audio is muted, turn it on
@@ -163,6 +196,9 @@
         }
       }
     },
+
+    // Handle Blur Focus
+    ///////////////////////////////////////////////////////
 
     handleBlurFocus: function() {
 
@@ -179,24 +215,29 @@
       });
     }
 
-  }; // End of all plugin functions
+  // End of controller
+  ///////////////////////////////////////////////////////
 
-  // Functions to expose to rest of the plugin
-  $.Immerse.audioController = {
+  };
+
+  // Register with Immerse
+  ///////////////////////////////////////////////////////
+
+  $.Immerse[n] = {
     init: function(imm) {
-      return new ImmerseAudioController(this).init(imm);
+      return new controller[n](this).init(imm);
     },
     extendGlobalOptions: function(imm, defaults) {
-      return new ImmerseAudioController(this).extendGlobalOptions(imm, defaults);
+      return new controller[n](this).extendGlobalOptions(imm, defaults);
     },
     changeStatus: function(imm, status) {
-      var controller = new ImmerseAudioController(this);
+      var c = new controller[n](this);
       if (status === 'unmute') {
-        controller.muteBtns.unmuteAll.call(controller, imm);
+        c.muteBtns.unmuteAll.call(c, imm);
       } else if (status === 'mute') {
-        controller.muteBtns.muteAll.call(controller, imm);
+        c.muteBtns.muteAll.call(c, imm);
       }
-      return controller;
+      return c;
     }
   }
 
