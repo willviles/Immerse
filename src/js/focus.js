@@ -50,30 +50,31 @@
       if (document.activeElement === $('body')[0]) {
         e.preventDefault();
         $(firstInput).focus();
-
-        // Manage input handling
-        $inputs.off('keydown').on('keydown', function(e) {
-          var isButton = $(this).is('button'),
-              isSelect = $(this).is('select'),
-              isElementInNeedOfBlocking = isButton || isSelect;
-
-          // Give the last input a keydown function to return it to document
-          if ($(this)[0] === $(lastInput)[0] && e.which === 9) {
-            e.preventDefault();
-            $(this).blur();
-            return;
-          }
-
-          // If element isn't in need of blocking, just let things happen
-          if (!isElementInNeedOfBlocking) { return; }
-
-          // If element is in need of blocking and scroll is unbound, block the key!
-          if (e.which === 38 || e.which === 40) {
-            e.preventDefault();
-            return;
-          }
-        })
       }
+
+      // Manage input handling
+      $inputs.off('keydown').on('keydown', function(e) {
+        var isButton = $(this).is('button'),
+            isSelect = $(this).is('select'),
+            isElementInNeedOfBlocking = isButton || isSelect;
+
+        // Give the last input a keydown function to return it to document
+        if ($(this)[0] === $(lastInput)[0] && e.which === 9) {
+          e.preventDefault();
+          $(this).blur();
+          return;
+        }
+
+        // If element isn't in need of blocking, just let things happen
+        if (!isElementInNeedOfBlocking) { return; }
+
+        // If element is in need of blocking and scroll is unbound, block the key!
+        if (e.which === 38 || e.which === 40) {
+          e.preventDefault();
+          return;
+        }
+      });
+
       return this;
     }
 

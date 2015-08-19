@@ -1884,6 +1884,7 @@ button {
   border: none;
   width: 100%;
   padding: 0 0 0 0;
+  cursor: pointer;
 }
 button:focus {
   outline: 0;
@@ -1951,6 +1952,15 @@ button.fullwidth {
   -moz-box-shadow: 0px 0px 0px 4px #acc4dd inset;
   -webkit-box-shadow: 0px 0px 0px 4px #acc4dd inset;
   box-shadow: 0px 0px 0px 4px #acc4dd inset;
+  -moz-transition: all 0.1s linear;
+  -o-transition: all 0.1s linear;
+  -webkit-transition: all 0.1s linear;
+  transition: all 0.1s linear;
+}
+.button:focus {
+  -moz-box-shadow: 0px 0px 0px 4px white inset;
+  -webkit-box-shadow: 0px 0px 0px 4px white inset;
+  box-shadow: 0px 0px 0px 4px white inset;
   -moz-transition: all 0.1s linear;
   -o-transition: all 0.1s linear;
   -webkit-transition: all 0.1s linear;
