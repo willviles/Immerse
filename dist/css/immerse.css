@@ -66,6 +66,7 @@ body::-webkit-scrollbar {
   right: 0;
   position: fixed;
   background-color: white;
+  z-index: 1001;
 }
 .imm-loading .imm-spinner {
   position: absolute;

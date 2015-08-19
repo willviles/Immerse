@@ -158,18 +158,39 @@
     loading: function(imm) {
 
       this.imm = imm;
-      var loadingOverlayClass = this.imm.utils.namespacify.call(this.imm, 'loading');
+      var loadingOverlayClass = this.imm.utils.namespacify.call(this.imm, 'loading'),
+          minLoadingTime = this.imm.setup.options.minLoadingTime,
+          minLoadingTime = (minLoadingTime !== undefined) ? minLoadingTime : 0,
+          minLoadingTime = ($.isNumeric(minLoadingTime)) ? minLoadingTime : 0,
+          that = this;
+
+      this._loadingTime = 0;
+
+      var timeSinceInit = setInterval(function() {
+        that._loadingTime++;
+      }, 1);
 
       $.when(this.imm._assetQueue).then(
         function(s) {
-          // Run init on all sections
-          $.each(that.imm._sections, function(i, s) {
-            $(s.element).trigger('init');
-          });
-          // Trigger init of whole plugin
-          that.imm.$elem.trigger('immInit');
-          // Hide loading
-          $('.' + loadingOverlayClass).hide();
+
+          // Calculate remaining load time to meet min load time
+          var remainingLoad = minLoadingTime - that._loadingTime,
+              remainingLoad = (remainingLoad >= 0) ? remainingLoad : 0;
+
+          console.log(remainingLoad);
+          clearInterval(timeSinceInit);
+
+          setTimeout(function() {
+            // Run init on all sections
+            $.each(that.imm._sections, function(i, s) {
+              $(s.element).trigger('init');
+            });
+            // Trigger init of whole plugin
+            that.imm.$elem.trigger('immInit');
+            // Hide loading
+            $('.' + loadingOverlayClass).hide();
+          }, remainingLoad);
+
         },
         function(s) {
           alert('Asset loading failed');

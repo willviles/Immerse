@@ -109,3 +109,14 @@ $jumpBezier: cubic-bezier(.25,1.43,.55,.99);
   color: white;
   background-color: $ltblue;
 }
+
+.imm-loading {
+  .spinner {
+    position: fixed; top: 50%; left: 50%;
+    @include translate(-50%, -50%);
+    object {
+      width: 100px; height: auto;
+      @include animation(bounce 1s infinite .5s);
+    }
+  }
+}

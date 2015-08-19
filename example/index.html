@@ -237,7 +237,11 @@
     </nav>
 
     <div class="imm-loading">
-      <div class="imm-spinner"></div>
+      <div class="spinner">
+        <object data="assets/images/imm-logo.svg" type="image/svg+xml">
+          <img src="assets/images/imm-logo.jpg" />
+        </object>
+      </div>
     </div>
 
     <script type="text/javascript">
@@ -258,6 +262,7 @@
               unmuted: '<i class="fa fa-volume-up"></i>',
               muted: '<i class="fa fa-volume-off"></i>',
             },
+            minLoadingTime: 1000,
             devMode: true
           },
 
