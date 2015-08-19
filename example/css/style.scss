@@ -54,6 +54,24 @@ $jumpBezier: cubic-bezier(.25,1.43,.55,.99);
       }
     }
   }
+  .board-modal {
+    & > .container-fluid {
+      padding: 0 5em;
+    }
+    [data-imm-modal-action="close"] {
+      position: absolute;
+      top: 0; right: 0; width: 50px; height: 50px;
+      background-color: transparent;
+    }
+    .board-image-container {
+      display: block;
+      padding: 3em;
+    }
+    img {
+      width: 100%; height: auto;
+    }
+    .board-info { padding-top: 3em; }
+  }
 }
 
 #tutors {
