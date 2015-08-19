@@ -18,6 +18,7 @@ module.exports = function(grunt) {
           'src/js/navigation.js',
           'src/js/assets.js',
           'src/js/viewport.js',
+          'src/js/focus.js',
           'src/js/component.js',
           'src/js/components/*.js'
         ],

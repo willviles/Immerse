@@ -65,6 +65,8 @@ Author URI: http://vil.es/
       this._assetQueue = $.Immerse.assetController.register(this);
       // Setup the Scroll Controller
       $.Immerse.sectionController.init(this);
+      // Setup the Focus Controller
+      $.Immerse.focusController.init(this);
       // Setup the Scroll Controller
       $.Immerse.scrollController.init(this);
       // Setup the Navigation Controller
@@ -454,6 +456,7 @@ Author URI: http://vil.es/
       this.imm._sectionBelow = this.imm._sections[1];
       // Ensure page always starts at the top
       this.imm._scrollContainer.scrollTop(0);
+      this.imm._scrollContainer.attr('tabindex', 0);
       // Get bound/unbound status of first section
       this.imm._scrollUnbound = this.imm._currentSection.options.unbindScroll ? true : false;
       // Manage binding or unbind of scroll on sectionChange
@@ -566,7 +569,10 @@ Author URI: http://vil.es/
         down: function(e) {
 
           // if HTML scroll is locked, just behave normally
-          if (this.imm._htmlScrollLocked) { return };
+          if (this.imm._htmlScrollLocked) { return; };
+
+          // If body isn't the active element, just behave normally
+          if (document.activeElement !== $('body')[0]) { return; }
 
           if (!this.imm._scrollUnbound && this.imm._lastKey && this.imm._lastKey.which == e.which) {
             e.preventDefault();
@@ -593,6 +599,12 @@ Author URI: http://vil.es/
                 e.preventDefault();
                 this.ifCanThenGo.call(this, this.imm, 'DOWN');
               }
+            break;
+
+            case 9: // tab
+
+              $.Immerse.focusController.tabPress(this.imm, e);
+
             break;
 
             default: return; // exit this handler for other keys
@@ -935,7 +947,13 @@ Author URI: http://vil.es/
         this.imm._htmlScrollLocked = false;
       }
 
+    },
+
+/*
+    trackFocus: function() {
+      this.imm._scrollContainer.on('focus')
     }
+*/
 
   }; // End of all plugin functions
 
@@ -1610,6 +1628,103 @@ Author URI: http://vil.es/
     },
     isView: function(imm, a) {
       return new ImmerseViewportController(this).isView(imm, a);
+    }
+  }
+
+})( jQuery, window , document );
+
+// Focus Controller
+///////////////////////////////////////////////////////
+///////////////////////////////////////////////////////
+///////////////////////////////////////////////////////
+
+(function( $, window, document, undefined ) {
+
+  var controller = { name: 'focusController' };
+
+  // Set controller name
+  var n = controller.name;
+  // Controller constructor
+  controller[n] = function() {};
+  // Controller prototype
+  controller[n].prototype = {
+
+    // Initialize
+    ///////////////////////////////////////////////////////
+
+    init: function(imm) {
+      this.imm = imm;
+      this.imm.$elem.on('sectionChanged', function(e, d) {
+        if (document.activeElement !== $('body')[0]) {
+          $(document.activeElement).blur();
+        }
+      });
+      return this;
+    },
+
+    // Tab Press
+    ///////////////////////////////////////////////////////
+
+    tabPress: function(imm, e) {
+
+      // Get a handle on the Immerse object
+      this.imm = imm;
+
+      // Find form
+      var $form = $(this.imm._currentSection.element).find('form');
+      if ($form.length === 0) { e.preventDefault(); return; }
+
+      // Find inputs inside form
+      var $inputs = $('input, textarea, button, select', $form);
+      if ($inputs.length === 0) { e.preventDefault(); return; }
+
+      var firstInput = $inputs[0],
+          lastInput = $inputs[$inputs.length - 1];
+
+      // If body is the active element, go for first input
+      if (document.activeElement === $('body')[0]) {
+        e.preventDefault();
+        $(firstInput).focus();
+
+        // Manage input handling
+        $inputs.off('keydown').on('keydown', function(e) {
+          var isButton = $(this).is('button'),
+              isSelect = $(this).is('select'),
+              isElementInNeedOfBlocking = isButton || isSelect;
+
+          // Give the last input a keydown function to return it to document
+          if ($(this)[0] === $(lastInput)[0] && e.which === 9) {
+            e.preventDefault();
+            $(this).blur();
+            return;
+          }
+
+          // If element isn't in need of blocking, just let things happen
+          if (!isElementInNeedOfBlocking) { return; }
+
+          // If element is in need of blocking and scroll is unbound, block the key!
+          if (e.which === 38 || e.which === 40) {
+            e.preventDefault();
+            return;
+          }
+        })
+      }
+      return this;
+    }
+
+  // End of controller
+  ///////////////////////////////////////////////////////
+  };
+
+  // Register with Immerse
+  ///////////////////////////////////////////////////////
+
+  $.Immerse[n] = {
+    init: function(imm) {
+      return new controller[n](this).init(imm);
+    },
+    tabPress: function(imm, e) {
+      return new controller[n](this).tabPress(imm, e);
     }
   }
 

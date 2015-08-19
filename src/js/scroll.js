@@ -26,6 +26,7 @@
       this.imm._sectionBelow = this.imm._sections[1];
       // Ensure page always starts at the top
       this.imm._scrollContainer.scrollTop(0);
+      this.imm._scrollContainer.attr('tabindex', 0);
       // Get bound/unbound status of first section
       this.imm._scrollUnbound = this.imm._currentSection.options.unbindScroll ? true : false;
       // Manage binding or unbind of scroll on sectionChange
@@ -138,7 +139,10 @@
         down: function(e) {
 
           // if HTML scroll is locked, just behave normally
-          if (this.imm._htmlScrollLocked) { return };
+          if (this.imm._htmlScrollLocked) { return; };
+
+          // If body isn't the active element, just behave normally
+          if (document.activeElement !== $('body')[0]) { return; }
 
           if (!this.imm._scrollUnbound && this.imm._lastKey && this.imm._lastKey.which == e.which) {
             e.preventDefault();
@@ -165,6 +169,12 @@
                 e.preventDefault();
                 this.ifCanThenGo.call(this, this.imm, 'DOWN');
               }
+            break;
+
+            case 9: // tab
+
+              $.Immerse.focusController.tabPress(this.imm, e);
+
             break;
 
             default: return; // exit this handler for other keys
@@ -507,7 +517,13 @@
         this.imm._htmlScrollLocked = false;
       }
 
+    },
+
+/*
+    trackFocus: function() {
+      this.imm._scrollContainer.on('focus')
     }
+*/
 
   }; // End of all plugin functions
 

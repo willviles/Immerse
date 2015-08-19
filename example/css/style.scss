@@ -108,6 +108,14 @@ $jumpBezier: cubic-bezier(.25,1.43,.55,.99);
 #join {
   color: white;
   background-color: $ltblue;
+  input[type="email"], input[type="text"] {
+    display: block; background-color: rgba(white, .7);
+    width: 100%;
+    font-size: 1.5em; border: none !important;
+    padding: .5em 1em .5em 1em;
+    color: $grey; margin-bottom: 25px;
+    &:focus { outline: 0; background-color: rgba(white, 1) }
+  }
 }
 
 .imm-loading {

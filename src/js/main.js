@@ -65,6 +65,8 @@ Author URI: http://vil.es/
       this._assetQueue = $.Immerse.assetController.register(this);
       // Setup the Scroll Controller
       $.Immerse.sectionController.init(this);
+      // Setup the Focus Controller
+      $.Immerse.focusController.init(this);
       // Setup the Scroll Controller
       $.Immerse.scrollController.init(this);
       // Setup the Navigation Controller
