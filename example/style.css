@@ -1809,6 +1809,29 @@ i {
   font-style: italic;
 }
 
+.imm-logo-full {
+  position: absolute;
+  top: 60px;
+  left: 50px;
+  z-index: 1000;
+}
+.imm-logo-full > div {
+  display: inline-block;
+  position: relative;
+}
+.imm-logo-full > div object {
+  height: 45px;
+  width: auto;
+}
+.imm-logo-full > div a {
+  position: absolute;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
 @-moz-keyframes bounce {
   0%, 20%, 50%, 80%, 100% {
     -moz-transform: translateY(0);
