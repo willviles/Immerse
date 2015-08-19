@@ -2274,8 +2274,14 @@ nav.top-nav.white-grey div button {
   padding-top: 200px;
   padding-bottom: 200px;
 }
-#learn p:first-of-type {
+#learn p.lead {
   margin-top: 3em;
+}
+#learn .surfers-bondi {
+  margin: 50px 0;
+}
+#learn h2 i {
+  color: #f5da55;
 }
 
 #join {

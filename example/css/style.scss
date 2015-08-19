@@ -80,7 +80,11 @@ $jumpBezier: cubic-bezier(.25,1.43,.55,.99);
 #learn {
   padding-top: 200px;
   padding-bottom: 200px;
-  p:first-of-type { margin-top: 3em; }
+  p.lead { margin-top: 3em; }
+  .surfers-bondi {
+    margin: 50px 0;
+  }
+  h2 i { color: $yellow; }
 }
 
 #join {
