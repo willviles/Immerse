@@ -759,6 +759,14 @@ Author URI: http://vil.es/
         that.imm._lastSection = opts.currentSection;
         that.imm._currentSection = opts.nextSection;
 
+        // Set new section as current section
+        that.imm.$elem.trigger('sectionChanged', [{
+          last: that.imm._lastSection,
+          current: that.imm._currentSection,
+          below: that.imm._sectionBelow,
+          above: that.imm._sectionAbove
+        }]);
+
         TweenLite.to(this.imm.$elem, 1, {
           scrollTo: { y: dist, autoKill: false },
           ease:Power4.easeOut,
@@ -767,22 +775,6 @@ Author URI: http://vil.es/
             opts.$nextSection.trigger(opts.triggers.entered);
             // Set current section to exited
             opts.$currentSection.trigger(opts.triggers.exited);
-            // Set new section as current section
-            that.imm.$elem.trigger('sectionChanged', [{
-              last: that.imm._lastSection,
-              current: that.imm._currentSection,
-              below: that.imm._sectionBelow,
-              above: that.imm._sectionAbove
-            }]);
-
-/*
-            if (opts.scrollAnchor === 'bottom') {
-              $.Immerse.scrollController.htmlScroll(that.imm, 'lock');
-              setTimeout(function() {
-                $.Immerse.scrollController.htmlScroll(that.imm, 'unlock');
-              }, 500);
-            }
-*/
 
             setTimeout(function() {
               // Reset flags
