@@ -3,13 +3,19 @@
 ///////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////
 
-(function( $, window, document, undefined ){
+(function( $, window, document, undefined ) {
 
+  // Setup component registry
   $.Immerse.componentRegistry = {};
 
-  var ImmerseComponentController = function() {};
+  var controller = { name: 'componentController' };
 
-  ImmerseComponentController.prototype = {
+  // Set controller name
+  var n = controller.name;
+  // Controller constructor
+  controller[n] = function() {};
+  // Controller prototype
+  controller[n].prototype = {
 
     // Add component to global registry
     ///////////////////////////////////////////////////////
@@ -81,24 +87,29 @@
       });
     },
 
-  }; // End of all plugin functions
+  // End of controller
+  ///////////////////////////////////////////////////////
 
-  // Functions to expose to rest of the plugin
-  $.Immerse.componentController = {
+  };
+
+  // Register with Immerse
+  ///////////////////////////////////////////////////////
+
+  $.Immerse[n] = {
     add: function(opts) {
-      return new ImmerseComponentController(this).add(opts);
+      return new controller[n](this).add(opts);
     },
     extendDefaults: function(defaults) {
-      return new ImmerseComponentController(this).extendDefaults(defaults);
+      return new controller[n](this).extendDefaults(defaults);
     },
     extendGlobalOptions: function(imm, defaults) {
-      return new ImmerseComponentController(this).extendGlobalOptions(imm, defaults);
+      return new controller[n](this).extendGlobalOptions(imm, defaults);
     },
     init: function(imm, section) {
-      return new ImmerseComponentController(this).init(imm, section);
+      return new controller[n](this).init(imm, section);
     },
     resize: function(imm) {
-      return new ImmerseComponentController(this).resize(imm);
+      return new controller[n](this).resize(imm);
     }
   }
 
