@@ -39,6 +39,8 @@
       defaults = $.Immerse.componentController.extendGlobalOptions(this.imm, defaults);
       // Extend global audio options
       defaults = $.Immerse.audioController.extendGlobalOptions(this.imm, defaults);
+      // Extend global attribute options
+      defaults = this.extendDefaults.attributes.call(this, defaults);
 
       // Reassign defaults with component defaults/global options included
       this.sectionDefaults = defaults;
@@ -216,6 +218,18 @@
         });
       }
 
+    },
+
+    extendDefaults: {
+      attributes: function(defaults) {
+        var attributeSetupOpts = this.imm.setup.attributes;
+
+        if (attributeSetupOpts === undefined) { return defaults; }
+
+        defaults['attributes'] = attributeSetupOpts;
+
+        return defaults;
+      }
     }
 
   }; // End of all plugin functions
