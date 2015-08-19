@@ -315,8 +315,6 @@
             this.go.change.call(this, opts);
           } else {
             if (opts.direction === 'UP') {
-              // Set a watcher which detects when current section is fully scrolled (up) out of view
-//               console.log('FIRE WATCHER');
               opts.scrollAnchor = 'bottom';
               this.go.animate.call(this, opts);
             } else if (opts.direction === 'DOWN') {
@@ -337,8 +335,6 @@
         // On the rare occasion we're scrolling to the bottom of the div instead.
         if (opts.scrollAnchor === 'bottom') {
           dist = (opts.nextSection.scrollOffset + opts.$nextSection.outerHeight()) - this.imm._windowHeight;
-          console.log(opts.nextSection.scrollOffset);
-          console.log(dist);
         }
 
         // Set current section to exiting

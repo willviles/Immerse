@@ -24,10 +24,13 @@ $.Immerse.registerComponent({
 
     $section.find(this.scrollToDataTag).on('click', function(e) {
       var $button = $(this),
-          target = $button.data(that.scrollToNamespace),
-          $target = (target.charAt(0) === '#') ? $(target) : $('#' + target);
+          target = $button.data(that.scrollToNamespace);
 
-      $.Immerse.scrollController.doScroll(that.imm, $target);
+      if (target !== 'NEXT' && target !== 'PREV' && target !== 'DOWN' && target !== 'UP') {
+        target = (target.charAt(0) === '#') ? $(target) : $('#' + target);
+      }
+
+      $.Immerse.scrollController.doScroll(that.imm, target);
     });
 
     return this;

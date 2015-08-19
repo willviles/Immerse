@@ -36,7 +36,7 @@
               </button>
             </div>
             <div class="col-sm-3">
-              <button data-imm-scroll-to="boards" class="button fullwidth">
+              <button data-imm-scroll-to="DOWN" class="button fullwidth">
                 <span><i class="fa fa-angle-down"></i> Let's Go</span>
               </button>
             </div>
@@ -150,7 +150,7 @@
           </div>
           <div class="row text-center">
             <p class="next">
-              <button data-imm-scroll-to="join" class="button small white">
+              <button data-imm-scroll-to="DOWN" class="button small white">
                 <span><i class="fa fa-angle-down"></i> Next</span>
               </button>
             </p>
@@ -323,9 +323,6 @@
           },
           // Component settings
           components: {
-            stacks: {
-              option1: 'THIS SHOULD ONLY BE VISIBLE IN BOARDS SECTION'
-            },
             modals: {
               'default': {
                 onCancel: function(modal) {
@@ -401,6 +398,11 @@
           name: 'Join',
           // Set the element. Must be able to take either a string, javascript or jquery selector
           element: $('#join'),
+          attributes: {
+            'navColor': {
+              value: 'white'
+            }
+          }
         });
 
         // Init immerse instance

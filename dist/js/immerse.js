@@ -729,8 +729,6 @@ Author URI: http://vil.es/
             this.go.change.call(this, opts);
           } else {
             if (opts.direction === 'UP') {
-              // Set a watcher which detects when current section is fully scrolled (up) out of view
-//               console.log('FIRE WATCHER');
               opts.scrollAnchor = 'bottom';
               this.go.animate.call(this, opts);
             } else if (opts.direction === 'DOWN') {
@@ -751,8 +749,6 @@ Author URI: http://vil.es/
         // On the rare occasion we're scrolling to the bottom of the div instead.
         if (opts.scrollAnchor === 'bottom') {
           dist = (opts.nextSection.scrollOffset + opts.$nextSection.outerHeight()) - this.imm._windowHeight;
-          console.log(opts.nextSection.scrollOffset);
-          console.log(dist);
         }
 
         // Set current section to exiting
@@ -1962,10 +1958,13 @@ $.Immerse.registerComponent({
 
     $section.find(this.scrollToDataTag).on('click', function(e) {
       var $button = $(this),
-          target = $button.data(that.scrollToNamespace),
-          $target = (target.charAt(0) === '#') ? $(target) : $('#' + target);
+          target = $button.data(that.scrollToNamespace);
 
-      $.Immerse.scrollController.doScroll(that.imm, $target);
+      if (target !== 'NEXT' && target !== 'PREV' && target !== 'DOWN' && target !== 'UP') {
+        target = (target.charAt(0) === '#') ? $(target) : $('#' + target);
+      }
+
+      $.Immerse.scrollController.doScroll(that.imm, target);
     });
 
     return this;
