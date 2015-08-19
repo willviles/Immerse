@@ -249,7 +249,7 @@
     go: {
 
       prepare: function(o) {
-        var a = { currentSection: this.imm._currentSection },
+        var a = { currentSection: this.imm._currentSection, scrollAnchor: 'top' },
           that = this;
 
         a.$currentSection = $(a.currentSection.element);
@@ -315,7 +315,10 @@
             this.go.change.call(this, opts);
           } else {
             if (opts.direction === 'UP') {
-              this.go.change.call(this, opts);
+              // Set a watcher which detects when current section is fully scrolled (up) out of view
+//               console.log('FIRE WATCHER');
+              opts.scrollAnchor = 'bottom';
+              this.go.animate.call(this, opts);
             } else if (opts.direction === 'DOWN') {
               this.go.animate.call(this, opts);
             }
@@ -326,9 +329,17 @@
       },
 
       animate: function(opts) {
+
         // New section scroll offset
         var dist = opts.nextSection.scrollOffset,
             that = this;
+
+        // On the rare occasion we're scrolling to the bottom of the div instead.
+        if (opts.scrollAnchor === 'bottom') {
+          dist = (opts.nextSection.scrollOffset + opts.$nextSection.outerHeight()) - this.imm._windowHeight;
+          console.log(opts.nextSection.scrollOffset);
+          console.log(dist);
+        }
 
         // Set current section to exiting
         opts.$currentSection.trigger(opts.triggers.exiting);
@@ -353,6 +364,16 @@
               below: that.imm._sectionBelow,
               above: that.imm._sectionAbove
             }]);
+
+/*
+            if (opts.scrollAnchor === 'bottom') {
+              $.Immerse.scrollController.htmlScroll(that.imm, 'lock');
+              setTimeout(function() {
+                $.Immerse.scrollController.htmlScroll(that.imm, 'unlock');
+              }, 500);
+            }
+*/
+
             setTimeout(function() {
               // Reset flags
               that.imm._isScrolling = false;

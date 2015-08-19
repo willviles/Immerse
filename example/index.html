@@ -159,17 +159,28 @@
       </div>
     </section>
 
-    <section id="join" class="imm-section">
+    <section id="learn" class="imm-section">
       <div class="container">
         <div class="row text-center">
           <div class="col-sm-8 col-sm-offset-2">
-            <h3 class="title">Join the <span class="yellow-text">academy.</span></h3>
+            <h3 class="title">Learn at <span class="yellow-text">Bondi Beach.</span></h3>
             <p>What better place to learn to surf than on world-famous Bondi Beach? Here you'll find fantastic waves, sunbathing models, year-round sun and the coolest beachside vibe anywhere.</p>
             <p>What better place to learn to surf than on world-famous Bondi Beach? Here you'll find fantastic waves, sunbathing models, year-round sun and the coolest beachside vibe anywhere.</p>
             <p>What better place to learn to surf than on world-famous Bondi Beach? Here you'll find fantastic waves, sunbathing models, year-round sun and the coolest beachside vibe anywhere.</p>
             <p>What better place to learn to surf than on world-famous Bondi Beach? Here you'll find fantastic waves, sunbathing models, year-round sun and the coolest beachside vibe anywhere.</p>
             <p>What better place to learn to surf than on world-famous Bondi Beach? Here you'll find fantastic waves, sunbathing models, year-round sun and the coolest beachside vibe anywhere.</p>
             <p>What better place to learn to surf than on world-famous Bondi Beach? Here you'll find fantastic waves, sunbathing models, year-round sun and the coolest beachside vibe anywhere.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="join" class="imm-fullscreen imm-section">
+      <div class="imm-video" data-imm-video="surf"></div>
+      <div class="imm-vertcenter">
+        <div class="container-fluid">
+          <div class="row text-center">
+            <h3 class="title"><span class="white-text">Join</span> the waves.</h3>
           </div>
         </div>
       </div>
@@ -371,9 +382,9 @@
 
         pageName.section({
           // Unique name for the section
-          name: 'Join',
+          name: 'Learn',
           // Set the element. Must be able to take either a string, javascript or jquery selector
-          element: $('#join'),
+          element: $('#learn'),
           options: {
             unbindScroll: true
           },
@@ -383,6 +394,13 @@
               value: 'grey'
             }
           }
+        });
+
+        pageName.section({
+          // Unique name for the section
+          name: 'Join',
+          // Set the element. Must be able to take either a string, javascript or jquery selector
+          element: $('#join'),
         });
 
         // Init immerse instance

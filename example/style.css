@@ -2270,12 +2270,16 @@ nav.top-nav.white-grey div button {
   text-align: right;
 }
 
-#join {
-  padding-top: 100px;
-  padding-bottom: 500px;
+#learn {
+  padding-top: 200px;
+  padding-bottom: 200px;
 }
-#join p:first-of-type {
+#learn p:first-of-type {
   margin-top: 3em;
+}
+
+#join {
+  background-color: #d0deec;
 }
 
 /*# sourceMappingURL=style.css.map */

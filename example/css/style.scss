@@ -77,8 +77,12 @@ $jumpBezier: cubic-bezier(.25,1.43,.55,.99);
   }
 }
 
-#join {
-  padding-top: 100px;
-  padding-bottom: 500px;
+#learn {
+  padding-top: 200px;
+  padding-bottom: 200px;
   p:first-of-type { margin-top: 3em; }
+}
+
+#join {
+  background-color: $ltblue;
 }
