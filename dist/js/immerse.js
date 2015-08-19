@@ -184,11 +184,16 @@ Author URI: http://vil.es/
 ///////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////
 
-(function( $, window, document, undefined ){
+(function( $, window, document, undefined ) {
 
-  var ImmerseSectionController = function() {};
+  var controller = { name: 'sectionController' };
 
-  ImmerseSectionController.prototype = {
+  // Set controller name
+  var n = controller.name;
+  // Controller constructor
+  controller[n] = function() {};
+  // Controller prototype
+  controller[n].prototype = {
 
     // Default section settings
     ///////////////////////////////////////////////////////
@@ -413,16 +418,20 @@ Author URI: http://vil.es/
       }
     }
 
-  }; // End of all plugin functions
+  // End of controller
+  ///////////////////////////////////////////////////////
+  };
 
-  // Functions to expose to rest of the plugin
-  $.Immerse.sectionController = {
+  // Register with Immerse
+  ///////////////////////////////////////////////////////
+
+  $.Immerse[n] = {
     init: function(imm) {
-      return new ImmerseSectionController(this).init(imm);
+      return new controller[n](this).init(imm);
     },
 
     add: function(imm, section) {
-      return new ImmerseSectionController(this).add(imm, section);
+      return new controller[n](this).add(imm, section);
     }
   }
 
