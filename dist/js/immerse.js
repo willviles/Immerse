@@ -1764,11 +1764,11 @@ Author URI: http://vil.es/
       this.hash = window.location.href.split("#")[1];
 
       if (this.imm.setup.options.hashChange !== true) {
-        this.setInitialSection.call(this, 'first');
+        this.setSection.call(this, 'first');
         return false;
       }
 
-      this.setInitialSection.call(this);
+      this.setSection.call(this);
 
       var that = this;
 
@@ -1779,7 +1779,7 @@ Author URI: http://vil.es/
       return this;
     },
 
-    setInitialSection: function(o) {
+    setSection: function(o) {
       if (o === 'first' || !this.hash) {
         this.imm._currentSection = this.imm._sections[0];
         this.imm._sectionBelow = this.imm._sections[1];
