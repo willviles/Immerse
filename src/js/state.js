@@ -66,12 +66,7 @@
     },
 
     hashChange: function(d) {
-      var hash;
-      if (d.current.scrollIndex === 0) {
-        hash = this.baseUrl;
-      } else {
-        hash = '#' + d.current.element[0].id;
-      }
+      var hash = (d.current.scrollIndex === 0) ? this.baseUrl : '#' + d.current.element[0].id;
       history.replaceState({}, "", hash);
     }
 
