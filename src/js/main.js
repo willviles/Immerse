@@ -34,6 +34,7 @@ Author URI: http://vil.es/
             unmuted: 'Audio On',
             muted: 'Audio Off',
           },
+          hashChange: true,
           devMode: false
         },
         sections: []
@@ -63,8 +64,10 @@ Author URI: http://vil.es/
       $.Immerse.viewportController.init(this);
       // Setup the Asset Queue
       this._assetQueue = $.Immerse.assetController.register(this);
-      // Setup the Scroll Controller
+      // Setup the Section Controller
       $.Immerse.sectionController.init(this);
+      // Setup the State Controller
+      $.Immerse.stateController.init(this);
       // Setup the Focus Controller
       $.Immerse.focusController.init(this);
       // Setup the Scroll Controller

@@ -134,8 +134,9 @@
       	return obj1.scrollOffset - obj2.scrollOffset;
       });
 
-      // Initiate all components on all sections
-      $.each(this.imm._sections, function(n, s) {
+      // Add index to and initiate all components on all sections
+      $.each(this.imm._sections, function(i, s) {
+        s.scrollIndex = i;
         $.Immerse.componentController.init(that, s);
       });
 

@@ -34,6 +34,7 @@ Author URI: http://vil.es/
             unmuted: 'Audio On',
             muted: 'Audio Off',
           },
+          hashChange: true,
           devMode: false
         },
         sections: []
@@ -63,8 +64,10 @@ Author URI: http://vil.es/
       $.Immerse.viewportController.init(this);
       // Setup the Asset Queue
       this._assetQueue = $.Immerse.assetController.register(this);
-      // Setup the Scroll Controller
+      // Setup the Section Controller
       $.Immerse.sectionController.init(this);
+      // Setup the State Controller
+      $.Immerse.stateController.init(this);
       // Setup the Focus Controller
       $.Immerse.focusController.init(this);
       // Setup the Scroll Controller
@@ -315,8 +318,9 @@ Author URI: http://vil.es/
       	return obj1.scrollOffset - obj2.scrollOffset;
       });
 
-      // Initiate all components on all sections
-      $.each(this.imm._sections, function(n, s) {
+      // Add index to and initiate all components on all sections
+      $.each(this.imm._sections, function(i, s) {
+        s.scrollIndex = i;
         $.Immerse.componentController.init(that, s);
       });
 
@@ -480,11 +484,6 @@ Author URI: http://vil.es/
 
       // If element initiated on is body, set the scroll target to window
       this.imm._scrollContainer = ($(this.imm.elem)[0] === $('body')[0]) ? $(window) : $(this.imm.elem);
-      // Set current section
-      this.imm._currentSection = this.imm._sections[0];
-      this.imm._sectionBelow = this.imm._sections[1];
-      // Ensure page always starts at the top
-      this.imm._scrollContainer.scrollTop(0);
       // Get bound/unbound status of first section
       this.imm._scrollUnbound = this.imm._currentSection.options.unbindScroll ? true : false;
       // Manage binding or unbind of scroll on sectionChange
@@ -1734,6 +1733,98 @@ Author URI: http://vil.es/
     },
     isView: function(imm, a) {
       return new controller[n](this).isView(imm, a);
+    }
+  }
+
+})( jQuery, window , document );
+
+// State Controller
+///////////////////////////////////////////////////////
+///////////////////////////////////////////////////////
+///////////////////////////////////////////////////////
+
+(function( $, window, document, undefined ) {
+
+  var controller = { name: 'stateController' };
+
+  // Set controller name
+  var n = controller.name;
+  // Controller constructor
+  controller[n] = function() {};
+  // Controller prototype
+  controller[n].prototype = {
+
+    // Initialize
+    ///////////////////////////////////////////////////////
+
+    init: function(imm) {
+      this.imm = imm;
+
+      this.baseUrl = window.location.href.split("#")[0];
+      this.hash = window.location.href.split("#")[1];
+
+      if (this.imm.setup.options.hashChange !== true) {
+        this.setInitialSection.call(this, 'first');
+        return false;
+      }
+
+      this.setInitialSection.call(this);
+
+      var that = this;
+
+      this.imm.$elem.on('sectionChanged', function(e, d) {
+        that.hashChange.call(that, d);
+      });
+
+      return this;
+    },
+
+    setInitialSection: function(o) {
+      if (o === 'first' || !this.hash) {
+        this.imm._currentSection = this.imm._sections[0];
+        this.imm._sectionBelow = this.imm._sections[1];
+        return;
+      }
+
+      this.imm._currentSection = this.findSection.call(this, this.hash)[0];
+      this.imm._sectionBelow = this.imm._sections[this.imm._currentSection.scrollIndex + 1];
+      this.imm._sectionAbove = this.imm._sections[this.imm._currentSection.scrollIndex - 1];
+
+      var that = this;
+
+      this.imm.$elem.on('immInit', function(e) {
+        that.imm._scrollContainer.scrollTop(that.imm._currentSection.scrollOffset);
+        that.imm._currentSection.element.trigger('enteringDown');
+        that.imm._currentSection.element.trigger('enteredDown');
+      });
+    },
+
+    findSection: function(hash) {
+      return this.imm._sections.filter(function(s) {
+        return s.element[0] === $('#' + hash)[0];
+      });
+    },
+
+    hashChange: function(d) {
+      var hash;
+      if (d.current.scrollIndex === 0) {
+        hash = this.baseUrl;
+      } else {
+        hash = '#' + d.current.element[0].id;
+      }
+      history.replaceState({}, "", hash);
+    }
+
+  // End of controller
+  ///////////////////////////////////////////////////////
+  };
+
+  // Register with Immerse
+  ///////////////////////////////////////////////////////
+
+  $.Immerse[n] = {
+    init: function(imm) {
+      return new controller[n](this).init(imm);
     }
   }
 

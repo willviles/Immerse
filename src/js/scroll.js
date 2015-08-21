@@ -26,11 +26,6 @@
 
       // If element initiated on is body, set the scroll target to window
       this.imm._scrollContainer = ($(this.imm.elem)[0] === $('body')[0]) ? $(window) : $(this.imm.elem);
-      // Set current section
-      this.imm._currentSection = this.imm._sections[0];
-      this.imm._sectionBelow = this.imm._sections[1];
-      // Ensure page always starts at the top
-      this.imm._scrollContainer.scrollTop(0);
       // Get bound/unbound status of first section
       this.imm._scrollUnbound = this.imm._currentSection.options.unbindScroll ? true : false;
       // Manage binding or unbind of scroll on sectionChange
