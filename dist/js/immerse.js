@@ -490,7 +490,6 @@ Author URI: http://vil.es/
       this.imm.$elem.on('immInit sectionChanged', function(e, d) {
         if (e.type === 'sectionChanged') {
           that.imm._scrollUnbound = that.utils.isScrollUnbound.call(that, that.imm, d.current);
-          console.log(that.imm._scrollUnbound);
         }
         $.each(that.events, function(n, f) { f.call(that); });
       });
