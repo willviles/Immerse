@@ -27,14 +27,19 @@ npm install immersejs
 
 Include dependencies
 ```html
+<!-- JQuery -->
 <script src="node_modules/jquery/jquery.min.js"></script>
+<!-- GSAP TweenMax -->
 <script src="node_modules/gsap/src/minified/TweenMax.min.js"></script>
+<!-- GSAP ScrollTo Plugin -->
 <script src="node_modules/gsap/src/minified/plugins/ScrollToPlugin.min.js"></script>
 ```
 
 Include Immerse.js javascript and stylesheet
 ```html
+<!-- Immerse.js -->
 <script src="node_modules/immersejs/dist/js/immerse.js"></script>
+<!-- Immerse.css -->
 <link rel="stylesheet" type="text/css" href="node_modules/immersejs/dist/css/immerse.css">
 ```
 
