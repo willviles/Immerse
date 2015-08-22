@@ -1,7 +1,7 @@
-# Immerse
+# Immerse.js v1.0.7
 #### Build immersive, media driven web experiences - the easy way.
 
-[http://immerse.vil.es](https://immerse.vil.es "Immerse.js Site")
+Checkout the [official plugin website](https://immerse.vil.es "Immerse.js Site"), the [Learn to Surf](https://immerse.vil.es "Immerse.js Learn to Surf Example") example or the [full documentation](https://immerse.vil.es "Immerse.js Full Documentation").
 
 ### What does Immerse.js do?
 
@@ -43,16 +43,88 @@ Include Immerse.js:
 <link rel="stylesheet" type="text/css" href="node_modules/immersejs/dist/css/immerse.css">
 ```
 
-## Build HTML markup
+## Basic Setup
 
+#### Build HTML markup
 At its most basic configuration, Immerse.js will build your section based site from simple HTML markup.
 
 ```html
 <!-- Set the Immerse scroll container -->
 <body class="imm-scroll-container">
-  <!-- Create a section using .imm-section. Adding the .imm-fullscreen class creates a 100 vertical height section with fixed scrolling. -->
-  <section id="first-section" class="imm-section imm-fullscreen"></section>
-  <!-- Not adding the .imm-fullscreen class creates a flexible height, unbound scroll section. -->
-  <section id="second-section" class="imm-section"></section>
+
+  <!-- Create a flexible-height section using .imm-section. Give it an ID for Immerse to reference. -->
+  <section id="foo" class="imm-section"></section>
+  
+  <!-- Adding the .imm-fullscreen class creates a 100 vertical height section with fixed scrolling. -->
+  <section id="bar" class="imm-section imm-fullscreen"></section>
+  
+  <!-- Section navigation will be injected into any DOM element with .imm-nav-list attached. -->
+  <ul class="imm-nav-list"></ul>
+  
+  <!-- Any div with the imm-loading class will be used as a loading overlay and hidden when the page's assets have fully loaded -->
+  <div class="imm-loading"></div>
 </body>
 ```
+
+#### Setup & Init Immerse
+
+```js
+var page = $.Immerse.setup();
+page.init($('body'));
+```
+
+## Configure sections
+
+Sections can be configured through registering a section on the page variable before Immerse is initialized.
+
+```js
+page.section({
+
+  // Name the section.
+  name: 'Section Name',
+  
+  // Set the element. Must be able to take either a string, javascript or jquery selector
+  element: $('#foo'),
+  
+});
+```
+
+## Assets
+### Defining assets
+### Preloading (wait)
+
+## Animations
+### Configuring animations
+### Devices, breakpoints & runtime
+### Resetting animations
+
+## Attributes
+### Default attributes for all sections
+### Change attributes per section
+### Listen for changes & fire custom code
+
+## Actions
+### Fire custom code
+
+## Audio
+### Default audio for all sections
+### Section-based audio
+### Mute button configuration
+### Programatically control audio
+
+## Scrolling
+### Unbinding
+### Buttons
+### Programatically
+
+## Other
+### Namespacing
+### Tracking State (hasChange)
+### Custom breakpoints
+### Loading Animation (min time)
+### Development Mode
+### Vertical Align
+
+## Custom components
+### registerComponent
+### onResize
