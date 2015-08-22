@@ -1779,6 +1779,9 @@ Author URI: http://vil.es/
       return this;
     },
 
+    // Set Section
+    ///////////////////////////////////////////////////////
+
     setSection: function(o) {
       if (o === 'first' || !this.hash) {
         this.imm._currentSection = this.imm._sections[0];
@@ -1799,11 +1802,17 @@ Author URI: http://vil.es/
       });
     },
 
+    // Find Section
+    ///////////////////////////////////////////////////////
+
     findSection: function(hash) {
       return this.imm._sections.filter(function(s) {
         return s.element[0] === $('#' + hash)[0];
       });
     },
+
+    // Hash Change
+    ///////////////////////////////////////////////////////
 
     hashChange: function(d) {
       var hash = (d.current.scrollIndex === 0) ? this.baseUrl : '#' + d.current.element[0].id;
