@@ -19,13 +19,13 @@ Immerse.js offers a javascript framework for building complex, media-driven web 
 
 ## Getting Started
 
-Install Immerse.js via NPM.
+Install Immerse.js via NPM:
 
 ```shell
 npm install immersejs
 ```
 
-Include dependencies
+Include dependencies:
 ```html
 <!-- JQuery -->
 <script src="node_modules/jquery/jquery.min.js"></script>
@@ -35,7 +35,7 @@ Include dependencies
 <script src="node_modules/gsap/src/minified/plugins/ScrollToPlugin.min.js"></script>
 ```
 
-Include Immerse.js javascript and stylesheet
+Include Immerse.js:
 ```html
 <!-- Immerse.js -->
 <script src="node_modules/immersejs/dist/js/immerse.js"></script>
@@ -43,3 +43,16 @@ Include Immerse.js javascript and stylesheet
 <link rel="stylesheet" type="text/css" href="node_modules/immersejs/dist/css/immerse.css">
 ```
 
+## Build HTML markup
+
+At its most basic configuration, Immerse.js will build your section based site from simple HTML markup.
+
+```html
+<!-- Set the Immerse scroll container -->
+<body class="imm-scroll-container">
+  <!-- Create a section using .imm-section. Adding the .imm-fullscreen class creates a 100 vertical height section with fixed scrolling. -->
+  <section id="first-section" class="imm-section imm-fullscreen"></section>
+  <!-- Not adding the .imm-fullscreen class creates a flexible height, unbound scroll section. -->
+  <section id="second-section" class="imm-section"></section>
+</body>
+```
