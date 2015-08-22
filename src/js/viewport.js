@@ -92,6 +92,9 @@
       // If we've got a newBreakpoint detected, do something about it!
       if (currentBreakpoint !== newBreakpoint) {
         this.imm._breakpoint = newBreakpoint;
+        if (currentBreakpoint) {
+          this.imm.utils.log(this.imm, "Screen resized to '" + newBreakpoint + "'");
+        }
       }
     },
 
