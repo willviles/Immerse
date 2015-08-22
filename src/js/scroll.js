@@ -27,11 +27,12 @@
       // If element initiated on is body, set the scroll target to window
       this.imm._scrollContainer = ($(this.imm.elem)[0] === $('body')[0]) ? $(window) : $(this.imm.elem);
       // Get bound/unbound status of first section
-      this.imm._scrollUnbound = this.imm._currentSection.options.unbindScroll ? true : false;
+      this.imm._scrollUnbound = this.utils.isScrollUnbound.call(this, this.imm, this.imm._currentSection);
       // Manage binding or unbind of scroll on sectionChange
       this.imm.$elem.on('immInit sectionChanged', function(e, d) {
         if (e.type === 'sectionChanged') {
-          that.imm._scrollUnbound = d.current.options.unbindScroll ? true : false;
+          that.imm._scrollUnbound = that.utils.isScrollUnbound.call(that, that.imm, d.current);
+          console.log(that.imm._scrollUnbound);
         }
         $.each(that.events, function(n, f) { f.call(that); });
       });
@@ -502,6 +503,24 @@
 
       isKeydownEvent: function(e) {
         return e.type === 'keydown';
+      },
+
+      isScrollUnbound: function(imm, section) {
+
+        this.imm = (this.imm === undefined) ? imm : this.imm;
+
+        var status = section.options.unbindScroll ? section.options.unbindScroll : false,
+            enableOn = {};
+
+        if ($.isArray(status)) {
+          enableOn.breakpoints = status;
+        } else if (status !== true) {
+          // Set scrollUnbound to false
+          return status;
+        }
+
+        return $.Immerse.viewportController.isView(this.imm, enableOn);
+
       }
     },
 
@@ -516,7 +535,9 @@
         this.imm._htmlScrollLocked = false;
       }
 
-    }
+    },
+
+
 
   // End of controller
   ///////////////////////////////////////////////////////
@@ -547,6 +568,9 @@
     },
     htmlScroll: function(imm, status) {
       return new controller[n](this).htmlScroll(imm, status);
+    },
+    isScrollUnbound: function(imm, section) {
+      return new controller[n](this).isScrollUnbound(imm, section);
     }
   }
 

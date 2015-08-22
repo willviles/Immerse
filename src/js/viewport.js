@@ -135,6 +135,8 @@
       // ...We're now on the right device!
       // If currentbreakpoint isn't defined in breakpoints array, return false.
       if ($.inArray(this.imm._breakpoint, a.breakpoints) === -1) { return false; }
+
+      return true;
     },
 
   // End of controller
