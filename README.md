@@ -69,12 +69,14 @@ At its most basic configuration, Immerse.js will build your section based site f
 #### Setup & initialise Immerse
 
 ```js
-var page = $.Immerse.setup(); // Get a handle on the Immerse setup object inside a variable.
+// Get a handle on the Immerse setup object inside a variable.
+var page = $.Immerse.setup(); 
 
-page.init($('.imm-scroll-container')); // Initialize on your container
+// Initialize on your container
+page.init($('.imm-scroll-container')); 
 ```
 
-## Section configuration.
+## Section configuration
 Sections can be configured through registering a section on the page variable before Immerse is initialised. There are various methods through which to customise section GreenSock animations, custom js actions & attributes, various runtime hooks, viewport and orientation parameters. However, this is the most basic configuration.
 
 ```js
