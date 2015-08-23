@@ -7,6 +7,6 @@ deploy:
   provider: npm
   email: will@vil.es
   api_key:
-    secure: ADD HERE
+    secure: C2bw5nhZjQI1rK2UvRGUzrLx6BfBpLqv61yrTY02IGEJBUZD2QhyQ9fQ5JNTQnBQ4H7uwMcW5gELhXxlkhfddvrafpg/bHgWckXEGuFDi2oyylbu7UC8FThavdOw46+qShku6LErQNxMyFCI0NwalqXc2dKYYsNjRNWSyHcqNdX8yK++qDurP4HGM9zUtDxm0Gsh+9BUasfsryYohZYd6IxP+j1hWiBttIyDacl5lYZBmDwDlbo4o9lzAp4omsG1J77YDIQ32URy/ddfGekyEUeWvmwo/rzce5V2QlivOynQuSIqYZBRfHpcJ/CG2J4qUpvEHh1g1C7v3f7CUoiPLd96ZBvKoCv4+4V9Uh+fwbfVNycql1R3FER7J8D7QLQgRGasLLZdMPGVk1L1a1OoEuqWCmh0vyUxi8DwkhCI7rXBfUgrq/oR7c2bZVD6Nao4QCjJCM3707l8ug+AMJvjFJga4DLyOgWWv8ydUEGMlP/SfkyLnpD3OeaPaLpcDfsGXVdq2dPd0aTCZ37VuYzt+b+QtNNfZGiF/tKHSv4AdTBDzo6RIwkeKnC5fPywe+Grqbm2EYASrVwElXFlYmgg0+kh3pCIHcRKj3KHcsciqzADlYRvfPAj/N/WOKBh6cPrJ1cbOxzKDEUIFpWI+mL6a0GS1by0qfoHtYjllyQVzns=
   on:
     tags: true
