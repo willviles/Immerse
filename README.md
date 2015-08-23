@@ -37,19 +37,18 @@ Include Immerse.js:
 At its most basic configuration, Immerse.js will build your section based site from simple HTML markup.
 
 ```html
-<!-- Set the Immerse scroll container -->
 <body class="imm-scroll-container">
 
-  <!-- Create a flexible-height section using .imm-section. Give it an ID for Immerse to reference. -->
+  <!-- Create a free scrolling section. -->
   <section id="foo" class="imm-section"></section>
   
-  <!-- Adding the .imm-fullscreen class creates a 100 vertical height section with fixed scrolling. -->
+  <!-- Create a fullpage fixed scrolling section. -->
   <section id="bar" class="imm-section imm-fullscreen"></section>
   
-  <!-- Section navigation will be injected into any DOM element with .imm-nav-list attached. -->
+  <!-- Navigation will be injected here. -->
   <ul class="imm-nav-list"></ul>
   
-  <!-- Any div with the imm-loading class will be used as a loading overlay and hidden when the page's assets have fully loaded -->
+  <!-- Loading overlay displays until the page's assets have fully loaded -->
   <div class="imm-loading"></div>
 </body>
 ```
