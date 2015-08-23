@@ -34,7 +34,7 @@ Include Immerse.js:
 ## Basic Setup
 
 #### Build HTML markup
-At its most basic configuration, Immerse.js will build your section based site from simple HTML markup.
+At its most basic configuration, Immerse.js will build your section based page from simple HTML markup, automatically handling scrolling and navigation:
 
 ```html
 <body>
@@ -60,12 +60,15 @@ At its most basic configuration, Immerse.js will build your section based site f
 // Get a handle on the Immerse setup object inside a variable.
 var page = new Immerse().setup(); 
 
+// Add section configuration
+...
+
 // Initialize the page
 page.init(); 
 ```
 
 ## Section configuration
-Sections can be configured through registering a section on the page variable before Immerse is initialised. There are various methods through which to customise section GreenSock animations, custom js actions & attributes, various runtime hooks, viewport and orientation parameters. However, this is the most basic configuration.
+Sections can be configured through registering a section on the page variable. The following markup is the most basic configuration:
 
 ```js
 page.section({
