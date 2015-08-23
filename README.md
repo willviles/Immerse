@@ -1,4 +1,4 @@
-# Immerse.js [v1.0.7](https://github.com/willviles/Immerse.js/blob/master/CHANGELOG.md "Immerse.js Changelog")
+# Immerse.js [v1.0.7](https://github.com/willviles/Immerse.js/blob/master/CHANGELOG.md "Immerse.js Changelog") [![Build Status](https://api.travis-ci.org/willviles/Immerse.js.svg?branch=master)](https://travis-ci.org/willviles/Immerse.js) 
 #### Build immersive, media driven web experiences - the easy way.
 
 Immerse.js offers a javascript framework for building complex, media-driven web experiences.
@@ -57,7 +57,7 @@ At its most basic configuration, Immerse.js will build your section based site f
 
 ```js
 // Get a handle on the Immerse setup object inside a variable.
-var page = $.Immerse.setup(); 
+var page = new Immerse().setup(); 
 
 // Initialize the page
 page.init(); 
@@ -85,7 +85,7 @@ Immerse requires all media assets to be registered in the Immerse setup object, 
 
 Define your assets in Immerse setup:
 ```js
-$.Immerse.setup({
+new Immerse().setup({
   
   assets: {
     'audioName': { type: 'audio', path: 'assets/audio/audio-name', loop: true },
@@ -130,7 +130,7 @@ Immerse easily enables the building of complex layered HTML5 audio soundtracks f
 Add a soundtrack to every section of your page by defining the audio layers in Immerse setup. Volume of each audio layer can be controlled, along with the length of time it takes for the track to fade out/in when the soundtrack changes.
 
 ```js
-$.Immerse.setup({
+new Immerse().setup({
   
   audio: {
     'mainAudio': { volume: 1, changeDuration: 1 },
@@ -167,7 +167,7 @@ Immerse automatically manages any mute buttons with the imm-mute class attached:
 The default content of the button is a string - 'Audio On' and 'Audio Off'. However, custom strings can be added in Immerse setup options. For example, a popular setup is using icon font Fontawesome to graphically illustrate audio state:
 
 ```js
-$.Immerse.setup({
+new Immerse().setup({
   
   options: {
     muteButton: {
@@ -252,7 +252,7 @@ Section attributes allow for individual values to be changed on a per-section ba
 Add the default attribute value to the Immerse setup:
 
 ```js
-$.Immerse.setup({
+new Immerse().setup({
   
   attributes: {
     
@@ -418,7 +418,7 @@ Immerse offers support for modal overlays out-of-the-box.
 All modal actions can be overridden on a per-modal basis inside a specific Immerse section:
 
 ```js
-$.Immerse.setup({
+new Immerse().setup({
   
   components: {  
     modals: {
@@ -474,7 +474,7 @@ Easily add YouTube modals to your Immerse page. Simply paste a YouTube URL into 
 By default, Immerse uses [history.replaceState](https://developer.mozilla.org/en-US/docs/Web/Guide/API/DOM/Manipulating_the_browser_history#The_replaceState()_method "Manipulating the browser history with history.replaceState") to enable hash navigation between page sections. If you don't wish to track state:
 
 ```js 
-// $.Immerse.setup.options
+// new Immerse().setup.options
 hashChange: false, ...
 ```
 
@@ -482,7 +482,7 @@ hashChange: false, ...
 Immerse's has its default breakpoints set at the same widths as popular front end framework Bootstrap. To overwrite the custom breakpoints, define a new breakpoints object in Immerse setup:
 
 ```js 
-// $.Immerse.setup.options
+// new Immerse().setup.options
 breakpoints: {
   newBreakpoint: 300,
   mobile: 480,
@@ -496,7 +496,7 @@ breakpoints: {
 Before Immerse's asset queue promise is satisfied, a loading overlay is displayed. This is particularly useful for users on slow connections, but users on fast connections, the loading overlay may only appear for a split section and be perceived as bad UI. Setting minLoadingTime ensures the loading overlay is displayed for at least *x* seconds before the page animates in.
 
 ```js
-// $.Immerse.setup.options
+// new Immerse().setup.options
 minLoadingTime: 1000, ...
 ```
 
@@ -504,7 +504,7 @@ minLoadingTime: 1000, ...
 Namespacing Immerse is not essential, but changing all classes and datatags from using 'imm-' is available:
 
 ```js
-// $.Immerse.setup.options
+// new Immerse().setup.options
 namespace: 'foo', ...
 ```
 
@@ -522,7 +522,7 @@ This will ensure, for example:
 Development mode logs all changes to animations, attributes and actions. It also logs breakpoint changes on resize. It is turned off by default, but can be turned on using:
 
 ```js
-// $.Immerse.setup.options
+// new Immerse().setup.options
 devMode: true, ...
 ```
 

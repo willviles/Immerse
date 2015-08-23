@@ -6,10 +6,10 @@ Author: Will Viles
 Author URI: http://vil.es/
 */
 
-(function( $, window, document, undefined ){
+// Global Plugin Constructor
+var Immerse = function() {};
 
-  // Plugin Constructor
-  var Immerse = function() {};
+(function( $, window, document, undefined ){
 
   // Plugin Prototype
   Immerse.prototype = {
@@ -156,6 +156,11 @@ Author URI: http://vil.es/
       return $.Immerse.sectionController.add(this, section);
     },
 
+    // Description: Register a new component with Immerse
+    component: function(opts) {
+      return $.Immerse.componentController.add(opts);
+    },
+
     // Description: Get state of audio & mute/unmute programmatically
     audio: function(status) {
       if (status === undefined) {
@@ -174,14 +179,8 @@ Author URI: http://vil.es/
   }; // End of all plugin functions
 
 
-  $.Immerse = {
-    setup: function(setup) {
-      return new Immerse(this).setup(setup);
-    },
-    registerComponent: function(opts) {
-     $.Immerse.componentController.add(opts);
-    }
-  }
+  // Add jQuery Immerse object for all controllers
+  $.Immerse = {}
 
 })( jQuery, window , document );
 
@@ -2089,7 +2088,7 @@ Author: Will Viles
 Author URI: http://vil.es/
 */
 
-$.Immerse.registerComponent({
+new Immerse().component({
   name: 'modals',
 
   // Initialize component
@@ -2326,7 +2325,7 @@ Author: Will Viles
 Author URI: http://vil.es/
 */
 
-$.Immerse.registerComponent({
+new Immerse().component({
   name: 'scroll-to',
 
   // Initialize function
@@ -2366,7 +2365,7 @@ Author: Will Viles
 Author URI: http://vil.es/
 */
 
-$.Immerse.registerComponent({
+new Immerse().component({
   name: 'sliders',
 
   // Initialize function
@@ -2391,7 +2390,7 @@ Author: Will Viles
 Author URI: http://vil.es/
 */
 
-$.Immerse.registerComponent({
+new Immerse().component({
   name: 'stacks',
 
   // Initialize function
@@ -2431,7 +2430,7 @@ Author: Will Viles
 Author URI: http://vil.es/
 */
 
-$.Immerse.registerComponent({
+new Immerse().component({
   name: 'tooltips',
 
   // Initialize function
@@ -2497,7 +2496,7 @@ Author: Will Viles
 Author URI: http://vil.es/
 */
 
-$.Immerse.registerComponent({
+new Immerse().component({
   name: 'videos',
 
   // Initialize function

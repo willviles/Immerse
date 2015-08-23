@@ -7,7 +7,7 @@ Author: Will Viles
 Author URI: http://vil.es/
 */
 
-$.Immerse.registerComponent({
+new Immerse().component({
   name: 'scroll-to',
 
   // Initialize function
