@@ -557,7 +557,9 @@ Immerse.js aims to support all major browsers in recent versions:
 Firefox 26+, Chrome 30+, Safari 5.1+, Opera 10+, IE 9+
 
 ## About the Author
-I'm Will Viles, a digital creative from Birmingham, UK. I can offer help & custom site builds using Immerse.js. Check out [my website](https://vil.es "Will Viles - Digital Creative Portfolio") or contact me on Twitter [@willviles](https://twitter.com/willviles "Will Viles Twitter").
+I'm Will Viles, a digital creative from Birmingham, UK. I can offer help & custom site builds using Immerse.js. 
+
+Check out [my website](https://vil.es "Will Viles - Digital Creative Portfolio") or contact me on Twitter [@willviles](https://twitter.com/willviles "Will Viles Twitter").
 
 ## License
 Immerse.js is dual licensed under the MIT license and GPL.
