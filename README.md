@@ -116,14 +116,7 @@ $.Immerse.setup({
 Adding the wait key to any asset will add it to the preloading queue. Immerse will display a loading overlay until all required assets are loaded. Images will be loaded into the browser cache and audio/video will be considered loaded when the HTML5 canplaythrough event is returned.
 
 ```js
-$.Immerse.setup({
-  
-  // Define assets in Immerse setup
-  assets: {
-    'videoName': { type: 'video', path: 'assets/audio/gnossienne', loop: true, wait: true }
-  },...
-  
-}); 
+'videoName': { type: 'video', path: 'assets/audio/gnossienne', loop: true, wait: true }, ...
 ```
 
 ## Video
