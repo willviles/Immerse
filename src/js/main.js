@@ -50,8 +50,11 @@ Author URI: http://vil.es/
 
     init: function(elem) {
 
-      this.elem = elem;
-      this.$elem = $(elem);
+      // If elem not defined, find namespaced -scroll-container class
+      var scrollContainerClass = this.utils.namespacify.call(this, 'scroll-container');
+
+      this.$elem = elem ? elem : $('.' + scrollContainerClass);
+      this.elem = this.$elem[0];
       this._assets = this.setup.assets;
       this._sections = [];
       this._isScrolling = false;
