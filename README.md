@@ -135,9 +135,65 @@ Immerse.js will manage initialisation, pausing/playing on scroll and resizing of
 
 
 ## Audio
-### Default audio for all sections
-### Section-based audio
+
+Immerse easily enables the building of complex layered HTML5 audio soundtracks for each section of your page.
+
+### Default soundtrack
+
+Add a soundtrack to every section of your page by defining the audio layers in Immerse setup. Volume of each audio layer can be controlled, along with the length of time it takes for the track to fade out/in when the soundtrack changes.
+
+```js
+$.Immerse.setup({
+  
+  audio: {
+    'mainAudio': { volume: 1, changeDuration: 1 },
+    'subtleAudio': { volume: .5, changeDuration: .5 }
+  }, ...
+  
+}); 
+```
+
+*If no default soundtrack is defined, sections without specific audio defined will be silent.*
+
+### Section-based soundtrack
+
+Soundtracks can then be changed for each section of the page. Inside your Immerse section, just define a new soundtrack.
+
+```js
+page.section({
+  
+  audio: {
+    'differentMainAudio': { volume: .8, changeDuration: 1.5 },
+    'differentSubtleAudio': { volume: .3, changeDuration: .25 }
+  }, ...
+  
+}); 
+```
 ### Mute button configuration
+
+Immerse automatically manages any mute buttons with the imm-mute class attached.
+
+```html
+<button class="imm-mute"></button>
+```
+
+The default content of the button is a string - 'Audio On' and 'Audio Off'. However, custom strings can be added in Immerse setup options. For example, a popular setup is using icon font Fontawesome to graphically illustrate audio state.
+
+```js
+$.Immerse.setup({
+  
+  options: {
+    muteButton: {
+      unmuted: '<i class="fa fa-volume-up"></i>',
+      muted: '<i class="fa fa-volume-off"></i>',
+    }, ...
+  }, ...
+  
+}); 
+```
+
+*By default, Immerse uses cookies to set the audio to the state the user last left the page.*
+
 ### Programatically control audio
 
 
