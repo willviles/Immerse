@@ -53,7 +53,8 @@ var Immerse = function() {};
       // If elem not defined, find namespaced -scroll-container class
       var scrollContainerClass = this.utils.namespacify.call(this, 'scroll-container');
 
-      this.$elem = elem ? elem : $('.' + scrollContainerClass);
+      var $elem = elem ? elem : $('.' + scrollContainerClass);
+      this.$elem = $elem.length > 0 ? $elem : $('body');
       this.elem = this.$elem[0];
       this._assets = this.setup.assets;
       this._sections = [];

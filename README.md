@@ -7,7 +7,7 @@ Checkout the [official plugin website](https://immerse.vil.es "Immerse.js Site")
 
 ## Getting Started
 
-[Download](https://github.com/willviles/Immerse.js/archive/master.zip "Immerse.js Download ZIP") the zip or install Immerse.js via [NPM](https://www.npmjs.com/package/immersejs "Immerse.js NPM package - immersejs"):
+[Download the zip](https://github.com/willviles/Immerse.js/archive/master.zip "Immerse.js Download ZIP") or install Immerse.js via [NPM](https://www.npmjs.com/package/immersejs "Immerse.js NPM package - immersejs"):
 
 ```shell
 npm install immersejs
@@ -37,7 +37,7 @@ Include Immerse.js:
 At its most basic configuration, Immerse.js will build your section based site from simple HTML markup.
 
 ```html
-<body class="imm-scroll-container">
+<body>
 
   <!-- Create a free scrolling section. -->
   <section id="foo" class="imm-section"></section>
@@ -50,6 +50,7 @@ At its most basic configuration, Immerse.js will build your section based site f
   
   <!-- Loading overlay displays until the page's assets have fully loaded -->
   <div class="imm-loading"></div>
+  
 </body>
 ```
 
