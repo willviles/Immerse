@@ -1,4 +1,4 @@
-# Immerse.js [v1.0.7](https://github.com/willviles/Immerse.js/archive/CHANGELOG.md "Immerse.js Changelog")
+# Immerse.js [v1.0.7](https://github.com/willviles/Immerse.js/blob/master/CHANGELOG.md "Immerse.js Changelog")
 #### Build immersive, media driven web experiences - the easy way.
 
 Immerse.js offers a javascript framework for building complex, media-driven web experiences.
