@@ -540,7 +540,17 @@ devMode: true, ...
 ```
 
 ## Custom components
-Custom Immerse.js components will be available for everyone to develop in the near future once the documentation is up to speed! Follow [@willviles](https://twitter.com/willviles "Will Viles Twitter") for regular updates on Immerse.
+Custom Immerse.js components will be available for anyone to develop in the near future once the documentation is up to speed! Follow [@willviles](https://twitter.com/willviles "Will Viles Twitter") for regular updates on Immerse.
+
+## Future Developments
+&#10004; Section hash state management
+&#10004; YouTube modal windows
+&#9744; Vimeo modal windows
+&#9744; Set of easily-attachable modal window open/close animations
+&#9744; Set of easily-attachable section transitions. Inspiration [here](http://codyhouse.co/gem/page-scroll-effects/ "Codyhouse page scroll effects")
+&#9744; Option to use history.pushState as well as history.replaceState
+
+Got a feature request? Tweet it to [@willviles](https://twitter.com/willviles "Will Viles Twitter")
 
 ## Browser Support
 Immerse.js aims to support all major browsers in recent versions:
