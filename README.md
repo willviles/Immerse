@@ -479,7 +479,7 @@ Easily add YouTube modals to your Immerse page. Simply paste a YouTube URL into 
 
 *The YouTube modal automatically includes the YouTube iFrame API and handles playing, pausing and restarting of the video on open/close of the modal and at the end of the video.*
 
-## Further Immerse Options
+## Further Options
 
 *The following options are configured in Immerse setup.*
 
@@ -540,8 +540,7 @@ devMode: true, ...
 ```
 
 ## Custom components
-#### registerComponent
-#### onResize
+Custom Immerse.js components will be available for everyone to develop in the near future once the documentation is up to speed! Follow [@willviles](https://twitter.com/willviles "Will Viles Twitter") for regular updates on Immerse.
 
 ## Browser Support
 Immerse.js aims to support all major browsers in recent versions:
