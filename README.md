@@ -563,4 +563,4 @@ Check out [my website](https://vil.es "Will Viles - Digital Creative Portfolio")
 
 ## License
 Immerse.js is dual licensed under the MIT license and GPL.
-For more information click [](https://github.com/willviles/Immerse.js/blob/master/LICENSE.md "Immerse.js license").
+For more information click [here](https://github.com/willviles/Immerse.js/blob/master/LICENSE.md "Immerse.js license").
