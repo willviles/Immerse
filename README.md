@@ -225,7 +225,7 @@ page.section({
       
       // Define runtime. Defaults to when the section is enteringDown & enteringUp.
       // All runtimes: ['init', 'enteringDown', 'enteringUp', 'enteredDown', 'enteredUp', 'exitingDown', 'exitingUp']
-      runtime: [enteringDown', 'enteringUp'],
+      runtime: ['enteringDown', 'enteringUp'],
       
       // Define reset runtime. Defaults to when the section has exitedDown, exitedUp.
       reset: ['exitedDown', 'exitedUp'],
