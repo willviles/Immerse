@@ -19,7 +19,7 @@ Immerse.js offers a javascript framework for building complex, media-driven web 
 
 ## Getting Started
 
-Install Immerse.js via NPM:
+[Download](https://github.com/willviles/Immerse.js/archive/master.zip "Immerse.js Download ZIP") the zip or install Immerse.js via NPM:
 
 ```shell
 npm install immersejs
