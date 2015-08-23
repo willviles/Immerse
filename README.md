@@ -433,8 +433,7 @@ All modal actions can be overridden on a per-modal basis inside a specific Immer
 ```js
 $.Immerse.setup({
   
-  components: {
-    
+  components: {  
     modals: {
       
       // Set a default for all modals in this section
@@ -443,13 +442,13 @@ $.Immerse.setup({
         onConfirm: function(modal) { /* Custom function */ },
         onClose: function(modal) { /* Custom function */ }
       },
+      
       // Will set specific settings on modal
       'modalName': {
         onCancel: function(modal) { /* Custom function */ }), ..
       }, ...
       
-    }, ...
-    
+    }, ...  
   }, ...
   
 });
@@ -460,15 +459,11 @@ Or globally inside Immerse setup:
 ```js
 page.section({
   
-  components: {
-    
+  components: { 
     modals: {
-      
       'default': { ... },
       'modalName': { ... }, ...
-      
     }, ...
-    
   }, ...
   
 });
