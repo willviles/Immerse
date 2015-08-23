@@ -94,7 +94,7 @@ page.section({
 ## Assets
 Immerse requires all media assets to be registered in the Immerse setup object, so the plugin can properly inject them into the DOM and allow easy manipulation of them through the Immerse API.
 
-### Defining assets
+#### Defining assets
 
 Define your assets in Immerse setup:
 ```js
@@ -111,7 +111,7 @@ $.Immerse.setup({
 
 *Video file types default to mp4, ogv and webm. Loop defaults to true.*
 
-### Asset preloading
+#### Asset preloading
 
 Adding the wait key to any asset will add it to the preloading queue. Immerse will display a loading overlay until all required assets are loaded. Images will be loaded into the browser cache and audio/video will be considered loaded when the HTML5 canplaythrough event is returned.
 
@@ -138,7 +138,7 @@ Immerse.js will manage initialisation, pausing/playing on scroll and resizing of
 
 Immerse easily enables the building of complex layered HTML5 audio soundtracks for each section of your page.
 
-### Default soundtrack
+#### Default soundtrack
 
 Add a soundtrack to every section of your page by defining the audio layers in Immerse setup. Volume of each audio layer can be controlled, along with the length of time it takes for the track to fade out/in when the soundtrack changes.
 
@@ -155,7 +155,7 @@ $.Immerse.setup({
 
 *If no default soundtrack is defined, sections without specific audio defined will be silent.*
 
-### Section-based soundtrack
+#### Section-based soundtrack
 
 Soundtracks can then be changed for each section of the page. Inside your Immerse section, just define a new soundtrack.
 
@@ -169,7 +169,7 @@ page.section({
   
 }); 
 ```
-### Mute button configuration
+#### Mute button configuration
 
 Immerse automatically manages any mute buttons with the imm-mute class attached:
 
@@ -194,7 +194,7 @@ $.Immerse.setup({
 
 *By default, Immerse uses cookies to set the audio to the state the user last left the page.*
 
-### Programatically control audio
+#### Programatically control audio
 
 It's also possible to programmatically control audio state:
 
@@ -208,7 +208,7 @@ page.audio('unmute'); // Unmutes audio
 
 One of Immerse's key features is offering a clean, easy-to define, read & maintain interface for creating animations and tailoring them to devices and screens.
 
-### Configuring animation timelines
+#### Configuring animation timelines
 
 Below is the most verbose example of defining and executing one GSAP Timeline in Immerse:
 
@@ -260,7 +260,7 @@ For more information about using the GSAP, visit [the official GreenSock Animati
 
 Section attributes allow for individual values to be changed on a per-section basis and trigger an event when changed. The following example will demonstrate how easy it is to change navigation colour through each section of your site, with just one attribute.
 
-### Default attribute value
+#### Default attribute value
 
 Add the default attribute value to the Immerse setup:
 
@@ -285,7 +285,7 @@ $.Immerse.setup({
 }); 
 ```
 
-### Change the attribute based upon section
+#### Change the attribute based upon section
 
 In your chosen section, define the new attribute value.
 
@@ -299,7 +299,7 @@ page.section({
 }); 
 ```
 
-### Listen for changes & fire custom code
+#### Listen for changes & fire custom code
 
 When the page is scrolled to the chosen section, an event will be triggered. Listen to it and execute your desired code. For example, add a class to your navigation so its CSS styles will change to the desired color.
 
@@ -346,7 +346,7 @@ page.section({
 
 From combining a mix of fixed height, auto scrolling sections with free scrolling sections, to adding scrollTo buttons to the page using just HTML markup, Immerse solves many issues related to scrolling with elegant solutions.
 
-### Fixed scroll vs free scroll
+#### Fixed scroll vs free scroll
 
 Immerse infers which sections should be fixed height and which should be free scrolling simply by observing HTML classes:
 
@@ -358,7 +358,7 @@ Immerse infers which sections should be fixed height and which should be free sc
 <section class="imm-section imm-fullscreen"></section> 
 ```
 
-### Responsive scrolling
+#### Responsive scrolling
 
 It's possible to create responsive solutions for fixed scrolling sections by unbinding the scroll at certain breakpoints.
 
@@ -377,7 +377,7 @@ page.section({
 
 *For more information on default breakpoints and defining your own breakpoints, [click here](#custom-breakpoints "Immerse custom breakpoints").*
 
-### ScrollTo Buttons
+#### ScrollTo Buttons
 
 Adding buttons which link to other Immerse page sections can be achieved through data tags:
 
@@ -389,7 +389,7 @@ Adding buttons which link to other Immerse page sections can be achieved through
 <button data-imm-scroll-to="DOWN">Go down a section</button>
 ```
 
-### Programatically control scrolling
+#### Programatically control scrolling
 
 It's also possible to control scrolling programmatically:
 
@@ -399,17 +399,17 @@ page.changeSection('DOWN');
 ```
 
 ## Other
-### Namespacing
-### Tracking State (hasChange)
-### Custom breakpoints
-### Loading Animation (min time)
-### Development Mode
-### Vertical Align
-### Custom scroll container
+#### Namespacing
+#### Tracking State (hasChange)
+#### Custom breakpoints
+#### Loading Animation (min time)
+#### Development Mode
+#### Vertical Align
+#### Custom scroll container
 
 ## Custom components
-### registerComponent
-### onResize
+#### registerComponent
+#### onResize
 
 ## Browser Support
 Immerse.js aims to support all major browsers in recent versions:
