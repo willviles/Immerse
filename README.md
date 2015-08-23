@@ -351,8 +351,11 @@ From combining a mix of fixed height, auto scrolling sections with free scrollin
 Immerse infers which sections should be fixed height and which should be free scrolling simply by observing HTML classes:
 
 ```html
-<section class="imm-section"></section> // Free scroll
-<section class="imm-section imm-fullscreen"></section> // Fixed scroll  
+<!-- Free scrolling section -->
+<section class="imm-section"></section>
+
+<!-- Fixed scrolling section -->
+<section class="imm-section imm-fullscreen"></section> 
 ```
 
 ### Responsive scrolling
