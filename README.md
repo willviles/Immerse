@@ -28,19 +28,19 @@ npm install immersejs
 Include dependencies:
 ```html
 <!-- JQuery -->
-<script src="node_modules/jquery/jquery.min.js"></script>
+<script src="jquery/jquery.min.js"></script>
 <!-- GSAP TweenMax -->
-<script src="node_modules/gsap/src/minified/TweenMax.min.js"></script>
+<script src="gsap/src/minified/TweenMax.min.js"></script>
 <!-- GSAP ScrollTo Plugin -->
-<script src="node_modules/gsap/src/minified/plugins/ScrollToPlugin.min.js"></script>
+<script src="gsap/src/minified/plugins/ScrollToPlugin.min.js"></script>
 ```
 
 Include Immerse.js:
 ```html
 <!-- Immerse.js -->
-<script src="node_modules/immersejs/dist/js/immerse.js"></script>
+<script src="immersejs/dist/js/immerse.js"></script>
 <!-- Immerse.css -->
-<link rel="stylesheet" type="text/css" href="node_modules/immersejs/dist/css/immerse.css">
+<link rel="stylesheet" type="text/css" href="immersejs/dist/css/immerse.css">
 ```
 
 ## Basic Setup
@@ -553,7 +553,7 @@ Custom Immerse.js components will be available for anyone to develop in the near
 *Got a feature request? Tweet it to [@willviles](https://twitter.com/willviles "Will Viles Twitter").*
 
 ## Browser Support
-Immerse.js aims to support all major browsers in recent versions:
+Immerse.js aims to support all major browsers in recent versions:  
 Firefox 26+, Chrome 30+, Safari 5.1+, Opera 10+, IE 9+
 
 ## About the Author
