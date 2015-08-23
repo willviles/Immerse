@@ -398,11 +398,17 @@ page.changeSection('linked-section');
 page.changeSection('DOWN');
 ```
 
+## Modals
+
+Immerse offers support for modals out-of-the-box.
+
+Details of modals coming soon.
+
 ## Further Options
 
 *The following options are configured in Immerse setup.*
 
-#### Tracking State (hasChange)
+#### Hash navigation
 By default, Immerse uses [history.replaceState](https://developer.mozilla.org/en-US/docs/Web/Guide/API/DOM/Manipulating_the_browser_history#The_replaceState()_method "Manipulating the browser history with history.replaceState") to enable hash navigation between page sections. If you don't wish to track state:
 
 ```js 
@@ -424,7 +430,7 @@ breakpoints: {
 }, ...
 ```
 
-#### Loading animation
+#### Minimum loading time
 Before Immerse's asset queue promise is satisfied, a loading overlay is displayed. This is particularly useful for users on slow connections, but users on fast connections, the loading overlay may only appear for a split section and be perceived as bad UI. Setting minLoadingTime ensures the loading overlay is displayed for at least *x* seconds before the page animates in.
 
 ```js
