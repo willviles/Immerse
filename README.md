@@ -252,22 +252,148 @@ page.section({
 }
 ```
 
+For most animations which run when the section is scrolled to, and reset when the section is removed from view, only the timeline function need be defined. The animation defaults do the rest.
+
 For more information about using the GSAP, visit [the official GreenSock Animation Platform website](http://greensock.com/gsap "GreenSock Animation Platform Official Website").
 
 ## Attributes
-### Default attributes for all sections
-### Change attributes per section
+
+Section attributes allow for individual values to be changed on a per-section basis and trigger an event when changed. The following example will demonstrate how easy it is to change navigation colour through each section of your site, with just one attribute.
+
+### Default attribute value
+
+Add the default attribute value to the Immerse setup:
+
+```js
+$.Immerse.setup({
+  
+  attributes: {
+    
+    // Name the attribute
+    'navColor': {
+      
+      // Device and runtime targeting available in attributes too!
+      devices: ['touch', 'desktop'],
+      runtime: ['enteringDown', 'enteringUp'],
+      
+      // Define the default value
+      value: 'white'
+    }, ...
+    
+  },...
+  
+}); 
+```
+
+### Change the attribute based upon section
+
+In your chosen section, define the new attribute value.
+
+```js
+page.section({
+  
+  attributes: {
+    'navColor': { value: 'blue' }
+  }, ...
+  
+}); 
+```
+
 ### Listen for changes & fire custom code
 
+When the page is scrolled to the chosen section, an event will be triggered. Listen to it and execute your desired code. For example, add a class to your navigation so its CSS styles will change to the desired color.
+
+```js
+$('body').on('navColor', function(e, value) {
+  
+  var $nav = $(nav);
+  var currentColor = $nav.data('color');
+  
+  $nav.removeClass(currentColor).addClass(value).data('color', value);
+
+});
+```
+
 ## Actions
-### Fire custom code
 
+Immerse also allows for any custom code to be triggered using device and runtime targeting.
 
+```js
+page.section({
+  
+  actions: {
+    
+    // Name the action
+    'actionName': {
+      
+      // Device and runtime targeting available in actions too!
+      devices: ['touch', 'desktop'],
+      runtime: ['enteringDown', 'enteringUp'],
+      
+      // Define the default value
+      action: function($section) {
+        
+        // Execute your custom code here.
+        
+      }
+    }
+  }, ...
+  
+}); 
+```
 
 ## Scrolling
-### Unbinding
-### Buttons
-### Programatically
+
+From combining a mix of fixed height, auto scrolling sections with free scrolling sections, to adding scrollTo buttons to the page using just HTML markup, Immerse solves many issues related to scrolling with elegant solutions.
+
+### Fixed scroll vs free scroll
+
+Immerse infers which sections should be fixed height and which should be free scrolling simply by observing HTML classes:
+
+```html
+<section class="imm-section"></section> // Free scroll
+<section class="imm-section imm-fullscreen"></section> // Fixed scroll  
+```
+
+### Responsive scrolling
+
+It's possible to create responsive solutions for fixed scrolling sections by unbinding the scroll at certain breakpoints.
+
+```js
+page.section({
+  
+  options: {
+    
+    // The section will be free scrolling on mobile & tablet, but fixed scrolling for all larger screen sizes. 
+    unbindScroll: ['mobile', 'tablet'], ...
+    
+  }, ...
+  
+});
+```
+
+*For more information on default breakpoints and defining your own breakpoints, [click here](#custom-breakpoints "Immerse custom breakpoints").*
+
+### ScrollTo Buttons
+
+Adding buttons which link to other Immerse page sections can be achieved through data tags:
+
+```HTML
+<!-- Pass either the name of the section or with a starting # -->
+<button data-imm-scroll-to="linked-section">Go to linked-section</button>
+
+<!-- You can also add either UP or DOWN to go to the next/prev sections. Must be in caps. -->
+<button data-imm-scroll-to="DOWN">Go down a section</button>
+```
+
+### Programatically control scrolling
+
+It's also possible to control scrolling programmatically:
+
+```js
+page.changeSection('linked-section');
+page.changeSection('DOWN');
+```
 
 ## Other
 ### Namespacing
