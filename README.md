@@ -171,13 +171,13 @@ page.section({
 ```
 ### Mute button configuration
 
-Immerse automatically manages any mute buttons with the imm-mute class attached.
+Immerse automatically manages any mute buttons with the imm-mute class attached:
 
 ```html
 <button class="imm-mute"></button>
 ```
 
-The default content of the button is a string - 'Audio On' and 'Audio Off'. However, custom strings can be added in Immerse setup options. For example, a popular setup is using icon font Fontawesome to graphically illustrate audio state.
+The default content of the button is a string - 'Audio On' and 'Audio Off'. However, custom strings can be added in Immerse setup options. For example, a popular setup is using icon font Fontawesome to graphically illustrate audio state:
 
 ```js
 $.Immerse.setup({
@@ -196,12 +196,63 @@ $.Immerse.setup({
 
 ### Programatically control audio
 
+It's also possible to programmatically control audio state:
 
+```js
+page.audio(); // Get current state
+page.audio('mute'); // Mutes audio
+page.audio('unmute'); // Unmutes audio
+```
 
 ## Animations
-### Configuring animations
-### Devices, breakpoints & runtime
-### Resetting animations
+
+One of Immerse's key features is offering a clean, easy-to define, read & maintain interface for creating animations and tailoring them to devices and screens.
+
+### Configuring animation timelines
+
+Below is the most verbose example of defining and executing one GSAP Timeline in Immerse:
+
+```js
+page.section({
+  
+  animations: {
+    
+    // Name the timeline
+    'timelineOne': {
+      
+      // Define which devices to target. Defaults to both.
+      devices: ['touch', 'desktop'],
+      
+      // Define runtime. Defaults to when the section is enteringDown & enteringUp.
+      // All runtimes: ['init', 'enteringDown', 'enteringUp', 'enteredDown', 'enteredUp', 'exitingDown', 'exitingUp']
+      runtime: [enteringDown', 'enteringUp'],
+      
+      // Define reset runtime. Defaults to when the section has exitedDown, exitedUp.
+      reset: ['exitedDown', 'exitedUp'],
+      
+      // Add a delay to the start of the timeline
+      delay: 1,
+      
+      // Timeline. Add content of a GreenSock Timeline here.
+      // The jQuery object of the section is available to use to specifically find section elements to animate.
+      timeline: function($section) {
+        return [
+          TweenMax.from($section.find('.thing-to-animate'), 2, {
+            opacity: 0, x: -70, delay: .5, ease: Power4.easeIn
+          }),
+          TweenMax.from($section.find('.another-thing-to-animate'), 2, {
+            ...
+          })
+        ]
+      }
+      
+    }, ...    
+  },...
+  
+}
+```
+
+For more information about using the GSAP, visit [the official GreenSock Animation Platform website](http://greensock.com/gsap "GreenSock Animation Platform Official Website").
 
 ## Attributes
 ### Default attributes for all sections
