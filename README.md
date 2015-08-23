@@ -400,11 +400,91 @@ page.changeSection('DOWN');
 
 ## Modals
 
-Immerse offers support for modals out-of-the-box.
+Immerse offers support for modal overlays out-of-the-box.
 
-Details of modals coming soon.
+#### Modal markup
 
-## Further Options
+```HTML
+<section>
+  
+  <!-- Open modal button -->
+  <button data-imm-modal-open="modal-name"></button>
+  
+  <!-- Modal markup -->
+  <div data-imm-modal-id="modal-name">
+  
+    <!-- Button will fire the onConfirm function -->
+    <button data-imm-modal-action="confirm">Confirm</button>
+    
+    <!-- Button will fire the onCancel function -->
+    <button data-imm-modal-action="cancel">Cancel</button>
+    
+    <!-- Button will fire the onClose function -->
+    <button data-imm-modal-action="close">Close</button>
+    
+  </div>
+</section>
+```
+
+#### Modal options
+
+All modal actions can be overridden on a per-modal basis inside a specific Immerse section:
+
+```js
+$.Immerse.setup({
+  
+  components: {
+    
+    modals: {
+      
+      // Set a default for all modals in this section
+      'default': {
+        onCancel: function(modal) { /* Custom function */ },
+        onConfirm: function(modal) { /* Custom function */ },
+        onClose: function(modal) { /* Custom function */ }
+      },
+      // Will set specific settings on modal
+      'modalName': {
+        onCancel: function(modal) { /* Custom function */ }), ..
+      }, ...
+      
+    }, ...
+    
+  }, ...
+  
+});
+```
+
+Or globally inside Immerse setup:
+
+```js
+page.section({
+  
+  components: {
+    
+    modals: {
+      
+      'default': { ... },
+      'modalName': { ... }, ...
+      
+    }, ...
+    
+  }, ...
+  
+});
+```
+
+#### [NEW] YouTube modals
+
+Easily add YouTube modals to your Immerse page. Simply paste a YouTube URL into the imm-modal-open data tag and a YouTube modal will be generated.
+
+```HTML
+<button data-imm-modal-open="https://www.youtube.com/watch?v=XXXXXXXXXXX"></button>
+```
+
+*The YouTube modal automatically includes the YouTube iFrame API and handles playing, pausing and restarting of the video on open/close of the modal and at the end of the video.*
+
+## Further Immerse Options
 
 *The following options are configured in Immerse setup.*
 
