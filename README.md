@@ -46,7 +46,7 @@ At its most basic configuration, Immerse.js will build your section based site f
   <section id="bar" class="imm-section imm-fullscreen"></section>
   
   <!-- Navigation will be injected here. -->
-  <ul class="imm-nav-list"></ul>
+  <ul class="imm-nav"></ul>
   
   <!-- Loading overlay displays until the page's assets have fully loaded -->
   <div class="imm-loading"></div>

@@ -1302,7 +1302,7 @@ Author URI: http://vil.es/
 
     init: function(imm) {
       this.imm = imm;
-      this.navListClass = this.imm.utils.namespacify.call(this.imm, 'nav-list');
+      this.navListClass = this.imm.utils.namespacify.call(this.imm, 'nav');
       this.navLinkClass = this.imm.utils.namespacify.call(this.imm, 'nav-link');
       this.sectionDataTag = this.imm.utils.namespacify.call(this.imm, 'section');
       var that = this;
