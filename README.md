@@ -72,8 +72,8 @@ At its most basic configuration, Immerse.js will build your section based site f
 // Get a handle on the Immerse setup object inside a variable.
 var page = $.Immerse.setup(); 
 
-// Initialize on your container
-page.init($('.imm-scroll-container')); 
+// Initialize the page
+page.init(); 
 ```
 
 ## Section configuration
@@ -92,8 +92,62 @@ page.section({
 ```
 
 ## Assets
+Immerse requires all media assets to be registered in the Immerse setup object, so the plugin can properly inject them into the DOM and allow easy manipulation of them through the Immerse API.
+
 ### Defining assets
-### Preloading (wait)
+
+Define your assets in Immerse setup:
+```js
+$.Immerse.setup({
+  
+  assets: {
+    'audioName': { type: 'audio', path: 'assets/audio/audio-name', loop: true },
+    'videoName': { type: 'video', path: 'assets/video/video-name', fileTypes: ['mp4', 'ogv', 'webm'], loop: true },
+    'imageName': { type: 'image', path: 'assets/image/image-name', fileTypes: ['jpg', 'png'] }
+  }, ...
+  
+}); 
+```
+
+*Video file types default to mp4, ogv and webm. Loop defaults to true.*
+
+### Asset preloading
+
+Adding the wait key to any asset will add it to the preloading queue. Immerse will display a loading overlay until all required assets are loaded. Images will be loaded into the browser cache and audio/video will be considered loaded when the HTML5 canplaythrough event is returned.
+
+```js
+$.Immerse.setup({
+  
+  // Define assets in Immerse setup
+  assets: {
+    'videoName': { type: 'video', path: 'assets/audio/gnossienne', loop: true, wait: true }
+  },...
+  
+}); 
+```
+
+## Video
+
+Once a video asset is registered, it can be easily used as a video background for a page section. It's this simple:
+
+```html
+
+<section id="foo" class="imm-section imm-fullscreen">
+  <!-- Ensure your .imm-video element is a direct child of the section and pass your video name into the data tag -->
+  <div class="imm-video" data-imm-video="videoName"></div>
+</section>
+```
+
+Immerse.js will manage initialisation, pausing/playing on scroll and resizing of the HTML5 video without the need for any custom code.
+
+
+## Audio
+### Default audio for all sections
+### Section-based audio
+### Mute button configuration
+### Programatically control audio
+
+
 
 ## Animations
 ### Configuring animations
@@ -108,11 +162,7 @@ page.section({
 ## Actions
 ### Fire custom code
 
-## Audio
-### Default audio for all sections
-### Section-based audio
-### Mute button configuration
-### Programatically control audio
+
 
 ## Scrolling
 ### Unbinding
@@ -126,7 +176,19 @@ page.section({
 ### Loading Animation (min time)
 ### Development Mode
 ### Vertical Align
+### Custom scroll container
 
 ## Custom components
 ### registerComponent
 ### onResize
+
+## Browser Support
+Immerse.js aims to support all major browsers in recent versions:
+Firefox 26+, Chrome 30+, Safari 5.1+, Opera 10+, IE 9+
+
+## About the Author
+I'm Will Viles, a digital creative from Birmingham, UK. I can offer help & custom site builds using Immerse.js. Check out [my website](https://vil.es "Will Viles - Digital Creative Portfolio") or contact me on Twitter [@willviles](https://twitter.com/willviles "Will Viles Twitter").
+
+## License
+Immerse.js is dual licensed under the MIT license and GPL.
+For more information click [](https://github.com/willviles/Immerse.js/blob/master/LICENSE.md "Immerse.js license").
