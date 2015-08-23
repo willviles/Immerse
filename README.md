@@ -1,7 +1,5 @@
 # Immerse.js v1.0.7
-##### Build immersive, media driven web experiences - the easy way.
-
-### What does Immerse.js do?
+#### Build immersive, media driven web experiences - the easy way.
 
 Immerse.js offers a javascript framework for building complex, media-driven web experiences.
 
