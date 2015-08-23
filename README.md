@@ -398,14 +398,65 @@ page.changeSection('linked-section');
 page.changeSection('DOWN');
 ```
 
-## Other
-#### Namespacing
+## Further Options
+
+*The following options are configured in Immerse setup.*
+
 #### Tracking State (hasChange)
+By default, Immerse uses [history.replaceState](https://developer.mozilla.org/en-US/docs/Web/Guide/API/DOM/Manipulating_the_browser_history#The_replaceState()_method "Manipulating the browser history with history.replaceState") to enable hash navigation between page sections. If you don't wish to track state:
+
+```js 
+// $.Immerse.setup.options
+hashChange: false, ...
+```
+
 #### Custom breakpoints
-#### Loading Animation (min time)
+Immerse's has its default breakpoints set at the same widths as popular front end framework Bootstrap. To overwrite the custom breakpoints, define a new breakpoints object in Immerse setup:
+
+```js 
+// $.Immerse.setup.options
+breakpoints: {
+  newBreakpoint: 300,
+  mobile: 480,
+  tablet: 768,
+  mdDesktop: 992,
+  lgDesktop: 1200
+}, ...
+```
+
+#### Loading animation
+Before Immerse's asset queue promise is satisfied, a loading overlay is displayed. This is particularly useful for users on slow connections, but users on fast connections, the loading overlay may only appear for a split section and be perceived as bad UI. Setting minLoadingTime ensures the loading overlay is displayed for at least *x* seconds before the page animates in.
+
+```js
+// $.Immerse.setup.options
+minLoadingTime: 1000, ...
+```
+
+#### Namespacing
+Namespacing Immerse is not essential, but changing all classes and datatags from using 'imm-' is available:
+
+```js
+// $.Immerse.setup.options
+namespace: 'foo', ...
+```
+
+This will ensure, for example:
+
+```html
+<section class="foo-section foo-fullscreen">
+  <div class="foo-video" data-foo-video="videoName"></div>
+</section> 
+```
+
+*Warning: All styles defined by Immerse MUST be prepended with the new namespace for Immerse to function. This can be done through find and replace, however Immerse's scss files can be included before minification and the $prefix value changed in style.scss*
+
 #### Development Mode
-#### Vertical Align
-#### Custom scroll container
+Development mode logs all changes to animations, attributes and actions. It also logs breakpoint changes on resize. It is turned off by default, but can be turned on using:
+
+```js
+// $.Immerse.setup.options
+devMode: true, ...
+```
 
 ## Custom components
 #### registerComponent
