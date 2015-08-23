@@ -456,7 +456,7 @@ page.section({
 });
 ```
 
-#### [NEW] YouTube modals
+#### YouTube modals
 
 Easily add YouTube modals to your Immerse page. Simply paste a YouTube URL into the imm-modal-open data tag and a YouTube modal will be generated.
 
