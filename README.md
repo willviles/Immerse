@@ -515,7 +515,9 @@ breakpoints: {
 *The default breakpoints are set to match the breakpoint sizes for popular front end framework <a href="http://getbootstrap.com/css/#grid-media-queries" title="Bootstrap Grid Media Queries" target="_blank">Bootstrap</a>. *
 
 #### Minimum loading time
-Before Immerse's asset queue promise is satisfied, a loading overlay is displayed. This is particularly useful for users on slow connections, but users on fast connections, the loading overlay may only appear for a split section and be perceived as bad UI. Setting minLoadingTime ensures the loading overlay is displayed for at least *x* seconds before the page animates in.
+Before Immerse's asset queue promise is satisfied, a loading overlay is displayed. This is particularly useful for users on slow connections, but users on fast connections, the loading overlay may only appear for a split section and be perceived as bad UI. 
+
+Setting minLoadingTime ensures the loading overlay is displayed for at least *x* seconds before the page animates in.
 
 ```js
 // new Immerse().setup.options
