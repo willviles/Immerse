@@ -1916,6 +1916,7 @@ button.fullwidth {
   width: auto;
   position: relative;
   overflow: hidden;
+  margin-bottom: .5em;
   background-color: transparent;
   -moz-border-radius: 1.5em;
   -webkit-border-radius: 1.5em;
@@ -2300,9 +2301,6 @@ nav.top-nav.white-grey div button {
     background-size: 139px 580px;
   }
 }
-#boards .board-modal > .container-fluid {
-  padding: 0 5em;
-}
 #boards .board-modal [data-imm-modal-action="close"] {
   position: absolute;
   top: 0;
@@ -2323,6 +2321,19 @@ nav.top-nav.white-grey div button {
   padding-top: 3em;
 }
 
+@media screen and (max-width: 768px) {
+  #boards .board-modal .board-image-container {
+    padding: 2em;
+    height: 300px;
+    overflow: hidden;
+    border-bottom: 1px solid #f2f2f2;
+  }
+}
+@media screen and (min-width: 768px) {
+  #boards .board-modal > .container-fluid {
+    padding: 0 5em;
+  }
+}
 #boards.imm-fullscreen .imm-vertcenter {
   padding-bottom: 50vh;
 }

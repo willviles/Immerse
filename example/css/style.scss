@@ -43,9 +43,6 @@ $jumpBezier: cubic-bezier(.25,1.43,.55,.99);
     }
   }
   .board-modal {
-    & > .container-fluid {
-      padding: 0 5em;
-    }
     [data-imm-modal-action="close"] {
       position: absolute;
       top: 0; right: 0; width: 50px; height: 50px;
@@ -59,6 +56,24 @@ $jumpBezier: cubic-bezier(.25,1.43,.55,.99);
       width: 100%; height: auto;
     }
     .board-info { padding-top: 3em; }
+  }
+}
+
+@media screen and (max-width: $tablet-break) {
+  #boards .board-modal {
+    .board-image-container {
+      padding: 2em;
+      height: 300px; overflow: hidden;
+      border-bottom: 1px solid darken(white, 5%);
+    }
+  }
+}
+
+@media screen and (min-width: $tablet-break) {
+  #boards .board-modal {
+    & > .container-fluid {
+      padding: 0 5em;
+    }
   }
 }
 
