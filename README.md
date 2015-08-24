@@ -499,9 +499,7 @@ hashChange: false, ...
 ```
 
 #### Custom breakpoints
-Immerse uses breakpoints to allow animations, actions and attributes to be targeted at certain responsive screen sizes. The default breakpoints are set to match the breakpoint sizes for popular front end framework <a href="http://getbootstrap.com/css/#grid-media-queries" title="Bootstrap Grid Media Queries" target="_blank">Bootstrap</a>. 
-
-To overwrite the default breakpoints, define a new breakpoints object in Immerse setup:
+Immerse uses breakpoints to allow animations, actions and attributes to be targeted at certain responsive screen sizes. To overwrite the default breakpoints, define a new breakpoints object in Immerse setup:
 
 ```js 
 // new Immerse().setup.options
@@ -513,6 +511,8 @@ breakpoints: {
   lgDesktop: 1200
 }, ...
 ```
+
+*The default breakpoints are set to match the breakpoint sizes for popular front end framework <a href="http://getbootstrap.com/css/#grid-media-queries" title="Bootstrap Grid Media Queries" target="_blank">Bootstrap</a>. *
 
 #### Minimum loading time
 Before Immerse's asset queue promise is satisfied, a loading overlay is displayed. This is particularly useful for users on slow connections, but users on fast connections, the loading overlay may only appear for a split section and be perceived as bad UI. Setting minLoadingTime ensures the loading overlay is displayed for at least *x* seconds before the page animates in.
