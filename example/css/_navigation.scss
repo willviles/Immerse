@@ -78,6 +78,10 @@ nav.side-nav { @include navColorGenerator(white, $yellow, $grey, $grey); }
 nav.side-nav.grey { @include navColorGenerator($grey, $yellow, white, $grey); }
 nav.side-nav.white-grey { @include navColorGenerator(white, $grey, $grey, $yellow); }
 
+@media screen and (max-width: $tablet-break) {
+  nav.side-nav { display: none; }
+}
+
 
 nav.top-nav {
   position: fixed; top: 60px; right: 30px;

@@ -2172,6 +2172,11 @@ nav.side-nav.white-grey ul li a.current span:before {
   border-left: 4px solid #43433b;
 }
 
+@media screen and (max-width: 768px) {
+  nav.side-nav {
+    display: none;
+  }
+}
 nav.top-nav {
   position: fixed;
   top: 60px;
