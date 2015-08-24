@@ -474,6 +474,18 @@ Easily add YouTube modals to your Immerse page. Simply paste a YouTube URL into 
 
 *The following options are configured in Immerse setup.*
 
+#### Scroll duration &amp; easing
+
+```js 
+// new Immerse().setup.options
+scroll: {
+  duration: 1,
+  easing: Power4.easeOut
+}, ...
+```
+
+*For more information about GSAP easing, click <a href="http://greensock.com/ease-visualizer" target="_blank">here</a>.*
+
 #### Hash navigation
 By default, Immerse uses [history.replaceState](https://developer.mozilla.org/en-US/docs/Web/Guide/API/DOM/Manipulating_the_browser_history#The_replaceState()_method "Manipulating the browser history with history.replaceState") to enable hash navigation between page sections. If you don't wish to track state:
 

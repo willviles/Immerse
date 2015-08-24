@@ -34,6 +34,10 @@ var Immerse = function() {};
             unmuted: 'Audio On',
             muted: 'Audio Off',
           },
+          scroll: {
+            duration: 1,
+            easing: Power4.easeOut
+          },
           hashChange: true,
           devMode: false
         },

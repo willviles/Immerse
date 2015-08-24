@@ -339,6 +339,8 @@
 
         // New section scroll offset
         var dist = opts.nextSection.scrollOffset,
+            dur = this.imm.setup.options.scroll.duration,
+            easing = this.imm.setup.options.scroll.easing,
             that = this;
 
         // On the rare occasion we're scrolling to the bottom of the div instead.
@@ -362,9 +364,9 @@
           above: that.imm._sectionAbove
         }]);
 
-        TweenLite.to(this.imm.$elem, 1, {
+        TweenLite.to(this.imm.$elem, dur, {
           scrollTo: { y: dist, autoKill: false },
-          ease:Power4.easeOut,
+          ease: easing,
           onComplete: function() {
             // Set new section to entered
             opts.$nextSection.trigger(opts.triggers.entered);
