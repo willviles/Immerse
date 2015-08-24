@@ -124,10 +124,7 @@
         $.each(s.attributes, function(name, attr) {
           that.register.attributes.call(that, $s, name, attr);
         });
-        console.log('Section name: ' + s.name);
-        console.log('Unbind settings: ' + s.options.unbindScroll);
-        console.log('Should unbind? : ' + $.Immerse.scrollController.isScrollUnbound(that.imm, s));
-        console.log('-----------------');
+        // Remove -fullscreen classes if scroll is programatically set to be unbound
         if ($.Immerse.scrollController.isScrollUnbound(that.imm, s) && $s.hasClass(fullscreenClass)) {
           $s.removeClass(fullscreenClass);
         };
