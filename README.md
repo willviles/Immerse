@@ -559,7 +559,7 @@ Custom Immerse.js components will be available for anyone to develop in the near
 &#9744; Set of easily-attachable section transitions. Inspiration <a href="http://codyhouse.co/gem/page-scroll-effects/" title="Codyhouse page scroll effects" target="_blank">here</a>.  
 &#9744; Option to use history.pushState as well as history.replaceState.  
 
-*Got a feature request? Tweet it to <a href="https://twitter.com/willviles" title="Will Viles Twitter @willviles" target="_blank">here</a>.*
+*Got a feature request? Tweet <a href="https://twitter.com/willviles" title="Will Viles Twitter @willviles" target="_blank">@willviles</a> or <a href="https://github.com/willviles/Immerse.js/issues/new" title="Immerse.js New Issue" target="_blank">open an issue</a>.*
 
 ## Browser Support
 Immerse.js aims to support all major browsers in recent versions:  
