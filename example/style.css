@@ -1733,25 +1733,25 @@ h1 {
 
 h2 {
   font-size: 3em;
-  line-height: 1.5;
+  line-height: 1.25;
   letter-spacing: -.02em;
 }
 
 h3 {
   font-size: 2.5em;
-  line-height: 1.75;
+  line-height: 1.4;
   letter-spacing: -.02em;
 }
 
 h4 {
   font-size: 1.4em;
-  line-height: 1.75;
+  line-height: 1.6;
   letter-spacing: -.01em;
 }
 
 h5 {
   font-size: 1.2em;
-  line-height: 2;
+  line-height: 1.75;
 }
 
 h6 {
@@ -1764,13 +1764,27 @@ small {
   line-height: 2;
 }
 
+@media screen and (max-width: 768px) {
+  h1 {
+    font-size: 3em;
+    letter-spacing: -.02em;
+    line-height: 1;
+  }
+
+  h2 {
+    font-size: 2.75em;
+  }
+
+  h3 {
+    font-size: 2em;
+  }
+}
 h1, h2, h3, h4, h5, h6 {
   font-family: 'HeavyItalic', sans-serif;
   font-style: italic;
   font-weight: 800;
   padding: 0px 0px;
   margin: 0px;
-  line-height: 1.5em;
 }
 h1.body-font, h2.body-font, h3.body-font, h4.body-font, h5.body-font, h6.body-font {
   font-family: 'Open Sans', sans-serif;
@@ -2184,7 +2198,7 @@ nav.top-nav {
   z-index: 1000;
 }
 nav.top-nav div {
-  float: left;
+  float: right;
   margin-left: 1em;
   width: 2.5em;
 }
@@ -2207,11 +2221,24 @@ nav.top-nav.white-grey div button {
   color: white;
 }
 
+@media screen and (max-width: 768px) {
+  nav.top-nav {
+    top: 30px;
+    right: 20px;
+  }
+
+  .imm-mute {
+    display: none;
+  }
+}
+@media screen and (max-width: 480px) {
+  nav.top-nav {
+    top: 15px;
+    right: 15px;
+  }
+}
 #header {
   color: white;
-}
-#header h1 span {
-  color: #f5da55;
 }
 #header .buttons {
   padding-top: 2em;

@@ -82,12 +82,11 @@ nav.side-nav.white-grey { @include navColorGenerator(white, $grey, $grey, $yello
   nav.side-nav { display: none; }
 }
 
-
 nav.top-nav {
   position: fixed; top: 60px; right: 30px;
   z-index: 1000;
   div {
-    float: left; margin-left: 1em; width: 2.5em;
+    float: right; margin-left: 1em; width: 2.5em;
     button {
       background-color: transparent; color: white;
       @include transition(color .2s linear .2s);
@@ -96,4 +95,13 @@ nav.top-nav {
   }
   &.grey div button { color: $grey; }
   &.white-grey div button { color: white; }
+}
+
+@media screen and (max-width: $tablet-break) {
+  nav.top-nav { top: 30px; right: 20px; }
+  .imm-mute { display: none; }
+}
+
+@media screen and (max-width: $mobile-break) {
+  nav.top-nav { top: 15px; right: 15px; }
 }

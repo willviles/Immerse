@@ -25,9 +25,7 @@ body {
   letter-spacing: .08em;
 }
 
-@media screen and (max-width: $tablet-break) {
-  body { font-size: 15px; }
-}
+@media screen and (max-width: $tablet-break) { body { font-size: 15px; } }
 
 @mixin bodyfont() {
   font-family: 'Open Sans', sans-serif;
@@ -42,18 +40,23 @@ body {
 }
 
 h1 { font-size: 5.5em; letter-spacing: -.025em; line-height: 1;}
-h2 {font-size: 3em; line-height: 1.5; letter-spacing: -.02em; }
-h3 {font-size: 2.5em; line-height: 1.75; letter-spacing: -.02em; }
-h4 {font-size: 1.4em; line-height: 1.75; letter-spacing: -.01em;}
-h5 {font-size: 1.2em; line-height: 2; }
+h2 {font-size: 3em; line-height: 1.25; letter-spacing: -.02em; }
+h3 {font-size: 2.5em; line-height: 1.4; letter-spacing: -.02em; }
+h4 {font-size: 1.4em; line-height: 1.6; letter-spacing: -.01em;}
+h5 {font-size: 1.2em; line-height: 1.75; }
 h6 {font-size: 1em; line-height: 2; }
 small {font-size: 0.8em; line-height: 2; }
+
+@media screen and (max-width: $tablet-break) {
+  h1 { font-size: 3em; letter-spacing: -.02em; line-height: 1; }
+  h2 { font-size: 2.75em; }
+  h3 {font-size: 2em; }
+}
 
 h1, h2, h3, h4, h5, h6 {
   @include titlefont();
   padding: 0px 0px;
   margin: 0px;
-  line-height: 1.5em;
   &.body-font {
     @include bodyfont(); letter-spacing: .08em;
   }

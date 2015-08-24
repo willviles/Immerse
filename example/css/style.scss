@@ -15,9 +15,6 @@ $jumpBezier: cubic-bezier(.25,1.43,.55,.99);
 
 #header {
   color: white;
-  h1 {
-    span { color: $yellow; }
-  }
   .buttons {
     padding-top: 2em;
     button { margin-bottom: .5em; }
