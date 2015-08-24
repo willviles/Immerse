@@ -303,22 +303,7 @@ var Immerse = function() {};
           that.imm._sections[i] = $(_s.element)[0] === $(s.element)[0] ? s : _s;
         });
 
-        // Register Animations
-        $.each(s.animations, function(name, animation) {
-          that.register.animations.call(that, $s, name, animation);
-        });
-        // Register Actions
-        $.each(s.actions, function(name, action) {
-          that.register.actions.call(that, $s, name, action);
-        });
-        // Register Attributes
-        $.each(s.attributes, function(name, attr) {
-          that.register.attributes.call(that, $s, name, attr);
-        });
-        // Remove -fullscreen classes if scroll is programatically set to be unbound
-        if ($.Immerse.scrollController.isScrollUnbound(that.imm, s) && $s.hasClass(fullscreenClass)) {
-          $s.removeClass(fullscreenClass);
-        };
+        that.initSection.call(that, that.imm, s);
       });
 
       // Update section offsets
@@ -336,6 +321,54 @@ var Immerse = function() {};
       });
 
       return this;
+    },
+
+    // Init section
+    ///////////////////////////////////////////////////////
+
+    initSection: function(imm, s) {
+      this.imm = (this.imm === undefined) ? imm : this.imm;
+
+      var $s = $(s.element),
+          fullscreenClass = this.imm.utils.namespacify.call(this.imm, 'fullscreen'),
+          that = this;
+
+      // Register Animations
+      $.each(s.animations, function(name, animation) {
+        that.register.animations.call(that, $s, name, animation);
+      });
+      // Register Actions
+      $.each(s.actions, function(name, action) {
+        that.register.actions.call(that, $s, name, action);
+      });
+      // Register Attributes
+      $.each(s.attributes, function(name, attr) {
+        that.register.attributes.call(that, $s, name, attr);
+      });
+      // Remove -fullscreen classes if scroll is programatically set to be unbound
+      if ($.Immerse.scrollController.isScrollUnbound(that.imm, s)) {
+        $s.removeClass(fullscreenClass);
+      // Otherwise add it if it should be present
+      } else {
+        $s.addClass(fullscreenClass);
+      };
+    },
+
+    // Reinit Sections
+    ///////////////////////////////////////////////////////
+
+    reinitSections: function(imm) {
+
+      this.imm = (this.imm === undefined) ? imm : this.imm;
+
+      var that = this;
+
+      $.each(this.imm._sections, function(i, s) {
+        that.initSection.call(that, that.imm, s);
+      });
+
+      // Update section offsets
+      $.Immerse.scrollController.updateSectionOffsets(this.imm);
     },
 
     // Register
@@ -461,6 +494,12 @@ var Immerse = function() {};
     add: function(imm, section) {
       var c = new controller[n](this);
       c.add.call(c, imm, section);
+      return c;
+    },
+
+    reinitSections: function(imm) {
+      var c = new controller[n](this);
+      c.reinitSections.call(c, imm);
       return c;
     }
   }
@@ -1714,6 +1753,7 @@ var Immerse = function() {};
       if (currentBreakpoint !== newBreakpoint) {
         this.imm._breakpoint = newBreakpoint;
         if (currentBreakpoint) {
+          $.Immerse.sectionController.reinitSections(this.imm);
           this.imm.utils.log(this.imm, "Screen resized to '" + newBreakpoint + "'");
         }
       }
@@ -1762,6 +1802,8 @@ var Immerse = function() {};
 
       return true;
     },
+
+
 
   // End of controller
   ///////////////////////////////////////////////////////

@@ -36,8 +36,10 @@
       <div class="imm-vertcenter">
         <div class="container-fluid">
           <div class="row text-center">
-            <h1 class="title">Learn <span class="yellow-text">to surf.</span></h1>
-            <h4 class="subtitle body-font">A super simple Immerse.js example page.</h4>
+            <div class="col-sm-10 col-sm-offset-1">
+              <h1 class="title">Learn <span class="yellow-text">to surf.</span></h1>
+              <h4 class="subtitle body-font">A super simple Immerse.js example page.</h4>
+            </div>
           </div>
           <div class="buttons row">
             <div class="col-sm-3 col-sm-offset-3">
@@ -178,13 +180,13 @@
             <h3 class="title"><span class="white-text">Meet the</span> tutors.</h3>
           </div>
           <div class="row">
-            <div class="col-sm-6">
+            <div class="col-md-6">
               <div class="steve">
                 <span class="name">Steve</span>
                 <img src="assets/images/tutor-steve.jpg" />
               </div>
             </div>
-            <div class="col-sm-6">
+            <div class="col-md-6">
               <div class="sarah">
                 <span class="name">Sarah</span>
                 <img src="assets/images/tutor-sarah.jpg" />
@@ -325,6 +327,7 @@
           animations: {
             // Animation #1
             'init': {
+              breakpoints: ['mdDesktop', 'lgDesktop'],
               runtime: ['init', 'enteredUp'], // Default enteringDown, enteringUp
               reset: ['exitedDown'], // Default exitedDown, exitedUp
               delay: .5,
@@ -363,8 +366,7 @@
           animations: {
             // Animation #1
             'boards': {
-              devices: ['desktop'], // default touch & desktop
-              breakpoints: ['mobile', 'tablet', 'mdDesktop', 'lgDesktop'],
+              breakpoints: ['mdDesktop', 'lgDesktop'],
               runtime: ['enteringDown', 'enteringUp'], // Default enteringDown, enteringUp
               reset: ['exitedDown', 'exitedUp'], // Default exitedDown, exitedUp
               timeline: function(s) {
@@ -412,8 +414,7 @@
           animations: {
             // Animation #1
             'tutors': {
-              devices: ['desktop'], // default touch & desktop
-              breakpoints: ['mobile', 'tablet', 'mdDesktop', 'lgDesktop'],
+              breakpoints: ['mdDesktop', 'lgDesktop'],
               runtime: ['enteringDown', 'enteringUp'], // Default enteringDown, enteringUp
               reset: ['exitedDown', 'exitedUp'], // Default exitedDown, exitedUp
               timeline: function(s) {

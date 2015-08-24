@@ -2241,6 +2241,9 @@ nav.top-nav.white-grey div button {
 #header {
   color: white;
 }
+#header .subtitle {
+  margin: 1em .5em;
+}
 #header .buttons {
   padding-top: 2em;
 }
@@ -2324,7 +2327,7 @@ nav.top-nav.white-grey div button {
 @media screen and (max-width: 768px) {
   #boards .board-modal .board-image-container {
     padding: 2em;
-    height: 300px;
+    height: 350px;
     overflow: hidden;
     border-bottom: 1px solid #f2f2f2;
   }
@@ -2414,16 +2417,6 @@ nav.top-nav.white-grey div button {
 #tutors.imm-fullscreen .steve, #tutors.imm-fullscreen .sarah {
   position: relative;
 }
-#tutors.imm-fullscreen .steve .name, #tutors.imm-fullscreen .sarah .name {
-  position: absolute;
-  left: 0;
-  width: 100%;
-  font-family: 'HeavyItalic', sans-serif;
-  font-style: italic;
-  font-weight: 800;
-  color: white;
-  line-height: 2;
-}
 #tutors.imm-fullscreen .steve {
   height: 35vh;
   float: right;
@@ -2458,7 +2451,15 @@ nav.top-nav.white-grey div button {
   padding-bottom: 4em;
 }
 #tutors:not(.imm-fullscreen) .steve, #tutors:not(.imm-fullscreen) .sarah {
-  margin: 2em 0;
+  margin: 4em 0 2em 0;
+  text-align: center;
+}
+#tutors:not(.imm-fullscreen) .steve img, #tutors:not(.imm-fullscreen) .sarah img {
+  display: inline-block;
+}
+#tutors:not(.imm-fullscreen) .steve .name, #tutors:not(.imm-fullscreen) .sarah .name {
+  bottom: 100%;
+  padding-bottom: .5em;
 }
 
 #learn p.lead {
