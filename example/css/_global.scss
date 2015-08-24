@@ -1,3 +1,8 @@
+$lg-desktop-break: 1200px;
+$md-desktop-break: 992px;
+$tablet-break: 768px;
+$mobile-break: 480px;
+
 @font-face {
 	font-family:'HeavyItalic';
 	src: url('assets/fonts/HeavyItalic.eot');
@@ -71,17 +76,6 @@ a, a:visited, a:hover, a:active, a:focus {text-decoration: none; color: inherit;
 b { font-weight: 700; }
 i { font-style: italic; }
 
-.imm-logo-full {
-  position: absolute; top: 60px; left: 50px;
-  z-index: 1000;
-  & > div {
-    display: inline-block; position: relative;
-    object { height: 45px; width: auto;}
-    a { position: absolute; @include stretch(); }
-  }
-
-}
-
 @include keyframes(bounce) {
 	0%, 20%, 50%, 80%, 100% {
     @include transform(translateY(0));
@@ -94,7 +88,3 @@ i { font-style: italic; }
   }
 }
 
-$lg-desktop-break: 1200px;
-$md-desktop-break: 992px;
-$tablet-break: 768px;
-$mobile-break: 480px;

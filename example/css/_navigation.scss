@@ -105,3 +105,28 @@ nav.top-nav {
 @media screen and (max-width: $mobile-break) {
   nav.top-nav { top: 15px; right: 15px; }
 }
+
+.imm-logo-full {
+  position: absolute; top: 60px; left: 50px;
+  z-index: 1000;
+  & > div {
+    display: inline-block; position: relative;
+    object { height: 45px; width: auto;}
+    a { position: absolute; @include stretch(); }
+  }
+
+}
+
+@media screen and (max-width: $tablet-break) {
+  .imm-logo-full {
+    top: 30px; left: 20px;
+    & > div object { height: 40px; }
+  }
+}
+
+@media screen and (max-width: $mobile-break) {
+  .imm-logo-full {
+    top: 20px; left: 15px;
+    & > div object { height: 30px; }
+  }
+}
