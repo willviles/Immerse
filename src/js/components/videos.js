@@ -34,12 +34,12 @@ new Immerse().component({
     // Get a handle on the Immerse object
     this.imm = imm;
 
-    if (this.imm._isTouch) { return false; }
-
     var $wrapper = $(wrapper),
         $video = $wrapper.find('video'),
         $s = $(s.element),
         that = this;
+
+    if (this.imm._isTouch) { $video.hide(); return false; }
 
     // On entering scene & resize the video
     $s.on('init enteringDown enteringUp', function(e) {
