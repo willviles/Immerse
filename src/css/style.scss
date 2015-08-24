@@ -8,22 +8,14 @@ $prefix: 'imm';
 body::-webkit-scrollbar { width: 0 !important; }
 
 .#{$prefix}-section { position: relative; overflow: hidden; }
-.#{$prefix}-fullscreen { height: 100vh; }
-.#{$prefix}-vertcenter { position: absolute; top: 50%; left: 0; width: 100%; @include translateY(-50%); }
 
-/* Loading */
-
-@include keyframes(rotate) {
-  from { @include transform(rotate(0deg)); }
-  to { @include transform(rotate(360deg)); }
+.#{$prefix}-section.#{$prefix}-fullscreen {
+   height: 100vh;
+  .#{$prefix}-vertcenter { position: absolute; top: 50%; left: 0; width: 100%; @include translateY(-50%); }
 }
 
 .#{$prefix}-loading {
   @include stretch(); position: fixed; background-color: white; z-index: 1001;
-  .imm-spinner {
-    position: absolute; top: 50%; left: 50%; @include translate(-50%, -50%);
-    &:before { content: '*'; font-size: 10em; @include transform-origin(50% 50%); @include animation(rotate .5s linear infinite); }
-  }
 }
 
 /* Default Components */

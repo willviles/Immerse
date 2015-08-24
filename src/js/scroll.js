@@ -312,6 +312,9 @@
           return;
         }
 
+        var currentSectionUnbound = $.Immerse.scrollController.isScrollUnbound(this.imm, opts.currentSection),
+            nextSectionUnbound = $.Immerse.scrollController.isScrollUnbound(this.imm, opts.nextSection);
+
         // SCROLL LOGIC:
         // Just change section if...
         // 1) currentSection is unbound && nextSection is unbound
@@ -319,8 +322,8 @@
         // Animate change if..
         // 1) nextSection is bound
         // 2) currentSection is bound, nextSection is unbound && direction is down
-        if (opts.nextSection.options.unbindScroll) {
-          if (opts.currentSection.options.unbindScroll) {
+        if (nextSectionUnbound) {
+          if (currentSectionUnbound) {
             this.go.change.call(this, opts);
           } else {
             if (opts.direction === 'UP') {
@@ -423,7 +426,7 @@
         // If it's a keydown event and we're not pressing upwards
         if (this.utils.isKeydownEvent(e) && e.which !== 38) { return; }
         // If above section is also unbound
-        if (this.imm._sectionAbove.options.unbindScroll) {
+        if ($.Immerse.scrollController.isScrollUnbound(this.imm, this.imm._sectionAbove)) {
           // Just change section references.
           this.ifCanThenGo.call(this, this.imm, 'UP');
         // If above section is not unbound, do a scroll
@@ -441,7 +444,7 @@
         // If it's a keydown event and we're not pressing upwards
         if (this.utils.isKeydownEvent(e) && e.which !== 40) { return; }
         // If below section is also unbound
-        if (this.imm._sectionBelow.options.unbindScroll) {
+        if ($.Immerse.scrollController.isScrollUnbound(this.imm, this.imm._sectionBelow)) {
           // Just change section references.
           this.ifCanThenGo.call(this, this.imm, 'DOWN');
         // If below section is not unbound, do a scroll
@@ -465,7 +468,7 @@
       if (this.imm._sectionBelow === undefined) { return false; }
 
       // If next section is not also unbound, ensure it scrolls to new section from a window height away
-      var belowVal = this.imm._sectionBelow.options.unbindScroll === false ?
+      var belowVal = $.Immerse.scrollController.isScrollUnbound(this.imm, this.imm._sectionBelow) === false ?
                      this.imm._sectionBelow.scrollOffset - this.imm._windowHeight :
                      this.imm._sectionBelow.scrollOffset;
 
@@ -571,7 +574,7 @@
       return new controller[n](this).htmlScroll(imm, status);
     },
     isScrollUnbound: function(imm, section) {
-      return new controller[n](this).isScrollUnbound(imm, section);
+      return new controller[n](this).utils.isScrollUnbound(imm, section);
     }
   }
 

@@ -8,11 +8,10 @@ body::-webkit-scrollbar {
   overflow: hidden;
 }
 
-.imm-fullscreen {
+.imm-section.imm-fullscreen {
   height: 100vh;
 }
-
-.imm-vertcenter {
+.imm-section.imm-fullscreen .imm-vertcenter {
   position: absolute;
   top: 50%;
   left: 0;
@@ -23,41 +22,6 @@ body::-webkit-scrollbar {
   transform: translateY(-50%);
 }
 
-/* Loading */
-@-moz-keyframes rotate {
-  from {
-    -moz-transform: rotate(0deg);
-    transform: rotate(0deg);
-  }
-  to {
-    -moz-transform: rotate(360deg);
-    transform: rotate(360deg);
-  }
-}
-@-webkit-keyframes rotate {
-  from {
-    -webkit-transform: rotate(0deg);
-    transform: rotate(0deg);
-  }
-  to {
-    -webkit-transform: rotate(360deg);
-    transform: rotate(360deg);
-  }
-}
-@keyframes rotate {
-  from {
-    -moz-transform: rotate(0deg);
-    -ms-transform: rotate(0deg);
-    -webkit-transform: rotate(0deg);
-    transform: rotate(0deg);
-  }
-  to {
-    -moz-transform: rotate(360deg);
-    -ms-transform: rotate(360deg);
-    -webkit-transform: rotate(360deg);
-    transform: rotate(360deg);
-  }
-}
 .imm-loading {
   position: absolute;
   top: 0;
@@ -67,26 +31,6 @@ body::-webkit-scrollbar {
   position: fixed;
   background-color: white;
   z-index: 1001;
-}
-.imm-loading .imm-spinner {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  -moz-transform: translate(-50%, -50%);
-  -ms-transform: translate(-50%, -50%);
-  -webkit-transform: translate(-50%, -50%);
-  transform: translate(-50%, -50%);
-}
-.imm-loading .imm-spinner:before {
-  content: '*';
-  font-size: 10em;
-  -moz-transform-origin: 50% 50% 50%;
-  -ms-transform-origin: 50% 50% 50%;
-  -webkit-transform-origin: 50% 50% 50%;
-  transform-origin: 50% 50% 50%;
-  -moz-animation: rotate 0.5s linear infinite;
-  -webkit-animation: rotate 0.5s linear infinite;
-  animation: rotate 0.5s linear infinite;
 }
 
 /* Default Components */

@@ -20,21 +20,16 @@ $jumpBezier: cubic-bezier(.25,1.43,.55,.99);
   }
   .buttons {
     padding-top: 2em;
+    button { margin-bottom: .5em; }
   }
 }
 
+// Common unbound & fixed section styles
 #boards {
-  .imm-vertcenter {
-    padding-bottom: 50vh;
-  }
   .example-boards {
-    position: absolute;
-    bottom: 0; left: 0; width: 100%;
     li {
-      height: 60vh; position: relative;
       button {
         @include stretch(0, 0, -30px, 0); background-color: transparent;
-        @include transition(transform .4s $jumpBezier);
       }
       &:nth-of-type(1) button {
         @include bg2x(assets/images/board-1, jpg, 160px, 584px);
@@ -47,10 +42,6 @@ $jumpBezier: cubic-bezier(.25,1.43,.55,.99);
       &:nth-of-type(3) button {
         @include bg2x(assets/images/board-3, jpg, 139px, 580px);
         background-position: top center;
-      }
-      &:hover button {
-        @include translateY(-20px);
-        @include transition(transform .4s $jumpBezier);
       }
     }
   }
@@ -74,13 +65,54 @@ $jumpBezier: cubic-bezier(.25,1.43,.55,.99);
   }
 }
 
+// Fixed section styles
+#boards.imm-fullscreen {
+  .imm-vertcenter {
+    padding-bottom: 50vh;
+  }
+  .example-boards {
+    position: absolute;
+    bottom: 0; left: 0; width: 100%;
+    li {
+      height: 60vh; position: relative;
+      button {
+        @include transition(transform .4s $jumpBezier);
+      }
+      &:hover button {
+        @include translateY(-20px);
+        @include transition(transform .4s $jumpBezier);
+      }
+    }
+  }
+}
+
+// Unbound section styles
+#boards:not(.imm-fullscreen) {
+  padding-top: 100px; padding-bottom: 100px;
+  .example-boards {
+    margin-top: 2em;
+    li {
+      height: 350px;
+      button { @include background-size(contain); }
+    }
+  }
+}
+
 #tutors {
   background: $yellow;
+  .steve, .sarah {
+    position: relative;
+    height: 200px;
+    img { height: 100%; width: auto; max-width: 100%; }
+    .name { position: absolute; left: 0; width: 100%; @include titlefont(); color: white; line-height: 2; }
+  }
+}
+
+#tutors.imm-fullscreen {
   .title { padding-top: 5vh; padding-bottom: 7vh; }
   .next { padding-top: 5vh; }
   .steve, .sarah {
     position: relative;
-    img { height: 100%; width: auto; max-width: 100%; }
     .name { position: absolute; left: 0; width: 100%; @include titlefont(); color: white; line-height: 2; }
   }
   .steve {
@@ -95,14 +127,32 @@ $jumpBezier: cubic-bezier(.25,1.43,.55,.99);
   }
 }
 
+#tutors:not(.imm-fullscreen) {
+  padding-top: 4em; padding-bottom: 4em;
+  .steve, .sarah {
+    margin: 2em 0;
+  }
+}
+
 #learn {
-  padding-top: 200px;
-  padding-bottom: 200px;
   p.lead { margin-top: 3em; }
   .surfers-bondi {
     margin: 50px 0;
   }
   h2 i { color: $yellow; }
+}
+
+@media screen and (max-width: $tablet-break) {
+  #learn {
+    padding-top: 4em; padding-bottom: 4em;
+  }
+}
+
+@media screen and (min-width: $tablet-break) {
+  #learn {
+    padding-top: 200px;
+    padding-bottom: 200px;
+  }
 }
 
 #join {

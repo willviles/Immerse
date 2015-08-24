@@ -72,13 +72,13 @@
       <div class="example-boards">
         <div class="container">
           <ul class="row">
-            <li class="col-sm-4">
+            <li class="col-xs-4">
               <button data-imm-modal-open="board-one"></button>
             </li>
-            <li class="col-sm-4">
+            <li class="col-xs-4">
               <button data-imm-modal-open="board-two"></button>
             </li>
-            <li class="col-sm-4">
+            <li class="col-xs-4">
               <button data-imm-modal-open="board-three"></button>
             </li>
           </ul>
@@ -356,6 +356,9 @@
           name: 'Boards',
           // Set the element. Must be able to take either a string, javascript or jquery selector
           element: $('#boards'),
+          options: {
+            unbindScroll: ['mobile', 'tablet']
+          },
           // Define animations
           animations: {
             // Animation #1
@@ -402,6 +405,9 @@
           name: 'Tutors',
           // Set the element. Must be able to take either a string, javascript or jquery selector
           element: $('#tutors'),
+          options: {
+            unbindScroll: ['mobile', 'tablet']
+          },
           // Define animations
           animations: {
             // Animation #1

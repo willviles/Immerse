@@ -90,3 +90,8 @@ i { font-style: italic; }
     @include transform(translateY(-10px));
   }
 }
+
+$lg-desktop-break: 1200px;
+$md-desktop-break: 992px;
+$tablet-break: 768px;
+$mobile-break: 480px;

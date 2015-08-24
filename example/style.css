@@ -2211,20 +2211,10 @@ nav.top-nav.white-grey div button {
 #header .buttons {
   padding-top: 2em;
 }
+#header .buttons button {
+  margin-bottom: .5em;
+}
 
-#boards .imm-vertcenter {
-  padding-bottom: 50vh;
-}
-#boards .example-boards {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-}
-#boards .example-boards li {
-  height: 60vh;
-  position: relative;
-}
 #boards .example-boards li button {
   position: absolute;
   top: 0;
@@ -2232,10 +2222,6 @@ nav.top-nav.white-grey div button {
   left: 0;
   right: 0;
   background-color: transparent;
-  -moz-transition: -moz-transform 0.4s cubic-bezier(0.25, 1.43, 0.55, 0.99);
-  -o-transition: -o-transform 0.4s cubic-bezier(0.25, 1.43, 0.55, 0.99);
-  -webkit-transition: -webkit-transform 0.4s cubic-bezier(0.25, 1.43, 0.55, 0.99);
-  transition: transform 0.4s cubic-bezier(0.25, 1.43, 0.55, 0.99);
 }
 #boards .example-boards li:nth-of-type(1) button {
   background-image: url(assets/images/board-1.jpg);
@@ -2282,16 +2268,6 @@ nav.top-nav.white-grey div button {
     background-size: 139px 580px;
   }
 }
-#boards .example-boards li:hover button {
-  -moz-transform: translateY(-20px);
-  -ms-transform: translateY(-20px);
-  -webkit-transform: translateY(-20px);
-  transform: translateY(-20px);
-  -moz-transition: -moz-transform 0.4s cubic-bezier(0.25, 1.43, 0.55, 0.99);
-  -o-transition: -o-transform 0.4s cubic-bezier(0.25, 1.43, 0.55, 0.99);
-  -webkit-transition: -webkit-transform 0.4s cubic-bezier(0.25, 1.43, 0.55, 0.99);
-  transition: transform 0.4s cubic-bezier(0.25, 1.43, 0.55, 0.99);
-}
 #boards .board-modal > .container-fluid {
   padding: 0 5em;
 }
@@ -2315,18 +2291,59 @@ nav.top-nav.white-grey div button {
   padding-top: 3em;
 }
 
+#boards.imm-fullscreen .imm-vertcenter {
+  padding-bottom: 50vh;
+}
+#boards.imm-fullscreen .example-boards {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+}
+#boards.imm-fullscreen .example-boards li {
+  height: 60vh;
+  position: relative;
+}
+#boards.imm-fullscreen .example-boards li button {
+  -moz-transition: -moz-transform 0.4s cubic-bezier(0.25, 1.43, 0.55, 0.99);
+  -o-transition: -o-transform 0.4s cubic-bezier(0.25, 1.43, 0.55, 0.99);
+  -webkit-transition: -webkit-transform 0.4s cubic-bezier(0.25, 1.43, 0.55, 0.99);
+  transition: transform 0.4s cubic-bezier(0.25, 1.43, 0.55, 0.99);
+}
+#boards.imm-fullscreen .example-boards li:hover button {
+  -moz-transform: translateY(-20px);
+  -ms-transform: translateY(-20px);
+  -webkit-transform: translateY(-20px);
+  transform: translateY(-20px);
+  -moz-transition: -moz-transform 0.4s cubic-bezier(0.25, 1.43, 0.55, 0.99);
+  -o-transition: -o-transform 0.4s cubic-bezier(0.25, 1.43, 0.55, 0.99);
+  -webkit-transition: -webkit-transform 0.4s cubic-bezier(0.25, 1.43, 0.55, 0.99);
+  transition: transform 0.4s cubic-bezier(0.25, 1.43, 0.55, 0.99);
+}
+
+#boards:not(.imm-fullscreen) {
+  padding-top: 100px;
+  padding-bottom: 100px;
+}
+#boards:not(.imm-fullscreen) .example-boards {
+  margin-top: 2em;
+}
+#boards:not(.imm-fullscreen) .example-boards li {
+  height: 350px;
+}
+#boards:not(.imm-fullscreen) .example-boards li button {
+  -moz-background-size: contain;
+  -o-background-size: contain;
+  -webkit-background-size: contain;
+  background-size: contain;
+}
+
 #tutors {
   background: #f5da55;
 }
-#tutors .title {
-  padding-top: 5vh;
-  padding-bottom: 7vh;
-}
-#tutors .next {
-  padding-top: 5vh;
-}
 #tutors .steve, #tutors .sarah {
   position: relative;
+  height: 200px;
 }
 #tutors .steve img, #tutors .sarah img {
   height: 100%;
@@ -2343,39 +2360,64 @@ nav.top-nav.white-grey div button {
   color: white;
   line-height: 2;
 }
-#tutors .steve {
+
+#tutors.imm-fullscreen .title {
+  padding-top: 5vh;
+  padding-bottom: 7vh;
+}
+#tutors.imm-fullscreen .next {
+  padding-top: 5vh;
+}
+#tutors.imm-fullscreen .steve, #tutors.imm-fullscreen .sarah {
+  position: relative;
+}
+#tutors.imm-fullscreen .steve .name, #tutors.imm-fullscreen .sarah .name {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  font-family: 'HeavyItalic', sans-serif;
+  font-style: italic;
+  font-weight: 800;
+  color: white;
+  line-height: 2;
+}
+#tutors.imm-fullscreen .steve {
   height: 35vh;
   float: right;
   margin-right: -30px;
 }
-#tutors .steve img {
+#tutors.imm-fullscreen .steve img {
   float: right;
 }
-#tutors .steve .name {
+#tutors.imm-fullscreen .steve .name {
   bottom: 100%;
   margin-bottom: 1em;
   border-bottom: 2px solid white;
 }
-#tutors .sarah {
+#tutors.imm-fullscreen .sarah {
   height: 40vh;
   float: left;
   margin-top: 40px;
   margin-left: -120px;
 }
-#tutors .sarah img {
+#tutors.imm-fullscreen .sarah img {
   float: left;
 }
-#tutors .sarah .name {
+#tutors.imm-fullscreen .sarah .name {
   top: 100%;
   margin-top: .5em;
   border-top: 2px solid white;
   text-align: right;
 }
 
-#learn {
-  padding-top: 200px;
-  padding-bottom: 200px;
+#tutors:not(.imm-fullscreen) {
+  padding-top: 4em;
+  padding-bottom: 4em;
 }
+#tutors:not(.imm-fullscreen) .steve, #tutors:not(.imm-fullscreen) .sarah {
+  margin: 2em 0;
+}
+
 #learn p.lead {
   margin-top: 3em;
 }
@@ -2386,6 +2428,18 @@ nav.top-nav.white-grey div button {
   color: #f5da55;
 }
 
+@media screen and (max-width: 768px) {
+  #learn {
+    padding-top: 4em;
+    padding-bottom: 4em;
+  }
+}
+@media screen and (min-width: 768px) {
+  #learn {
+    padding-top: 200px;
+    padding-bottom: 200px;
+  }
+}
 #join {
   color: white;
   background-color: #d0deec;
