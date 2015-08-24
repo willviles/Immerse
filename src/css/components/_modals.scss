@@ -23,3 +23,15 @@
     outline:0;
   }
 }
+
+@media screen and (max-width: $tablet-break) {
+  [data-#{$prefix}-modal-id] {
+    width: 90%; height: 90%;
+  }
+}
+
+@media screen and (max-width: $mobile-break) {
+  [data-#{$prefix}-modal-id] {
+    width: 95%; height: 95%;
+  }
+}

@@ -1,7 +1,14 @@
 @import 'compass';
 @import 'compass/layout';
 
+// Namespace
 $prefix: 'imm';
+
+// Breakpoints
+$lg-desktop-break: 1200px;
+$md-desktop-break: 992px;
+$tablet-break: 768px;
+$mobile-break: 480px;
 
 /* Scaffold */
 

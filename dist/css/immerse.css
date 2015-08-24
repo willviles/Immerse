@@ -75,6 +75,18 @@ body::-webkit-scrollbar {
   outline: 0;
 }
 
+@media screen and (max-width: 768px) {
+  [data-imm-modal-id] {
+    width: 90%;
+    height: 90%;
+  }
+}
+@media screen and (max-width: 480px) {
+  [data-imm-modal-id] {
+    width: 95%;
+    height: 95%;
+  }
+}
 /*
 Plugin: Immerse.js
 Component: Tooltips
