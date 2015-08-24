@@ -3,11 +3,11 @@
 
 Immerse.js offers a javascript framework for building complex, media-driven web experiences.
 
-Checkout the [official plugin website](https://immerse.vil.es "Immerse.js Site"), the [Learn to Surf](https://immerse.vil.es "Immerse.js Learn to Surf Example") example or the [full documentation](https://immerse.vil.es "Immerse.js Full Documentation").
+Checkout the [official plugin website](http://immerse.vil.es "Immerse.js Site"), the [Learn to Surf](http://immerse.vil.es "Immerse.js Learn to Surf Example") example or the [full documentation](http://immerse.vil.es "Immerse.js Full Documentation").
 
 ## Getting Started
 
-[Download the zip](https://github.com/willviles/Immerse.js/archive/master.zip "Immerse.js Download ZIP") or install Immerse.js via [NPM](https://www.npmjs.com/package/immersejs "Immerse.js NPM package - immersejs"):
+[Download the zip](https://github.com/willviles/Immerse.js/archive/master.zip "Immerse.js Download ZIP") or install Immerse.js via <a href="https://www.npmjs.com/package/immersejs" title="Immerse.js NPM package - immersejs" target="_blank">NPM</a>.
 
 ```shell
 npm install immersejs
@@ -245,7 +245,7 @@ page.section({
 
 For most animations which run when the section is scrolled to, and reset when the section is removed from view, only the timeline function need be defined. The animation defaults do the rest.
 
-For more information about using the GSAP, visit [the official GreenSock Animation Platform website](http://greensock.com/gsap "GreenSock Animation Platform Official Website").
+For more information about using the GSAP, visit <a href="http://greensock.com/gsap" title="GreenSock Animation Platform Official Website" target="_blank">the official GreenSock Animation Platform website</a>.
 
 ## Attributes
 
@@ -366,7 +366,7 @@ page.section({
 });
 ```
 
-*For more information on default breakpoints and defining your own breakpoints, [click here](#custom-breakpoints "Immerse custom breakpoints").*
+*For more information on Immerse breakpoints, click [here](#custom-breakpoints "Immerse custom breakpoints").*
 
 #### ScrollTo Buttons
 
@@ -484,10 +484,10 @@ scroll: {
 }, ...
 ```
 
-*For more information about GSAP easing, click <a href="http://greensock.com/ease-visualizer" target="_blank">here</a>.*
+*For more information about GSAP easing, click <a href="http://greensock.com/ease-visualizer" title="GreenSock Easing Visualizer" target="_blank">here</a>.*
 
 #### Hash navigation
-By default, Immerse uses [history.replaceState](https://developer.mozilla.org/en-US/docs/Web/Guide/API/DOM/Manipulating_the_browser_history#The_replaceState()_method "Manipulating the browser history with history.replaceState") to enable hash navigation between page sections. If you don't wish to track state:
+By default, Immerse uses <a href="https://developer.mozilla.org/en-US/docs/Web/Guide/API/DOM/Manipulating_the_browser_history#The_replaceState()_method" title="Manipulating the browser history with history.replaceState" target="_blank">history.replaceState</a> to enable hash navigation between page sections. If you don't wish to track state:
 
 ```js 
 // new Immerse().setup.options
@@ -543,17 +543,17 @@ devMode: true, ...
 ```
 
 ## Custom components
-Custom Immerse.js components will be available for anyone to develop in the near future once the documentation is up to speed! Follow [@willviles](https://twitter.com/willviles "Will Viles Twitter") for regular updates on Immerse.
+Custom Immerse.js components will be available for anyone to develop in the near future once the documentation is up to speed! Follow <a href="https://twitter.com/willviles" title="Will Viles Twitter @willviles" target="_blank">@willviles</a> for regular updates on Immerse.
 
 ## Future Developments
 &#10004; Section hash state management.  
 &#10004; YouTube modal windows.  
 &#9744; Vimeo modal windows.  
 &#9744; Set of easily-attachable modal window open/close animations.  
-&#9744; Set of easily-attachable section transitions. Inspiration [here](http://codyhouse.co/gem/page-scroll-effects/ "Codyhouse page scroll effects").  
+&#9744; Set of easily-attachable section transitions. Inspiration <a href="http://codyhouse.co/gem/page-scroll-effects/" title="Codyhouse page scroll effects" target="_blank">here</a>.
 &#9744; Option to use history.pushState as well as history.replaceState.  
 
-*Got a feature request? Tweet it to [@willviles](https://twitter.com/willviles "Will Viles Twitter").*
+*Got a feature request? Tweet it to <a href="https://twitter.com/willviles" title="Will Viles Twitter @willviles" target="_blank">here</a>.*
 
 ## Browser Support
 Immerse.js aims to support all major browsers in recent versions:  
@@ -562,8 +562,8 @@ Firefox 26+, Chrome 30+, Safari 5.1+, Opera 10+, IE 9+
 ## About the Author
 I'm Will Viles, a digital creative from Birmingham, UK. I can offer help & custom site builds using Immerse.js. 
 
-Check out [my website](http://vil.es "Will Viles - Digital Creative Portfolio") or contact me on Twitter [@willviles](https://twitter.com/willviles "Will Viles Twitter").
+Check out <a href="http://vil.es" title="Will Viles - Digital Creative" target="_blank">my website</a> or contact me on <a href="https://twitter.com/willviles" title="Will Viles Twitter @willviles" target="_blank">Twitter</a>.
 
 ## License
 Immerse.js is dual licensed under the MIT license and GPL.
-For more information click [here](https://github.com/willviles/Immerse.js/blob/master/LICENSE.md "Immerse.js license").
+For more information click <a href="https://github.com/willviles/Immerse.js/blob/master/LICENSE.md" title="Immerse.js License Information" target="_blank">here</a>.
