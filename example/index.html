@@ -446,6 +446,17 @@
           }
         });
 
+        pageName.section({
+          // Unique name for the section
+          name: 'Join',
+          // Set the element. Must be able to take either a string, javascript or jquery selector
+          element: $('#join'),
+          // Custom Attributes get changed in the custom attributes dictionary. Fires an observer
+          attributes: {
+            'navColor': { value: '' }
+          }
+        });
+
         // Init immerse instance
         ///////////////////////////////////////////
 
