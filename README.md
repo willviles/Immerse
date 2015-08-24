@@ -34,7 +34,7 @@ Include Immerse.js:
 ## Basic Setup
 
 #### Build HTML markup
-At its most basic configuration, Immerse.js will build your section based page from simple HTML markup, automatically handling scrolling and navigation:
+At its most basic configuration, Immerse.js will build your section based page from simple HTML markup. It will automatically handle scrolling, navigation and loading with just the following code:
 
 ```html
 <body>
@@ -68,15 +68,15 @@ page.init();
 ```
 
 ## Section configuration
-Sections can be configured through registering a section on the page variable. The following markup is the most basic configuration:
+Sections can be configured through registering one on the page variable. The following markup is the most basic configuration:
 
 ```js
 page.section({
 
-  // Name the section.
+  // Name to show in navigation
   name: 'Section Name',
   
-  // Set the element. Must be able to take either a string, javascript or jquery selector
+  // Reference the section DOM element
   element: $('#foo'),
   
 });
@@ -104,7 +104,7 @@ new Immerse().setup({
 
 #### Asset preloading
 
-Adding the wait key to any asset will add it to the preloading queue. Immerse will display a loading overlay until all required assets are loaded. Images will be loaded into the browser cache and audio/video will be considered loaded when the HTML5 canplaythrough event is returned.
+Adding the wait key to any asset will add it to the asset queue for preloading. Immerse will display a loading overlay until all required assets are loaded. Images will be loaded into the browser cache and audio/video will be considered loaded when the HTML5 canplaythrough event is returned.
 
 ```js
 'videoName': { type: 'video', path: 'assets/audio/gnossienne', loop: true, wait: true }, ...
@@ -122,7 +122,7 @@ Once a video asset is registered, it can be easily used as a video background fo
 </section>
 ```
 
-Immerse.js will manage initialisation, pausing/playing on scroll and resizing of the HTML5 video without the need for any custom code.
+*Immerse.js will manage initialisation, pausing/playing on scroll and resizing of the HTML5 video without the need for any custom code.*
 
 
 ## Audio
@@ -131,7 +131,7 @@ Immerse easily enables the building of complex layered HTML5 audio soundtracks f
 
 #### Default soundtrack
 
-Add a soundtrack to every section of your page by defining the audio layers in Immerse setup. Volume of each audio layer can be controlled, along with the length of time it takes for the track to fade out/in when the soundtrack changes.
+Add a default soundtrack by defining the audio layers in Immerse setup. The volume of each individual audio layer can be controlled, along with the length of time it takes for the track to fade out/in when the soundtrack changes.
 
 ```js
 new Immerse().setup({
@@ -148,7 +148,7 @@ new Immerse().setup({
 
 #### Section-based soundtrack
 
-Soundtracks can then be changed for each section of the page. Inside your Immerse section, just define a new soundtrack.
+Soundtracks can also be defined for each section of the page. Inside your Immerse section, just define a new soundtrack and the audio will change to your new soundtrack when the section is scrolled to.
 
 ```js
 page.section({
@@ -197,7 +197,7 @@ page.audio('unmute'); // Unmutes audio
 
 ## Animations
 
-One of Immerse's key features is offering a clean, easy-to define, read & maintain interface for creating animations and tailoring them to devices and screens.
+One of Immerse's key features is offering a clean, easy to read interface for creating animations and targeting them at devices, breakpoints and runtimes.
 
 #### Configuring animation timelines
 
@@ -243,13 +243,13 @@ page.section({
 }
 ```
 
-For most animations which run when the section is scrolled to, and reset when the section is removed from view, only the timeline function need be defined. The animation defaults do the rest.
+For most animations (which run when the section is scrolled to and reset when the section is removed from view), only the timeline function need be defined. Every other value may be left to default.
 
-For more information about using the GSAP, visit <a href="http://greensock.com/gsap" title="GreenSock Animation Platform Official Website" target="_blank">the official GreenSock Animation Platform website</a>.
+For more information about using GSAP, visit <a href="http://greensock.com/gsap" title="GreenSock Animation Platform Official Website" target="_blank">the official GreenSock Animation Platform website</a>.
 
 ## Attributes
 
-Section attributes allow for individual values to be changed on a per-section basis and trigger an event when changed. The following example will demonstrate how easy it is to change navigation colour through each section of your site, with just one attribute.
+Section attributes allow for individual values to be changed on a per-section basis and trigger a listenable event when changed. The following example will demonstrate how easy it is to change navigation colour through each section of your site, with just one attribute.
 
 #### Default attribute value
 
@@ -335,7 +335,7 @@ page.section({
 
 ## Scrolling
 
-From combining a mix of fixed height, auto scrolling sections with free scrolling sections, to adding scrollTo buttons to the page using just HTML markup, Immerse solves many issues related to scrolling with elegant solutions.
+Immerse solves many problematic issues related to scrolling with elegant solutions.
 
 #### Fixed scroll vs free scroll
 
@@ -348,6 +348,8 @@ Immerse infers which sections should be fixed height and which should be free sc
 <!-- Fixed scrolling section -->
 <section class="imm-section imm-fullscreen"></section> 
 ```
+
+*Not sure what we mean by fixed vs free scroll? Check out the <a href="http://immerse.vil.es" title="Immerse.js Official Website" target="_blank">official plugin website</a> for examples.*
 
 #### Responsive scrolling
 
@@ -462,7 +464,7 @@ page.section({
 
 #### YouTube modals
 
-Easily add YouTube modals to your Immerse page. Simply paste a YouTube URL into the imm-modal-open data tag and a YouTube modal will be generated.
+It's easy to add YouTube modals to your Immerse page. Simply paste a YouTube URL into the imm-modal-open data tag and a YouTube modal will be generated.
 
 ```HTML
 <button data-imm-modal-open="https://www.youtube.com/watch?v=XXXXXXXXXXX"></button>
@@ -475,6 +477,8 @@ Easily add YouTube modals to your Immerse page. Simply paste a YouTube URL into 
 *The following options are configured in Immerse setup.*
 
 #### Scroll duration &amp; easing
+
+Immerse.js uses the <a href="https://greensock.com/docs/#/HTML5/GSAP/Plugins/ScrollToPlugin/" title="GreenSock ScrollTo Plugin" target="_blank">GSAP ScrollTo Plugin</a> to animate between sections. Therefore, it is possible to tweak the default scroll animation using buttery smooth GreenSock easing.
 
 ```js 
 // new Immerse().setup.options
@@ -495,7 +499,9 @@ hashChange: false, ...
 ```
 
 #### Custom breakpoints
-Immerse's has its default breakpoints set at the same widths as popular front end framework Bootstrap. To overwrite the custom breakpoints, define a new breakpoints object in Immerse setup:
+Immerse uses breakpoints to allow animations, actions and attributes to be targeted at certain responsive screen sizes. The default breakpoints are set to match the breakpoint sizes for popular front end framework <a href="http://getbootstrap.com/css/#grid-media-queries" title="Bootstrap Grid Media Queries" target="_blank">Bootstrap</a>. 
+
+To overwrite the default breakpoints, define a new breakpoints object in Immerse setup:
 
 ```js 
 // new Immerse().setup.options
@@ -517,7 +523,7 @@ minLoadingTime: 1000, ...
 ```
 
 #### Namespacing
-Namespacing Immerse is not essential, but changing all classes and datatags from using 'imm-' is available:
+Changing all classes and data tags from using 'imm-' is available:
 
 ```js
 // new Immerse().setup.options
@@ -543,14 +549,14 @@ devMode: true, ...
 ```
 
 ## Custom components
-Custom Immerse.js components will be available for anyone to develop in the near future once the documentation is up to speed! Follow <a href="https://twitter.com/willviles" title="Will Viles Twitter @willviles" target="_blank">@willviles</a> for regular updates on Immerse.
+Custom Immerse.js components will be available for anyone to develop in the near future once the API is locked down and documentation is up to speed! Follow <a href="https://twitter.com/willviles" title="Will Viles Twitter @willviles" target="_blank">@willviles</a> for updates.
 
 ## Future Developments
 &#10004; Section hash state management.  
 &#10004; YouTube modal windows.  
 &#9744; Vimeo modal windows.  
 &#9744; Set of easily-attachable modal window open/close animations.  
-&#9744; Set of easily-attachable section transitions. Inspiration <a href="http://codyhouse.co/gem/page-scroll-effects/" title="Codyhouse page scroll effects" target="_blank">here</a>.
+&#9744; Set of easily-attachable section transitions. Inspiration <a href="http://codyhouse.co/gem/page-scroll-effects/" title="Codyhouse page scroll effects" target="_blank">here</a>.  
 &#9744; Option to use history.pushState as well as history.replaceState.  
 
 *Got a feature request? Tweet it to <a href="https://twitter.com/willviles" title="Will Viles Twitter @willviles" target="_blank">here</a>.*
