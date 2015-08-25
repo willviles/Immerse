@@ -344,6 +344,26 @@
                   })
                 ]
               }
+            },
+            // Animation #2
+            'initSmall': {
+              breakpoints: ['mobile', 'tablet'],
+              runtime: ['init', 'enteredUp'], // Default enteringDown, enteringUp
+              reset: ['exitedDown'], // Default exitedDown, exitedUp
+              delay: .5,
+              timeline: function(s) {
+                return [
+                  TweenMax.from(s.find('.title'), 1.5, {
+                    opacity: 0, y: -40, ease: Elastic.easeOut.config(1, 0.3)
+                  }),
+                  TweenMax.from(s.find('.subtitle'), 2, {
+                    opacity: 0, y: -40, delay: .5, ease: Power4.easeOut
+                  }),
+                  TweenMax.from(s.find('.buttons'), 2.5, {
+                    opacity: 0, y: 20, delay: .8, ease: Power4.easeOut
+                  })
+                ]
+              }
             }
           },
           // Custom Attributes get changed in the custom attributes dictionary. Fires an observer
