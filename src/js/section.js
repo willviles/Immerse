@@ -144,15 +144,15 @@
 
       // Register Animations
       $.each(s.animations, function(name, animation) {
-        that.register.animations.call(that, $s, name, animation);
+        that.registrationHandler.call(that, 'animations', $s, name, animation);
       });
       // Register Actions
       $.each(s.actions, function(name, action) {
-        that.register.actions.call(that, $s, name, action);
+        that.registrationHandler.call(that, 'actions', $s, name, action);
       });
       // Register Attributes
       $.each(s.attributes, function(name, attr) {
-        that.register.attributes.call(that, $s, name, attr);
+        that.registrationHandler.call(that, 'attributes', $s, name, attr);
       });
       // Remove -fullscreen classes if scroll is programatically set to be unbound
       if ($.Immerse.scrollController.isScrollUnbound(that.imm, s)) {
@@ -161,6 +161,173 @@
       } else {
         $s.addClass(fullscreenClass);
       };
+    },
+
+    // Registration Handler
+    ///////////////////////////////////////////////////////
+
+    registrationHandler: function(type, $s, name, obj) {
+
+      // If view targeted
+      if ($.Immerse.viewportController.isView(this.imm, obj)) {
+
+        // If it's not active, register it.
+        if (!obj._active) {
+          this.register[type].call(this, $s, name, obj);
+
+        // But if it is, don't re-register.
+        } else {
+          return;
+        }
+
+      // If view isn't targeted
+      } else {
+        // If it's active, we need to kill it.
+        if (obj._active) {
+          this.kill.call(this, type, $s, name, obj);
+
+        // But if it isn't, it is of no consequence
+        } else {
+          return;
+        }
+      };
+
+    },
+
+    // Register
+
+    register: {
+
+    // Register Section Animations
+    ///////////////////////////////////////////////////////
+
+      animations: function(s, n, obj) {
+
+        var t = new TimelineMax({ paused: true }),
+            c = obj.timeline(s),
+            d = !isNaN(obj.delay) ? obj.delay : null,
+            r = obj.hasOwnProperty('runtime') ? obj.runtime : ['enteringDown', 'enteringUp'],
+            that = this;
+
+        // If there's a delay, add it to start of timeline
+        if (d !== null) { t.set({}, {}, "+=" + d); }
+        // Add content to the timeline
+        t.add(c);
+
+        obj._timeline = t; obj._runtimeStr = ''; obj._resetStr = '';
+
+        // Prepare runtimes
+        $.each(r, function(i, r) { obj._runtimeStr = obj._runtimeStr + ' ' + r; });
+        // Prepare resets
+        $.each(obj.reset, function(i, r) { obj._resetStr = obj._resetStr + ' ' + r; });
+
+
+        obj._run = function() {
+          that.imm.utils.log(that.imm, "Running animation '" + n + "'");
+          obj._timeline.play();
+        }
+
+        obj._reset = function() {
+          that.imm.utils.log(that.imm, "Resetting animation '" + n + "'");
+          obj._timeline.pause(0, true);
+        }
+
+        s.on(obj._runtimeStr, obj._run);
+        s.on(obj._resetStr, obj._reset);
+
+        this.imm.utils.log(this.imm, "Registered animation '" + n + "'");
+        obj._active = true;
+
+      },
+
+      // Register Section Actions
+      ///////////////////////////////////////////////////////
+
+      actions: function(s, n, obj) {
+
+        // Proceed or kill based upon device selection
+        if ($.Immerse.viewportController.isView(this.imm, obj) === false) { return false };
+
+        var d = !isNaN(obj.delay) ? obj.delay : 0,
+            r = obj.hasOwnProperty('runtime') ? obj.runtime : ['enteringDown', 'enteringUp'],
+            that = this;
+
+        obj._runtimeStr = ''; obj._resetStr = '';
+
+        // Prepare runtimes
+        $.each(r, function(i, r) { obj._runtimeStr = obj._runtimeStr + ' ' + r; });
+
+        obj._run = function() {
+          setTimeout(function() {
+            that.imm.utils.log(that.imm, "Running action: '" + n + "'");
+            obj.action.call(that, s);
+          }, d);
+        }
+
+        s.on(obj._runtimeStr, obj._run);
+
+        if (obj.clear) {
+          obj._reset = function() {
+            that.imm.utils.log(that.imm, "Clearing action: '" + n + "'");
+            obj.clear.call(that, s);
+          }
+          s.on(obj._resetStr, obj._reset);
+        }
+
+        this.imm.utils.log(this.imm, "Registered action '" + n + "'");
+        obj._active = true;
+
+      },
+
+      // Register Section Attributes
+      ///////////////////////////////////////////////////////
+
+      attributes: function(s, n, obj) {
+
+        // Proceed or kill based upon device selection
+        if ($.Immerse.viewportController.isView(this.imm, obj) === false) { return false };
+
+        var d = !isNaN(obj.delay) ? obj.delay : 0,
+            r = obj.hasOwnProperty('runtime') ? obj.runtime : ['enteringDown', 'enteringUp'],
+            that = this;
+
+        obj._runtimeStr = '';
+
+        // Prepare runtimes
+        $.each(r, function(i, r) { obj._runtimeStr = obj._runtimeStr + ' ' + r; });
+
+        obj._run = function() {
+          setTimeout(function() {
+            that.imm.utils.log(that.imm, "Attribute '" + n + "' updated to '" + a.value + "'");
+            that.imm.$elem.trigger(n, a.value);
+          }, d);
+        }
+        s.on(obj._runtimeStr, obj._run);
+
+        this.imm.utils.log(this.imm, "Registered attribute '" + n + "'");
+        obj._active = true;
+      }
+
+    },
+
+    // Kill object
+    ///////////////////////////////////////////////////////
+
+    kill: function(type, s, name, obj) {
+
+      // Kill animation timeline
+      if (type === 'animations') { obj._timeline.progress(1, false).kill(); }
+
+      // Kill animation & actions reset string
+      if (type === 'animations' || type === 'actions') { s.off(obj._resetStr, obj._reset); }
+
+      // Kill animation, action and attribute runtime string
+      s.off(obj._runtimeStr, obj._run);
+
+      // Set object to not active
+      this.imm.utils.log(this.imm, "Killed " + type + " '" + name + "'");
+      obj._active = false;
+
     },
 
     // Reinit Sections
@@ -176,103 +343,12 @@
         that.initSection.call(that, that.imm, s);
       });
 
-      // Update section offsets
+      // Force update section offsets
       $.Immerse.scrollController.updateSectionOffsets(this.imm);
     },
 
-    // Register
-
-    register: {
-
-    // Register Section Animations
+    // Extend defaults
     ///////////////////////////////////////////////////////
-
-      animations: function(s, n, a) {
-
-        // Proceed or kill based upon device selection
-        if ($.Immerse.viewportController.isView(this.imm, a) === false) { return false };
-
-        var t = new TimelineMax({ paused: true }),
-            c = a.timeline(s),
-            d = !isNaN(a.delay) ? a.delay : null,
-            r = a.hasOwnProperty('runtime') ? a.runtime : ['enteringDown', 'enteringUp'],
-            runtimeStr, resetStr,
-            that = this;
-
-        // If there's a delay, add it to start of timeline
-        if (d !== null) { t.set({}, {}, "+=" + d); }
-        // Add content to the timeline
-        t.add(c);
-
-        // Prepare runtimes
-        $.each(r, function(i, r) { runtimeStr = runtimeStr + ' ' + r; });
-        // Prepare resets
-        $.each(a.reset, function(i, r) { resetStr = resetStr + ' ' + r; });
-
-        s.on(runtimeStr, function() {
-          that.imm.utils.log(that.imm, "Running animation '" + n + "'");
-          t.play();
-        });
-
-        s.on(resetStr, function() {
-          that.imm.utils.log(that.imm, "Resetting animation '" + n + "'");
-          t.pause(0, true);
-        });
-
-      },
-
-      // Register Section Actions
-      ///////////////////////////////////////////////////////
-
-      actions: function(s, n, a) {
-
-        // Proceed or kill based upon device selection
-        if ($.Immerse.viewportController.isView(this.imm, a) === false) { return false };
-
-        var action = a.action,
-            d = !isNaN(a.delay) ? a.delay : 0,
-            runtimeStr,
-            r = a.hasOwnProperty('runtime') ? a.runtime : ['enteringDown', 'enteringUp'],
-            that = this;
-
-        // Prepare runtimes
-        $.each(r, function(i, r) { runtimeStr = runtimeStr + ' ' + r; });
-
-        s.on(runtimeStr, function() {
-          setTimeout(function() {
-            that.imm.utils.log(that.imm, "Running action: '" + n + "'");
-            action.call(that, s);
-          }, d);
-        });
-
-      },
-
-      // Register Section Attributes
-      ///////////////////////////////////////////////////////
-
-      attributes: function(s, n, a) {
-
-        // Proceed or kill based upon device selection
-        if ($.Immerse.viewportController.isView(this.imm, a) === false) { return false };
-
-        var value = a.value,
-            d = !isNaN(a.delay) ? a.delay : 0,
-            runtimeStr,
-            r = a.hasOwnProperty('runtime') ? a.runtime : ['enteringDown', 'enteringUp'],
-            that = this;
-
-        // Prepare runtimes
-        $.each(r, function(i, r) { runtimeStr = runtimeStr + ' ' + r; });
-
-        s.on(runtimeStr, function() {
-          setTimeout(function() {
-            that.imm.utils.log(that.imm, "Attribute '" + n + "' updated to '" + value + "'");
-            that.imm.$elem.trigger(n, value);
-          }, d);
-        });
-      }
-
-    },
 
     extendDefaults: {
       attributes: function(defaults) {

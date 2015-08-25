@@ -93,7 +93,7 @@
       if (currentBreakpoint !== newBreakpoint) {
         this.imm._breakpoint = newBreakpoint;
         if (currentBreakpoint) {
-//           $.Immerse.sectionController.reinitSections(this.imm);
+          $.Immerse.sectionController.reinitSections(this.imm);
           this.imm.utils.log(this.imm, "Screen resized to '" + newBreakpoint + "'");
         }
       }
