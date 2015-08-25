@@ -214,6 +214,9 @@ page.section({
       // Define which devices to target. Defaults to both.
       devices: ['touch', 'desktop'],
       
+      // Define which breakpoints to target. Defaults to all.
+      breakpoints: ['mobile', 'tablet', 'mdDesktop', 'lgDesktop'],
+      
       // Define runtime. Defaults to when the section is enteringDown & enteringUp.
       // All runtimes: ['init', 'enteringDown', 'enteringUp', 'enteredDown', 'enteredUp', 'exitingDown', 'exitingUp']
       runtime: ['enteringDown', 'enteringUp'],
@@ -263,8 +266,9 @@ new Immerse().setup({
     // Name the attribute
     'navColor': {
       
-      // Device and runtime targeting available in attributes too!
+      // Device, breakpoint and runtime targeting available in attributes too!
       devices: ['touch', 'desktop'],
+      breakpoints: ['mobile', 'tablet', 'mdDesktop', 'lgDesktop'],
       runtime: ['enteringDown', 'enteringUp'],
       
       // Define the default value
@@ -317,8 +321,9 @@ page.section({
     // Name the action
     'actionName': {
       
-      // Device and runtime targeting available in actions too!
+      // Device, breakpoint and runtime targeting available in actions too!
       devices: ['touch', 'desktop'],
+      breakpoints: ['mobile', 'tablet', 'mdDesktop', 'lgDesktop'],
       runtime: ['enteringDown', 'enteringUp'],
       
       // Define the default value
