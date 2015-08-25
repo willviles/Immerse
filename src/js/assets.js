@@ -191,6 +191,7 @@
             });
             // Trigger init of whole plugin
             that.imm.$elem.trigger('immInit');
+            that.imm._isInitialized = true;
             // Hide loading
             $('.' + loadingOverlayClass).hide();
           }, remainingLoad);

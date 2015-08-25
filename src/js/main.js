@@ -62,6 +62,7 @@ var Immerse = function() {};
       this.elem = this.$elem[0];
       this._assets = this.setup.assets;
       this._sections = [];
+      this._isInitialized = false;
       this._isScrolling = false;
       this._canScroll = true;
       this._allAudio = [];

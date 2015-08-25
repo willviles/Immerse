@@ -240,7 +240,15 @@
         registration.section.on(obj._runtimeStr, obj._run);
         registration.section.on(obj._resetStr, obj._reset);
 
-        this.imm.utils.log(this.imm, "Registered " + registration.type + " '" + registration.name + "'");
+        // Set starting animation state
+        var currentSection = this.imm._currentSection;
+
+        // If we're on the section the animation is registered on, set animation progress to finished
+        if (currentSection !== undefined && $(currentSection.element)[0] === registration.section[0]) {
+          obj._timeline.progress(1, false);
+        };
+
+//         this.imm.utils.log(this.imm, "Registered " + registration.type + " '" + registration.name + "'");
         obj._active = true;
 
       },
@@ -278,7 +286,7 @@
           registration.section.on(obj._resetStr, obj._reset);
         }
 
-        this.imm.utils.log(this.imm, "Registered " + registration.type + " '" + registration.name + "'");
+//         this.imm.utils.log(this.imm, "Registered " + registration.type + " '" + registration.name + "'");
         obj._active = true;
 
       },
@@ -308,7 +316,7 @@
         }
         registration.section.on(obj._runtimeStr, obj._run);
 
-        this.imm.utils.log(this.imm, "Registered " + registration.type + " '" + registration.name + "'");
+//         this.imm.utils.log(this.imm, "Registered " + registration.type + " '" + registration.name + "'");
         obj._active = true;
       }
 
