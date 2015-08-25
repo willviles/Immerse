@@ -142,31 +142,56 @@
           fullscreenClass = this.imm.utils.namespacify.call(this.imm, 'fullscreen'),
           that = this;
 
+      s._register = { queue: [] };
+      s._kill = {
+        promise: jQuery.Deferred(),
+        queue: [],
+        queueCheck: function() {
+          if (s._kill.queue.length === 0) { s._kill.promise.resolve('killed'); }
+        }
+      };
+
       // Register Animations
       $.each(s.animations, function(name, animation) {
-        var registration = { section: $s };
+        var registration = { section: s, $section: $s };
         registration.type = 'animation'; registration.name = name; registration.obj = animation;
         that.registrationHandler.call(that, registration);
       });
       // Register Actions
       $.each(s.actions, function(name, action) {
-        var registration = { section: $s };
+        var registration = { section: s, $section: $s };
         registration.type = 'action'; registration.name = name; registration.obj = action;
         that.registrationHandler.call(that, registration);
       });
       // Register Attributes
       $.each(s.attributes, function(name, attribute) {
-        var registration = { section: $s };
+        var registration = { section: s, $section: $s };
         registration.type = 'attribute'; registration.name = name; registration.obj = attribute;
         that.registrationHandler.call(that, registration);
       });
-      // Remove -fullscreen classes if scroll is programatically set to be unbound
-      if ($.Immerse.scrollController.isScrollUnbound(that.imm, s)) {
-        $s.removeClass(fullscreenClass);
-      // Otherwise add it if it should be present
-      } else {
-        $s.addClass(fullscreenClass);
-      };
+
+      // Need to systematically kill events, AND ONLY THEN re-initialize the new ones
+      // Some sort of queue is required with a promise statement.
+      $.each(s._kill.queue, function(i, registration) {
+        that.kill.all.call(that, registration);
+      });
+
+      s._kill.queueCheck.call(this);
+
+      $.when(s._kill.promise.promise()).then(
+        function() {
+          $.each(s._register.queue, function(i, registration) {
+            that.register[registration.type].call(that, registration);
+          });
+          // Remove -fullscreen classes if scroll is programatically set to be unbound
+          if ($.Immerse.scrollController.isScrollUnbound(that.imm, s)) {
+            $s.removeClass(fullscreenClass);
+          // Otherwise add it if it should be present
+          } else {
+            $s.addClass(fullscreenClass);
+          };
+        }
+      );
     },
 
     // Registration Handler
@@ -179,7 +204,7 @@
 
         // If it's not active, register it.
         if (!registration.obj._active) {
-          this.register[registration.type].call(this, registration);
+          registration.section._register.queue.push(registration);
 
         // But if it is, don't re-register.
         } else {
@@ -190,7 +215,7 @@
       } else {
         // If it's active, we need to kill it.
         if (registration.obj._active) {
-          this.kill.call(this, registration);
+          registration.section._kill.queue.push(registration);
 
         // But if it isn't, it is of no consequence
         } else {
@@ -204,6 +229,8 @@
 
     register: {
 
+    // Queue defined in init section
+
     // Register Section Animation
     ///////////////////////////////////////////////////////
 
@@ -213,7 +240,7 @@
             that = this;
 
         obj._timeline = new TimelineMax({ paused: true });
-        obj._timelineContent = obj.timeline(registration.section);
+        obj._timelineContent = obj.timeline(registration.$section);
         obj.delay = !isNaN(obj.delay) ? obj.delay : null;
         obj.runtime = obj.hasOwnProperty('runtime') ? obj.runtime : ['enteringDown', 'enteringUp'];
 
@@ -239,15 +266,17 @@
           obj._timeline.pause(0, true);
         }
 
-        registration.section.on(obj._runtimeStr, obj['_run']);
-        registration.section.on(obj._resetStr, obj['_reset']);
+        registration.$section.on(obj._runtimeStr, obj['_run']);
+        registration.$section.on(obj._resetStr, obj['_reset']);
 
         // Set starting animation state
         var currentSection = this.imm._currentSection;
 
         // If we're on the section the animation is registered on, set animation progress to finished
-        if (currentSection !== undefined && $(currentSection.element)[0] === registration.section[0]) {
+        if (currentSection !== undefined && $(currentSection.element)[0] === registration.$section[0]) {
           obj._timeline.progress(1, false);
+        } else {
+          obj._timeline.pause(0, true);
         };
 
 //         this.imm.utils.log(this.imm, "Registered " + registration.type + " '" + registration.name + "'");
@@ -285,7 +314,7 @@
             that.imm.utils.log(that.imm, "Clearing " + registration.type + " '" + registration.name + "'");
             obj.clear.call(that, s);
           }
-          registration.section.on(obj._resetStr, obj['_reset']);
+          registration.$section.on(obj._resetStr, obj['_reset']);
         }
 
 //         this.imm.utils.log(this.imm, "Registered " + registration.type + " '" + registration.name + "'");
@@ -317,7 +346,7 @@
           }, obj.delay);
         }
 
-        registration.section.on(obj._runtimeStr, obj['_run']);
+        registration.$section.on(obj._runtimeStr, obj['_run']);
 
 //         this.imm.utils.log(this.imm, "Registered " + registration.type + " '" + registration.name + "'");
         obj._active = true;
@@ -325,26 +354,50 @@
 
     },
 
-    // Kill object
+    // Kill
     ///////////////////////////////////////////////////////
 
-    kill: function(registration) {
+    kill: {
 
-      var obj = registration.obj;
+      // Promise, queue, queueCheck defined in initSection
 
-      // Kill animation timeline
-      if (registration.type === 'animation') { obj._timeline.progress(1, false).kill(); }
+      // Kill all
+      all: function(registration) {
+        var obj = registration.obj;
 
-      // Kill animation & actions reset string
-      if (registration.type === 'animation' || registration.type === 'action') { registration.section.off(obj._resetStr, obj._reset); }
+        // Kill animation timeline
+        if (registration.type === 'animation') {
+          this.kill.timeline.call(this, obj._timeline);
+        }
 
-      // Kill animation, action and attribute runtime string
-      registration.section.off(obj._runtimeStr, obj._run);
+        // Kill animation & actions reset string
+        if (registration.type === 'animation' || registration.type === 'action') { registration.$section.off(obj._resetStr, obj._reset); }
 
-      // Set object to not active
-      this.imm.utils.log(this.imm, "Killed " + registration.type + " '" + registration.name + "'");
-      obj._active = false;
+        // Kill animation, action and attribute runtime string
+        registration.$section.off(obj._runtimeStr, obj._run);
 
+        // Set object to not active
+//         this.imm.utils.log(this.imm, "Killed " + registration.type + " '" + registration.name + "'");
+        obj._active = false;
+
+        // Remove from kill queue
+        var removeFromQueue = registration.section._kill.queue.filter(function(i, queueObj) {
+          return queueObj.name === registration.name && queueObj.section[0] === registration.$section[0]
+        });
+        registration.section._kill.queue.splice( $.inArray(removeFromQueue, registration.section._kill.queue), 1);
+        registration.section._kill.queueCheck.call(this);
+      },
+
+      // Kill timeline
+      timeline: function(timeline) {
+        var tweens = timeline.getChildren();
+        timeline.kill();
+        $.each(tweens, function(i, tween) {
+          if (tween.target.selector) {
+            TweenMax.set(tween.target.selector, { clearProps:'all' });
+          }
+        });
+      }
     },
 
     // Reinit Sections
@@ -363,6 +416,8 @@
       // Force update section offsets
       $.Immerse.scrollController.updateSectionOffsets(this.imm);
     },
+
+
 
     // Extend defaults
     ///////////////////////////////////////////////////////

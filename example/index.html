@@ -333,15 +333,15 @@
               delay: .5,
               timeline: function(s) {
                 return [
-                  TweenMax.from(s.find('.title'), 2, {
-                    opacity: 0, x: -70, ease: Elastic.easeOut.config(1, 0.3)
-                  }),
-                  TweenMax.from(s.find('.subtitle'), 3, {
-                    opacity: 0, x: -70, delay: 1, ease: Power4.easeOut
-                  }),
-                  TweenMax.from(s.find('.buttons'), 3, {
-                    opacity: 0, y: 20, delay: 1.25, ease: Power4.easeOut
-                  })
+                  TweenMax.from(s.find('.title'), 2,
+                    { opacity: 0, x: -70, ease: Elastic.easeOut.config(1, 0.3) }
+                  ),
+                  TweenMax.from(s.find('.subtitle'), 3,
+                    { opacity: 0, x: -70, delay: 1, ease: Power4.easeOut }
+                  ),
+                  TweenMax.from(s.find('.buttons'), 3,
+                    { opacity: 0, y: 20, delay: 1.25, ease: Power4.easeOut }
+                  )
                 ]
               }
             },
@@ -353,15 +353,18 @@
               delay: .5,
               timeline: function(s) {
                 return [
-                  TweenMax.from(s.find('.title'), 1.5, {
-                    opacity: 0, y: -40, ease: Elastic.easeOut.config(1, 0.3)
-                  }),
-                  TweenMax.from(s.find('.subtitle'), 2, {
-                    opacity: 0, y: -40, delay: .5, ease: Power4.easeOut
-                  }),
-                  TweenMax.from(s.find('.buttons'), 2.5, {
-                    opacity: 0, y: 20, delay: .8, ease: Power4.easeOut
-                  })
+                  TweenMax.fromTo(s.find('.title'), 1.5,
+                    { opacity: 0, y: -40, },
+                    { opacity: 1, y: 0, ease: Elastic.easeOut.config(1, 0.3)}
+                  ),
+                  TweenMax.fromTo(s.find('.subtitle'), 2,
+                    { opacity: 0, y: -40 },
+                    { opacity: 1, y: 0, delay: .5, ease: Power4.easeOut }
+                  ),
+                  TweenMax.fromTo(s.find('.buttons'), 2.5,
+                    { opacity: 0, y: 20 },
+                    { opacity: 1, y: 0, delay: .8, ease: Power4.easeOut }
+                  )
                 ]
               }
             }
