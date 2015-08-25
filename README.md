@@ -555,11 +555,9 @@ Custom Immerse.js components will be available for anyone to develop in the near
 
 ## Future Developments
 &#10004; Section hash state management.  
-&#10004; YouTube modal windows.  
-&#9744; Vimeo modal windows.  
-&#9744; Set of easily-attachable modal window open/close animations.  
+&#9744; Allow state tracking using history.pushState as well as history.replaceState.  
+&#9744; Set of easily-attachable modal window open/close animations. Inspiration <a href="http://tympanus.net/Development/ModalWindowEffects/" title="Codrops modal window effects inspiration" target="_blank">here</a>.
 &#9744; Set of easily-attachable section transitions. Inspiration <a href="http://codyhouse.co/gem/page-scroll-effects/" title="Codyhouse page scroll effects" target="_blank">here</a>.  
-&#9744; Option to use history.pushState as well as history.replaceState.  
 
 *Got a feature request? Tweet <a href="https://twitter.com/willviles" title="Will Viles Twitter @willviles" target="_blank">@willviles</a> or <a href="https://github.com/willviles/Immerse.js/issues/new" title="Immerse.js New Issue" target="_blank">open an issue</a>.*
 
@@ -568,9 +566,11 @@ Immerse.js aims to support all major browsers in recent versions:
 Firefox 26+, Chrome 30+, Safari 5.1+, Opera 10+, IE 9+
 
 ## About the Author
-I'm Will Viles, a digital creative from Birmingham, UK. I can offer help & custom site builds using Immerse.js. 
+I'm Will Viles, a digital creative from Birmingham, UK. 
 
-Check out <a href="http://vil.es" title="Will Viles - Digital Creative" target="_blank">my website</a> or contact me on <a href="https://twitter.com/willviles" title="Will Viles Twitter @willviles" target="_blank">Twitter</a>.
+With a degree in marketing and design/development skills, I specialise in developing creative, effective one page scrolling websites. I can offer help, guidance & custom site builds using Immerse.js. Feel free to get in contact.
+
+*Check out <a href="http://vil.es" title="Will Viles - Digital Creative" target="_blank">my website</a> or contact me on <a href="https://twitter.com/willviles" title="Will Viles Twitter @willviles" target="_blank">Twitter</a>.*
 
 ## License
 Immerse.js is dual licensed under the MIT license and GPL.
