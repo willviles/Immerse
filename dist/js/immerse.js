@@ -332,21 +332,23 @@ var Immerse = function() {};
 
       var $s = $(s.element),
           fullscreenClass = this.imm.utils.namespacify.call(this.imm, 'fullscreen'),
-          registration = { section: $s },
           that = this;
 
       // Register Animations
       $.each(s.animations, function(name, animation) {
+        var registration = { section: $s };
         registration.type = 'animation'; registration.name = name; registration.obj = animation;
         that.registrationHandler.call(that, registration);
       });
       // Register Actions
       $.each(s.actions, function(name, action) {
+        var registration = { section: $s };
         registration.type = 'action'; registration.name = name; registration.obj = action;
         that.registrationHandler.call(that, registration);
       });
       // Register Attributes
       $.each(s.attributes, function(name, attribute) {
+        var registration = { section: $s };
         registration.type = 'attribute'; registration.name = name; registration.obj = attribute;
         that.registrationHandler.call(that, registration);
       });
@@ -419,18 +421,18 @@ var Immerse = function() {};
         // Prepare resets
         $.each(obj.reset, function(i, r) { obj._resetStr = obj._resetStr + ' ' + r; });
 
-        obj._run = function() {
+        obj._run = function(e) {
           that.imm.utils.log(that.imm, "Running " + registration.type + " '" + registration.name + "'");
           obj._timeline.play();
         }
 
-        obj._reset = function() {
+        obj._reset = function(e) {
           that.imm.utils.log(that.imm, "Resetting " + registration.type + " '" + registration.name + "'");
           obj._timeline.pause(0, true);
         }
 
-        registration.section.on(obj._runtimeStr, obj._run);
-        registration.section.on(obj._resetStr, obj._reset);
+        registration.section.on(obj._runtimeStr, obj['_run']);
+        registration.section.on(obj._resetStr, obj['_reset']);
 
         // Set starting animation state
         var currentSection = this.imm._currentSection;
@@ -468,14 +470,14 @@ var Immerse = function() {};
           }, obj.delay);
         }
 
-        s.on(obj._runtimeStr, obj._run);
+        s.on(obj._runtimeStr, obj['_run']);
 
         if (obj.clear) {
           obj._reset = function() {
             that.imm.utils.log(that.imm, "Clearing " + registration.type + " '" + registration.name + "'");
             obj.clear.call(that, s);
           }
-          registration.section.on(obj._resetStr, obj._reset);
+          registration.section.on(obj._resetStr, obj['_reset']);
         }
 
 //         this.imm.utils.log(this.imm, "Registered " + registration.type + " '" + registration.name + "'");
@@ -499,14 +501,15 @@ var Immerse = function() {};
         // Prepare runtimes
         $.each(obj.runtime, function(i, r) { obj._runtimeStr = obj._runtimeStr + ' ' + r; });
 
-        obj._run = function() {
+        obj._run = function(e) {
           setTimeout(function() {
             var typeString = that.imm.utils.stringify(registration.type);
             that.imm.utils.log(that.imm, typeString + " '" + registration.name + "' updated to '" + obj.value + "'");
             that.imm.$elem.trigger(registration.name, obj.value);
           }, obj.delay);
         }
-        registration.section.on(obj._runtimeStr, obj._run);
+
+        registration.section.on(obj._runtimeStr, obj['_run']);
 
 //         this.imm.utils.log(this.imm, "Registered " + registration.type + " '" + registration.name + "'");
         obj._active = true;
@@ -532,7 +535,6 @@ var Immerse = function() {};
 
       // Set object to not active
       this.imm.utils.log(this.imm, "Killed " + registration.type + " '" + registration.name + "'");
-
       obj._active = false;
 
     },
