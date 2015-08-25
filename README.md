@@ -197,7 +197,9 @@ page.audio('unmute'); // Unmutes audio
 
 ## Animations
 
-One of Immerse's key features is offering a clean, easy to read interface for creating animations and targeting them at devices, breakpoints and runtimes. Multiple GSAP animations can be set on one individual DOM element and each animation will be appropriately registered/removed by Immerse.js when its breakpoint declaration is met on window resize.
+One of Immerse's key features is offering a clean, easy to read interface for creating animations and targeting them at devices, breakpoints and runtimes. 
+
+Multiple animations can be set on the same DOM element and each animation will be appropriately registered/removed by Immerse.js when its breakpoint declaration is met on window resize.
 
 #### Configuring animation timelines
 
