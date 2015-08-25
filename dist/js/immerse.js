@@ -331,19 +331,23 @@ var Immerse = function() {};
 
       var $s = $(s.element),
           fullscreenClass = this.imm.utils.namespacify.call(this.imm, 'fullscreen'),
+          registration = { section: $s },
           that = this;
 
       // Register Animations
       $.each(s.animations, function(name, animation) {
-        that.registrationHandler.call(that, 'animations', $s, name, animation);
+        registration.type = 'animation'; registration.name = name; registration.obj = animation;
+        that.registrationHandler.call(that, registration);
       });
       // Register Actions
       $.each(s.actions, function(name, action) {
-        that.registrationHandler.call(that, 'actions', $s, name, action);
+        registration.type = 'action'; registration.name = name; registration.obj = action;
+        that.registrationHandler.call(that, registration);
       });
       // Register Attributes
-      $.each(s.attributes, function(name, attr) {
-        that.registrationHandler.call(that, 'attributes', $s, name, attr);
+      $.each(s.attributes, function(name, attribute) {
+        registration.type = 'attribute'; registration.name = name; registration.obj = attribute;
+        that.registrationHandler.call(that, registration);
       });
       // Remove -fullscreen classes if scroll is programatically set to be unbound
       if ($.Immerse.scrollController.isScrollUnbound(that.imm, s)) {
@@ -357,14 +361,14 @@ var Immerse = function() {};
     // Registration Handler
     ///////////////////////////////////////////////////////
 
-    registrationHandler: function(type, $s, name, obj) {
+    registrationHandler: function(registration) {
 
       // If view targeted
-      if ($.Immerse.viewportController.isView(this.imm, obj)) {
+      if ($.Immerse.viewportController.isView(this.imm, registration.obj)) {
 
         // If it's not active, register it.
-        if (!obj._active) {
-          this.register[type].call(this, $s, name, obj);
+        if (!registration.obj._active) {
+          this.register[registration.type].call(this, registration);
 
         // But if it is, don't re-register.
         } else {
@@ -374,8 +378,8 @@ var Immerse = function() {};
       // If view isn't targeted
       } else {
         // If it's active, we need to kill it.
-        if (obj._active) {
-          this.kill.call(this, type, $s, name, obj);
+        if (registration.obj._active) {
+          this.kill.call(this, registration);
 
         // But if it isn't, it is of no consequence
         } else {
@@ -389,113 +393,113 @@ var Immerse = function() {};
 
     register: {
 
-    // Register Section Animations
+    // Register Section Animation
     ///////////////////////////////////////////////////////
 
-      animations: function(s, n, obj) {
+      animation: function(registration) {
 
-        var t = new TimelineMax({ paused: true }),
-            c = obj.timeline(s),
-            d = !isNaN(obj.delay) ? obj.delay : null,
-            r = obj.hasOwnProperty('runtime') ? obj.runtime : ['enteringDown', 'enteringUp'],
+        var obj = registration.obj,
             that = this;
+
+        obj._timeline = new TimelineMax({ paused: true });
+        obj._timelineContent = obj.timeline(registration.section);
+        obj.delay = !isNaN(obj.delay) ? obj.delay : null;
+        obj.runtime = obj.hasOwnProperty('runtime') ? obj.runtime : ['enteringDown', 'enteringUp'];
 
         // If there's a delay, add it to start of timeline
-        if (d !== null) { t.set({}, {}, "+=" + d); }
+        if (obj.delay !== null) { obj._timeline.set({}, {}, "+=" + obj.delay); }
         // Add content to the timeline
-        t.add(c);
-
-        obj._timeline = t; obj._runtimeStr = ''; obj._resetStr = '';
-
-        // Prepare runtimes
-        $.each(r, function(i, r) { obj._runtimeStr = obj._runtimeStr + ' ' + r; });
-        // Prepare resets
-        $.each(obj.reset, function(i, r) { obj._resetStr = obj._resetStr + ' ' + r; });
-
-
-        obj._run = function() {
-          that.imm.utils.log(that.imm, "Running animation '" + n + "'");
-          obj._timeline.play();
-        }
-
-        obj._reset = function() {
-          that.imm.utils.log(that.imm, "Resetting animation '" + n + "'");
-          obj._timeline.pause(0, true);
-        }
-
-        s.on(obj._runtimeStr, obj._run);
-        s.on(obj._resetStr, obj._reset);
-
-        this.imm.utils.log(this.imm, "Registered animation '" + n + "'");
-        obj._active = true;
-
-      },
-
-      // Register Section Actions
-      ///////////////////////////////////////////////////////
-
-      actions: function(s, n, obj) {
-
-        // Proceed or kill based upon device selection
-        if ($.Immerse.viewportController.isView(this.imm, obj) === false) { return false };
-
-        var d = !isNaN(obj.delay) ? obj.delay : 0,
-            r = obj.hasOwnProperty('runtime') ? obj.runtime : ['enteringDown', 'enteringUp'],
-            that = this;
+        obj._timeline.add(obj._timelineContent);
 
         obj._runtimeStr = ''; obj._resetStr = '';
 
         // Prepare runtimes
-        $.each(r, function(i, r) { obj._runtimeStr = obj._runtimeStr + ' ' + r; });
+        $.each(obj.runtime, function(i, r) { obj._runtimeStr = obj._runtimeStr + ' ' + r; });
+        // Prepare resets
+        $.each(obj.reset, function(i, r) { obj._resetStr = obj._resetStr + ' ' + r; });
+
+        obj._run = function() {
+          that.imm.utils.log(that.imm, "Running " + registration.type + " '" + registration.name + "'");
+          obj._timeline.play();
+        }
+
+        obj._reset = function() {
+          that.imm.utils.log(that.imm, "Resetting " + registration.type + " '" + registration.name + "'");
+          obj._timeline.pause(0, true);
+        }
+
+        registration.section.on(obj._runtimeStr, obj._run);
+        registration.section.on(obj._resetStr, obj._reset);
+
+        this.imm.utils.log(this.imm, "Registered " + registration.type + " '" + registration.name + "'");
+        obj._active = true;
+
+      },
+
+      // Register Section Action
+      ///////////////////////////////////////////////////////
+
+      action: function(registration) {
+
+        var obj = registration.obj,
+            that = this;
+
+        obj.delay = !isNaN(obj.delay) ? obj.delay : null;
+        obj.runtime = obj.hasOwnProperty('runtime') ? obj.runtime : ['enteringDown', 'enteringUp'];
+
+        obj._runtimeStr = ''; obj._resetStr = '';
+
+        // Prepare runtimes
+        $.each(obj.runtime, function(i, r) { obj._runtimeStr = obj._runtimeStr + ' ' + r; });
 
         obj._run = function() {
           setTimeout(function() {
-            that.imm.utils.log(that.imm, "Running action: '" + n + "'");
+            that.imm.utils.log(that.imm, "Running " + registration.type + " '" + registration.name + "'");
             obj.action.call(that, s);
-          }, d);
+          }, obj.delay);
         }
 
         s.on(obj._runtimeStr, obj._run);
 
         if (obj.clear) {
           obj._reset = function() {
-            that.imm.utils.log(that.imm, "Clearing action: '" + n + "'");
+            that.imm.utils.log(that.imm, "Clearing " + registration.type + " '" + registration.name + "'");
             obj.clear.call(that, s);
           }
-          s.on(obj._resetStr, obj._reset);
+          registration.section.on(obj._resetStr, obj._reset);
         }
 
-        this.imm.utils.log(this.imm, "Registered action '" + n + "'");
+        this.imm.utils.log(this.imm, "Registered " + registration.type + " '" + registration.name + "'");
         obj._active = true;
 
       },
 
-      // Register Section Attributes
+      // Register Section Attribute
       ///////////////////////////////////////////////////////
 
-      attributes: function(s, n, obj) {
+      attribute: function(registration) {
 
-        // Proceed or kill based upon device selection
-        if ($.Immerse.viewportController.isView(this.imm, obj) === false) { return false };
-
-        var d = !isNaN(obj.delay) ? obj.delay : 0,
-            r = obj.hasOwnProperty('runtime') ? obj.runtime : ['enteringDown', 'enteringUp'],
+        var obj = registration.obj,
             that = this;
+
+        obj.delay = !isNaN(obj.delay) ? obj.delay : null;
+        obj.runtime = obj.hasOwnProperty('runtime') ? obj.runtime : ['enteringDown', 'enteringUp'];
 
         obj._runtimeStr = '';
 
         // Prepare runtimes
-        $.each(r, function(i, r) { obj._runtimeStr = obj._runtimeStr + ' ' + r; });
+        $.each(obj.runtime, function(i, r) { obj._runtimeStr = obj._runtimeStr + ' ' + r; });
 
         obj._run = function() {
           setTimeout(function() {
-            that.imm.utils.log(that.imm, "Attribute '" + n + "' updated to '" + a.value + "'");
-            that.imm.$elem.trigger(n, a.value);
-          }, d);
+            var typeString = that.imm.utils.stringify(registration.type);
+            that.imm.utils.log(that.imm, typeString + " '" + registration.name + "' updated to '" + obj.value + "'");
+            that.imm.$elem.trigger(registration.name, obj.value);
+          }, obj.delay);
         }
-        s.on(obj._runtimeStr, obj._run);
+        registration.section.on(obj._runtimeStr, obj._run);
 
-        this.imm.utils.log(this.imm, "Registered attribute '" + n + "'");
+        this.imm.utils.log(this.imm, "Registered " + registration.type + " '" + registration.name + "'");
         obj._active = true;
       }
 
@@ -504,19 +508,22 @@ var Immerse = function() {};
     // Kill object
     ///////////////////////////////////////////////////////
 
-    kill: function(type, s, name, obj) {
+    kill: function(registration) {
+
+      var obj = registration.obj;
 
       // Kill animation timeline
-      if (type === 'animations') { obj._timeline.progress(1, false).kill(); }
+      if (registration.type === 'animation') { obj._timeline.progress(1, false).kill(); }
 
       // Kill animation & actions reset string
-      if (type === 'animations' || type === 'actions') { s.off(obj._resetStr, obj._reset); }
+      if (registration.type === 'animation' || registration.type === 'action') { registration.section.off(obj._resetStr, obj._reset); }
 
       // Kill animation, action and attribute runtime string
-      s.off(obj._runtimeStr, obj._run);
+      registration.section.off(obj._runtimeStr, obj._run);
 
       // Set object to not active
-      this.imm.utils.log(this.imm, "Killed " + type + " '" + name + "'");
+      this.imm.utils.log(this.imm, "Killed " + registration.type + " '" + registration.name + "'");
+
       obj._active = false;
 
     },
