@@ -563,8 +563,9 @@ Custom Immerse.js components will be available for anyone to develop in the near
 ## Future Developments
 &#10004; Section hash state management.  
 &#9744; Allow state tracking using history.pushState as well as history.replaceState.  
-&#9744; Set of easily-attachable modal window open/close animations. Inspiration <a href="http://tympanus.net/Development/ModalWindowEffects/" title="Codrops modal window effects inspiration" target="_blank">here</a>.
+&#9744; Set of easily-attachable modal window open/close animations. Inspiration <a href="http://tympanus.net/Development/ModalWindowEffects/" title="Codrops modal window effects inspiration" target="_blank">here</a>.  
 &#9744; Set of easily-attachable section transitions. Inspiration <a href="http://codyhouse.co/gem/page-scroll-effects/" title="Codyhouse page scroll effects" target="_blank">here</a>.  
+&#9744; In time, the project will be moved away from a dependency on jQuery toward pure ECMAScript 6.    
 
 *Got a feature request? Tweet <a href="https://twitter.com/willviles" title="Will Viles Twitter @willviles" target="_blank">@willviles</a> or <a href="https://github.com/willviles/Immerse.js/issues/new" title="Immerse.js New Issue" target="_blank">open an issue</a>.*
 
