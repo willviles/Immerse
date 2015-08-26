@@ -44,8 +44,9 @@
 
     events: {
       scroll: function() {
-        this.imm._scrollContainer.off('mousewheel wheel DOMMouseScroll')
-                                  .on('mousewheel wheel DOMMouseScroll', this.handlers.scroll.detect.bind(this));
+        var mousewheelEvent = (/Firefox/i.test(navigator.userAgent))? 'DOMMouseScroll' : 'mousewheel';
+        this.imm._scrollContainer.off(mousewheelEvent + ' wheel')
+                                 .on(mousewheelEvent + ' wheel', this.handlers.scroll.detect.bind(this));
       },
 
       keys: function() {
@@ -95,12 +96,10 @@
             } else {
               // Disable browser scroll
               this.handlers.scroll.toggle('disable', e);
-              // Fire animation to next section
-              if (e.originalEvent.wheelDelta >= 0) {
-                this.ifCanThenGo.call(this, this.imm, 'UP');
-              } else {
-                this.ifCanThenGo.call(this, this.imm, 'DOWN');
-              }
+
+              var direction = this.utils.getScrollDirection(e);
+
+              this.ifCanThenGo.call(this, this.imm, direction);
             }
           }
         },
@@ -112,9 +111,11 @@
             e.returnValue = false;
           }
 
+          var mousewheelEvent = (/Firefox/i.test(navigator.userAgent))? 'DOMMouseScroll wheel' : 'mousewheel wheel';
+
           if (status === 'enable') {
             if (window.removeEventListener) {
-              window.removeEventListener('DOMMouseScroll', preventDefaultScroll, false);
+              window.removeEventListener(mousewheelEvent, preventDefaultScroll, false);
             }
             window.onmousewheel = document.onmousewheel = null;
             window.onwheel = null;
@@ -122,7 +123,7 @@
 
           } else if (status === 'disable') {
             if (window.addEventListener) {
-              window.addEventListener('DOMMouseScroll', preventDefaultScroll, false);
+              window.addEventListener(mousewheelEvent, preventDefaultScroll, false);
             }
             window.onwheel = preventDefaultScroll; // modern standard
             window.onmousewheel = document.onmousewheel = preventDefaultScroll; // older browsers, IE
@@ -367,7 +368,7 @@
           above: that.imm._sectionAbove
         }]);
 
-        TweenLite.to(this.imm.$elem, dur, {
+        TweenLite.to(window, dur, {
           scrollTo: { y: dist, autoKill: false },
           ease: easing,
           onComplete: function() {
@@ -422,7 +423,7 @@
       // If scrollTop is above current section
       if (isAbove) {
         // If it's a scroll event and we're not scrolling upwards (i.e, we're just at the top of the section)
-        if (this.utils.isScrollEvent(e) && e.originalEvent.wheelDelta < 0) { return; };
+        if (this.utils.isScrollEvent(e) && this.utils.getScrollDirection(e) !== 'UP') { return; }
         // If it's a keydown event and we're not pressing upwards
         if (this.utils.isKeydownEvent(e) && e.which !== 38) { return; }
         // If above section is also unbound
@@ -440,7 +441,7 @@
 
       } else if (isBelow) {
         // If it's a scroll event and we're not scrolling download (i.e, we're just at the bottom end of the section)
-        if (this.utils.isScrollEvent(e) && e.originalEvent.wheelDelta >= 0) { return; };
+        if (this.utils.isScrollEvent(e) && this.utils.getScrollDirection(e) !== 'DOWN') { return; }
         // If it's a keydown event and we're not pressing upwards
         if (this.utils.isKeydownEvent(e) && e.which !== 40) { return; }
         // If below section is also unbound
@@ -503,6 +504,30 @@
     utils: {
       isScrollEvent: function(e) {
         return e.type === 'wheel' || e.type === 'DOMMouseScroll' || e.type === 'mousewheel';
+      },
+
+      getScrollDirection: function(e) {
+        var direction;
+        if(typeof e.originalEvent.detail == 'number' && e.originalEvent.detail !== 0) {
+          if(e.originalEvent.detail > 0) {
+            direction = 'DOWN';
+          } else if(e.originalEvent.detail < 0){
+            direction = 'UP';
+          }
+        } else if (typeof e.originalEvent.wheelDelta == 'number') {
+          if(e.originalEvent.wheelDelta < 0) {
+            direction = 'DOWN';
+          } else if(e.originalEvent.wheelDelta > 0) {
+            direction = 'UP';
+          }
+        } else if (typeof e.originalEvent.deltaY == 'number') {
+          if(e.originalEvent.deltaY > 0) {
+            direction = 'DOWN';
+          } else if (e.originalEvent.deltaY < 0) {
+            direction = 'UP';
+          }
+        }
+        return direction;
       },
 
       isKeydownEvent: function(e) {
