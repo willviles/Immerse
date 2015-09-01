@@ -35,12 +35,17 @@
 
       this.imm = imm;
 
-      // Generate correct jQuery reference to section here
-      // Set both the id and the element
-
       section.id = id;
       section.name = (section.hasOwnProperty('name')) ? section.name : this.imm.utils.stringify(id);
       section.element = $(this.imm.utils.sectionify.call(this.imm, id));
+
+      var unboundTag = this.imm.utils.namespacify.call(this.imm, 'unbound'),
+          unboundTagExists = section.element.attr('data-' + unboundTag) === 'true' ? true : false;
+
+      section.options = section.hasOwnProperty('options') ? section.options : {};
+      section.options.unbindScroll = section.options.hasOwnProperty('unbindScroll') ?
+                                     section.options.unbindScroll :
+                                     unboundTagExists;
 
       // Get defined defaults
       var defaults = (!this.imm.setup.hasOwnProperty('sectionDefaults')) ?
@@ -87,7 +92,7 @@
       var $allSectionElems = $(this.imm.utils.sectionify.call(this.imm)),
           // FIX: If no sections have been defined (all generated), ensure defaults are extended
           sectionDefaults = (!this.imm.setup.hasOwnProperty('sectionDefaults')) ? this.extendAllDefaults.call(this) : this.imm.setup.sectionDefaults,
-          fullscreenClass = this.imm.utils.namespacify.call(this.imm, 'fullscreen'),
+          unboundTag = this.imm.utils.namespacify.call(this.imm, 'unbound'),
           that = this;
 
       // Generate all sections from DOM elements
@@ -97,7 +102,7 @@
             generatedSection = sectionDefaults,
             id = $s.data('imm-section'),
             n = that.imm.utils.stringify(id),
-            u = $s.hasClass(fullscreenClass) ? false : true,
+            u = $s.data(unboundTag) === true ? true : false,
             newVals = {
               element: $s,
               id: id,
@@ -106,7 +111,7 @@
                 unbindScroll: u
               }
             };
-        generatedSection = $.extend({}, generatedSection, newVals);
+        generatedSection = $.extend(true, {}, generatedSection, newVals);
         that.imm._sections.push(generatedSection);
       });
 

@@ -232,12 +232,17 @@ var Immerse = function() {};
 
       this.imm = imm;
 
-      // Generate correct jQuery reference to section here
-      // Set both the id and the element
-
       section.id = id;
       section.name = (section.hasOwnProperty('name')) ? section.name : this.imm.utils.stringify(id);
       section.element = $(this.imm.utils.sectionify.call(this.imm, id));
+
+      var unboundTag = this.imm.utils.namespacify.call(this.imm, 'unbound'),
+          unboundTagExists = section.element.attr('data-' + unboundTag) === 'true' ? true : false;
+
+      section.options = section.hasOwnProperty('options') ? section.options : {};
+      section.options.unbindScroll = section.options.hasOwnProperty('unbindScroll') ?
+                                     section.options.unbindScroll :
+                                     unboundTagExists;
 
       // Get defined defaults
       var defaults = (!this.imm.setup.hasOwnProperty('sectionDefaults')) ?
@@ -284,7 +289,7 @@ var Immerse = function() {};
       var $allSectionElems = $(this.imm.utils.sectionify.call(this.imm)),
           // FIX: If no sections have been defined (all generated), ensure defaults are extended
           sectionDefaults = (!this.imm.setup.hasOwnProperty('sectionDefaults')) ? this.extendAllDefaults.call(this) : this.imm.setup.sectionDefaults,
-          fullscreenClass = this.imm.utils.namespacify.call(this.imm, 'fullscreen'),
+          unboundTag = this.imm.utils.namespacify.call(this.imm, 'unbound'),
           that = this;
 
       // Generate all sections from DOM elements
@@ -294,7 +299,7 @@ var Immerse = function() {};
             generatedSection = sectionDefaults,
             id = $s.data('imm-section'),
             n = that.imm.utils.stringify(id),
-            u = $s.hasClass(fullscreenClass) ? false : true,
+            u = $s.data(unboundTag) === true ? true : false,
             newVals = {
               element: $s,
               id: id,
@@ -303,7 +308,7 @@ var Immerse = function() {};
                 unbindScroll: u
               }
             };
-        generatedSection = $.extend({}, generatedSection, newVals);
+        generatedSection = $.extend(true, {}, generatedSection, newVals);
         that.imm._sections.push(generatedSection);
       });
 
@@ -1362,6 +1367,10 @@ var Immerse = function() {};
 
           var $a = $('audio#' + name), // Get audio
               d = !isNaN(o.delay) ? o.delay : 0; // If a delay is set
+
+          if ($a.length === 0) {
+            that.imm.utils.log(that.imm, "Asset Failure: Could not play audio asset '" + name + "'"); return;
+          }
 
           // Push to playing array
           that.imm._audioPlaying.push(name);
@@ -2759,10 +2768,10 @@ new Immerse().component({
 
       if (that.imm.setup.hasOwnProperty('assets')) {
         if (!that.imm.setup.assets.hasOwnProperty(videoName)) {
-          that.imm.utils.log(that.imm, "Asset Failure: Could not preload video asset '" + videoName + "'"); return;
+          that.imm.utils.log(that.imm, "Asset Failure: Could not initialize video asset '" + videoName + "'"); return;
         }
       } else {
-        that.imm.utils.log(that.imm, "Asset Failure: Could not preload video asset '" + videoName + "'"); return;
+        that.imm.utils.log(that.imm, "Asset Failure: Could not initialize video asset '" + videoName + "'"); return;
       }
 
       // If asset matches, initialize the video

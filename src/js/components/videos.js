@@ -26,10 +26,10 @@ new Immerse().component({
 
       if (that.imm.setup.hasOwnProperty('assets')) {
         if (!that.imm.setup.assets.hasOwnProperty(videoName)) {
-          that.imm.utils.log(that.imm, "Asset Failure: Could not preload video asset '" + videoName + "'"); return;
+          that.imm.utils.log(that.imm, "Asset Failure: Could not initialize video asset '" + videoName + "'"); return;
         }
       } else {
-        that.imm.utils.log(that.imm, "Asset Failure: Could not preload video asset '" + videoName + "'"); return;
+        that.imm.utils.log(that.imm, "Asset Failure: Could not initialize video asset '" + videoName + "'"); return;
       }
 
       // If asset matches, initialize the video

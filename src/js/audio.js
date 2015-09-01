@@ -86,6 +86,10 @@
           var $a = $('audio#' + name), // Get audio
               d = !isNaN(o.delay) ? o.delay : 0; // If a delay is set
 
+          if ($a.length === 0) {
+            that.imm.utils.log(that.imm, "Asset Failure: Could not play audio asset '" + name + "'"); return;
+          }
+
           // Push to playing array
           that.imm._audioPlaying.push(name);
 
