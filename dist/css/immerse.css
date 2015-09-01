@@ -195,7 +195,7 @@ Version: 1.0.0
 Author: Will Viles
 Author URI: http://vil.es/
 */
-.imm-video {
+[data-imm-video] {
   position: absolute;
   top: 0;
   bottom: 0;

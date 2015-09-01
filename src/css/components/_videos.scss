@@ -7,7 +7,7 @@ Author: Will Viles
 Author URI: http://vil.es/
 */
 
-.#{$prefix}-video {
+[data-#{$prefix}-video] {
   @include stretch(); overflow: hidden;
   @include background-size(cover);
   background-repeat: no-repeat;
