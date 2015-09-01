@@ -39,11 +39,9 @@ At its most basic configuration, Immerse.js will build your section based page f
 ```html
 <body>
 
-  <!-- Create an Immerse section. -->
+  <!-- Build your page structure with Immerse sections. -->
   <section data-imm-section="foo"></section>
-  
-  <!-- Create a fullpage fixed scrolling section. -->
-  <section data-imm-section="bar" class="imm-fullscreen"></section>
+  <section data-imm-section="bar"></section>
   
   <!-- Navigation will be injected here. -->
   <ul class="imm-nav"></ul>
@@ -343,14 +341,14 @@ Immerse solves many problematic issues related to scrolling with elegant solutio
 
 #### Fixed scroll vs free scroll
 
-Immerse infers which sections should be fixed height and which should be free scrolling simply by observing HTML classes:
+Immerse infers which sections should be fixed height and which should be free scrolling simply by observing your HTML markup:
 
 ```html
-<!-- Free scrolling section -->
+<!-- By default, sections are fullscreen fixed scrolling sections -->
 <section data-imm-section="foo"></section>
 
-<!-- Fixed scrolling section -->
-<section data-imm-section="foo" class="imm-fullscreen"></section> 
+<!-- However, free scrolling sections can be defined in the markup -->
+<section data-imm-section="foo" data-imm-unbound="true"></section> 
 ```
 
 *Not sure what we mean by fixed vs free scroll? Check out the <a href="http://immerse.vil.es" title="Immerse.js Official Website" target="_blank">official plugin website</a> for examples.*
