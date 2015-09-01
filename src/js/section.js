@@ -39,6 +39,7 @@
       // Set both the id and the element
 
       section.id = id;
+      section.name = (section.hasOwnProperty('name')) ? section.name : this.imm.utils.stringify(id);
       section.element = $(this.imm.utils.sectionify.call(this.imm, id));
 
       // Get defined defaults

@@ -282,9 +282,6 @@
 
           // Options
           options: {
-            defaultTransition: {
-              type: 'scroll'
-            },
             muteButton: {
               unmuted: '<i class="fa fa-volume-up"></i>',
               muted: '<i class="fa fa-volume-off"></i>',
@@ -375,8 +372,7 @@
         });
 
         pageName.section('boards', {
-          // Unique name for the section
-          name: 'Boards',
+          // Options
           options: {
             unbindScroll: ['mobile', 'tablet']
           },
@@ -421,8 +417,7 @@
         });
 
         pageName.section('tutors', {
-          // Unique name for the section
-          name: 'Tutors',
+          // Options
           options: {
             unbindScroll: ['mobile', 'tablet']
           },
@@ -454,11 +449,6 @@
         });
 
         pageName.section('learn', {
-          // Unique name for the section
-          name: 'Learn',
-          options: {
-            unbindScroll: true
-          },
           // Custom Attributes get changed in the custom attributes dictionary. Fires an observer
           attributes: {
             'navColor': {
@@ -468,8 +458,6 @@
         });
 
         pageName.section('join', {
-          // Unique name for the section
-          name: 'Join',
           // Custom Attributes get changed in the custom attributes dictionary. Fires an observer
           attributes: {
             'navColor': { value: '' }
