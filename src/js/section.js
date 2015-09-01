@@ -36,7 +36,7 @@
       this.imm = imm;
 
       // Get defined defaults
-      var defaults = (this.sectionDefaultsExtended !== true) ? this.extendAllDefaults.call(this) : this.sectionDefaults;
+      var defaults = (!this.imm.setup.hasOwnProperty('sectionDefaults')) ? this.extendAllDefaults.call(this) : this.imm.setup.sectionDefaults;
 
       // Extend upon defaults with section options
       section = $.extend(true, {}, defaults, section);
@@ -63,9 +63,7 @@
       defaults = this.extendDefaults.attributes.call(this, defaults);
 
       // Reassign defaults with component defaults/global options included
-      this.sectionDefaults = defaults;
-
-      this.sectionDefaultsExtended = true;
+      this.imm.setup.sectionDefaults = defaults;
 
       return defaults;
     },
@@ -81,7 +79,7 @@
       var sectionSelector = this.imm.utils.namespacify.call(this.imm, 'section'),
           $allSectionElems = $('.' + sectionSelector),
           // FIX: If no sections have been defined (all generated), ensure defaults are extended
-          sectionDefaults = (this.sectionDefaultsExtended !== true) ? this.extendAllDefaults.call(this) : this.sectionDefaults,
+          sectionDefaults = (!this.imm.setup.hasOwnProperty('sectionDefaults')) ? this.extendAllDefaults.call(this) : this.imm.setup.sectionDefaults,
           fullscreenClass = this.imm.utils.namespacify.call(this.imm, 'fullscreen'),
           that = this;
 
@@ -157,6 +155,7 @@
         registration.type = 'animation'; registration.name = name; registration.obj = animation;
         that.registrationHandler.call(that, registration);
       });
+
       // Register Actions
       $.each(s.actions, function(name, action) {
         var registration = { section: s, $section: $s };
