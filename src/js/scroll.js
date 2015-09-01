@@ -266,17 +266,15 @@
         a.currentSectionIndex = this.imm._sections.indexOf(a.currentSection);
 
         // If we've passed a jQuery object directly, use it as the next section
-        if (o.jquery) {
-          a.nextSection = $.grep(this.imm._sections, function(s) { return o[0].id == s.element[0].id; })[0];
+        if (o === 'UP' || o === 'DOWN') {
+          a.direction = o;
+          a.nextSection = (a.direction === 'UP') ? this.imm._sections[a.currentSectionIndex-1] : this.imm._sections[a.currentSectionIndex+1];
+        } else {
+          a.nextSection = $.grep(this.imm._sections, function(s) { return o == s.id; })[0];
           // Determine direction
           a.direction = a.currentSection.scrollOffset > a.nextSection.scrollOffset ? 'UP' : 'DOWN';
           // Just do scroll
           a.justDoScroll = true;
-
-        // Else if we've just passed the scroll direction, find the next section
-        } else if (o === 'UP' || o === 'DOWN') {
-          a.direction = o;
-          a.nextSection = (a.direction === 'UP') ? this.imm._sections[a.currentSectionIndex-1] : this.imm._sections[a.currentSectionIndex+1];
         }
 
         // Setup direction triggers

@@ -14,9 +14,9 @@ $mobile-break: 480px;
 
 body::-webkit-scrollbar { width: 0 !important; }
 
-.#{$prefix}-section { position: relative; overflow: hidden; }
+[data-#{$prefix}-section] { position: relative; overflow: hidden; }
 
-.#{$prefix}-section.#{$prefix}-fullscreen {
+[data-#{$prefix}-section].#{$prefix}-fullscreen {
    height: 100vh;
   .#{$prefix}-vertcenter { position: absolute; top: 50%; left: 0; width: 100%; @include translateY(-50%); }
 }

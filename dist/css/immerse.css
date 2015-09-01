@@ -3,15 +3,15 @@ body::-webkit-scrollbar {
   width: 0 !important;
 }
 
-.imm-section {
+[data-imm-section] {
   position: relative;
   overflow: hidden;
 }
 
-.imm-section.imm-fullscreen {
+[data-imm-section].imm-fullscreen {
   height: 100vh;
 }
-.imm-section.imm-fullscreen .imm-vertcenter {
+[data-imm-section].imm-fullscreen .imm-vertcenter {
   position: absolute;
   top: 50%;
   left: 0;

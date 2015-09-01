@@ -66,8 +66,10 @@
     ///////////////////////////////////////////////////////
 
     findSection: function(hash) {
+
+      var section = this.imm.utils.sectionify.call(this.imm, hash);
       return this.imm._sections.filter(function(s) {
-        return s.element[0] === $('#' + hash)[0];
+        return s.element[0] === $(section)[0];
       });
     },
 
@@ -75,7 +77,7 @@
     ///////////////////////////////////////////////////////
 
     hashChange: function(d) {
-      var hash = (d.current.scrollIndex === 0) ? this.baseUrl : '#' + d.current.element[0].id;
+      var hash = (d.current.scrollIndex === 0) ? this.baseUrl : '#' + d.current.id;
       history.replaceState({}, "", hash);
     }
 

@@ -39,7 +39,7 @@
       // Set both the id and the element
 
       section.id = id;
-      section.element = $('#' + id);
+      section.element = $(this.imm.utils.sectionify.call(this.imm, id));
 
       // Get defined defaults
       var defaults = (!this.imm.setup.hasOwnProperty('sectionDefaults')) ? this.extendAllDefaults.call(this) : this.imm.setup.sectionDefaults;
@@ -82,23 +82,22 @@
       // Get a handle on the Immerse object
       this.imm = imm;
 
-      var sectionSelector = this.imm.utils.namespacify.call(this.imm, 'section'),
-          $allSectionElems = $('.' + sectionSelector),
+      var $allSectionElems = $(this.imm.utils.sectionify.call(this.imm)),
           // FIX: If no sections have been defined (all generated), ensure defaults are extended
           sectionDefaults = (!this.imm.setup.hasOwnProperty('sectionDefaults')) ? this.extendAllDefaults.call(this) : this.imm.setup.sectionDefaults,
           fullscreenClass = this.imm.utils.namespacify.call(this.imm, 'fullscreen'),
           that = this;
 
       // Generate all sections from DOM elements
-      $.each($allSectionElems, function(i, $s) {
+      $.each($allSectionElems, function(i, s) {
 
-        var generatedSection = sectionDefaults,
-            // Generate name from data tag id
-            id = $($s)[0].id,
+        var $s = $(s),
+            generatedSection = sectionDefaults,
+            id = $s.data('imm-section'),
             n = that.imm.utils.stringify(id),
-            u = $($s).hasClass(fullscreenClass) ? false : true,
+            u = $s.hasClass(fullscreenClass) ? false : true,
             newVals = {
-              element: $($s),
+              element: $s,
               id: id,
               name: n,
               options: {

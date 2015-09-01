@@ -121,6 +121,11 @@ var Immerse = function() {};
         }
       },
 
+      sectionify: function(id) {
+        var ns = this.utils.namespacify.call(this, 'section');
+        return (id !== undefined) ? this.utils.datatagify(ns, id) : this.utils.datatagify(ns);
+      },
+
       cookies: {
         set: function(name, value, expiresInSeconds) {
           var r = new Date;
@@ -231,7 +236,7 @@ var Immerse = function() {};
       // Set both the id and the element
 
       section.id = id;
-      section.element = $('#' + id);
+      section.element = $(this.imm.utils.sectionify.call(this.imm, id));
 
       // Get defined defaults
       var defaults = (!this.imm.setup.hasOwnProperty('sectionDefaults')) ? this.extendAllDefaults.call(this) : this.imm.setup.sectionDefaults;
@@ -274,23 +279,22 @@ var Immerse = function() {};
       // Get a handle on the Immerse object
       this.imm = imm;
 
-      var sectionSelector = this.imm.utils.namespacify.call(this.imm, 'section'),
-          $allSectionElems = $('.' + sectionSelector),
+      var $allSectionElems = $(this.imm.utils.sectionify.call(this.imm)),
           // FIX: If no sections have been defined (all generated), ensure defaults are extended
           sectionDefaults = (!this.imm.setup.hasOwnProperty('sectionDefaults')) ? this.extendAllDefaults.call(this) : this.imm.setup.sectionDefaults,
           fullscreenClass = this.imm.utils.namespacify.call(this.imm, 'fullscreen'),
           that = this;
 
       // Generate all sections from DOM elements
-      $.each($allSectionElems, function(i, $s) {
+      $.each($allSectionElems, function(i, s) {
 
-        var generatedSection = sectionDefaults,
-            // Generate name from data tag id
-            id = $($s)[0].id,
+        var $s = $(s),
+            generatedSection = sectionDefaults,
+            id = $s.data('imm-section'),
             n = that.imm.utils.stringify(id),
-            u = $($s).hasClass(fullscreenClass) ? false : true,
+            u = $s.hasClass(fullscreenClass) ? false : true,
             newVals = {
-              element: $($s),
+              element: $s,
               id: id,
               name: n,
               options: {
@@ -933,17 +937,15 @@ var Immerse = function() {};
         a.currentSectionIndex = this.imm._sections.indexOf(a.currentSection);
 
         // If we've passed a jQuery object directly, use it as the next section
-        if (o.jquery) {
-          a.nextSection = $.grep(this.imm._sections, function(s) { return o[0].id == s.element[0].id; })[0];
+        if (o === 'UP' || o === 'DOWN') {
+          a.direction = o;
+          a.nextSection = (a.direction === 'UP') ? this.imm._sections[a.currentSectionIndex-1] : this.imm._sections[a.currentSectionIndex+1];
+        } else {
+          a.nextSection = $.grep(this.imm._sections, function(s) { return o == s.id; })[0];
           // Determine direction
           a.direction = a.currentSection.scrollOffset > a.nextSection.scrollOffset ? 'UP' : 'DOWN';
           // Just do scroll
           a.justDoScroll = true;
-
-        // Else if we've just passed the scroll direction, find the next section
-        } else if (o === 'UP' || o === 'DOWN') {
-          a.direction = o;
-          a.nextSection = (a.direction === 'UP') ? this.imm._sections[a.currentSectionIndex-1] : this.imm._sections[a.currentSectionIndex+1];
         }
 
         // Setup direction triggers
@@ -1540,12 +1542,12 @@ var Immerse = function() {};
       this.imm = imm;
       this.navListClass = this.imm.utils.namespacify.call(this.imm, 'nav');
       this.navLinkClass = this.imm.utils.namespacify.call(this.imm, 'nav-link');
-      this.sectionDataTag = this.imm.utils.namespacify.call(this.imm, 'section');
+      this.sectionDataTag = this.imm.utils.namespacify.call(this.imm, 'to-section');
       var that = this;
       // Generate Nav list
       this.addToDOM.call(this);
       // Set current
-      var navItem = $('.' + this.navListClass + ' li a[data-' + this.sectionDataTag + '="#' + this.imm._currentSection.element[0].id + '"]');
+      var navItem = $('.' + this.navListClass + ' li a[data-' + this.sectionDataTag + '="#' + this.imm._currentSection.id + '"]');
       this.update.call(this, navItem);
       // Handle nav item click
       this.handleClick.call(this);
@@ -1559,9 +1561,9 @@ var Immerse = function() {};
     handleClick: function() {
       var that = this;
       $('.' + this.navListClass + ' li a', 'body').on('click', function() {
-        var $target = $($(this).data(that.sectionDataTag));
-        if ($target[0] !== that.imm._currentSection.element[0]) {
-          $.Immerse.scrollController.doScroll(that.imm, $target);
+        var target = $(this).data(that.sectionDataTag);
+        if (target !== that.imm._currentSection.id) {
+          $.Immerse.scrollController.doScroll(that.imm, target);
         }
       });
     },
@@ -1572,7 +1574,7 @@ var Immerse = function() {};
     sectionChange: function() {
       var that = this;
       this.imm.$elem.on('sectionChanged', function(e, d) {
-        var navItem = $('.' + that.navListClass + ' li a[data-' + that.sectionDataTag + '="#' + d.current.element[0].id + '"]');
+        var navItem = $('.' + that.navListClass + ' li a[data-' + that.sectionDataTag + '="' + d.current.id + '"]');
         that.update.call(that, navItem);
       });
     },
@@ -1588,7 +1590,7 @@ var Immerse = function() {};
 
       $.each(this.imm._sections, function(i, s) {
         if (!s.options.hideFromNav) {
-          str = str + '<li><a class="' + that.navLinkClass + '" data-' + that.sectionDataTag + '="#' + s.element[0].id + '"><span>' + s.name + '</span></a></li>';
+          str = str + '<li><a class="' + that.navLinkClass + '" data-' + that.sectionDataTag + '="' + s.id + '"><span>' + s.name + '</span></a></li>';
         }
       });
       nav.html(str);
@@ -2077,8 +2079,10 @@ var Immerse = function() {};
     ///////////////////////////////////////////////////////
 
     findSection: function(hash) {
+
+      var section = this.imm.utils.sectionify.call(this.imm, hash);
       return this.imm._sections.filter(function(s) {
-        return s.element[0] === $('#' + hash)[0];
+        return s.element[0] === $(section)[0];
       });
     },
 
@@ -2086,7 +2090,7 @@ var Immerse = function() {};
     ///////////////////////////////////////////////////////
 
     hashChange: function(d) {
-      var hash = (d.current.scrollIndex === 0) ? this.baseUrl : '#' + d.current.element[0].id;
+      var hash = (d.current.scrollIndex === 0) ? this.baseUrl : '#' + d.current.id;
       history.replaceState({}, "", hash);
     }
 

@@ -21,12 +21,12 @@
       this.imm = imm;
       this.navListClass = this.imm.utils.namespacify.call(this.imm, 'nav');
       this.navLinkClass = this.imm.utils.namespacify.call(this.imm, 'nav-link');
-      this.sectionDataTag = this.imm.utils.namespacify.call(this.imm, 'section');
+      this.sectionDataTag = this.imm.utils.namespacify.call(this.imm, 'to-section');
       var that = this;
       // Generate Nav list
       this.addToDOM.call(this);
       // Set current
-      var navItem = $('.' + this.navListClass + ' li a[data-' + this.sectionDataTag + '="#' + this.imm._currentSection.element[0].id + '"]');
+      var navItem = $('.' + this.navListClass + ' li a[data-' + this.sectionDataTag + '="#' + this.imm._currentSection.id + '"]');
       this.update.call(this, navItem);
       // Handle nav item click
       this.handleClick.call(this);
@@ -40,9 +40,9 @@
     handleClick: function() {
       var that = this;
       $('.' + this.navListClass + ' li a', 'body').on('click', function() {
-        var $target = $($(this).data(that.sectionDataTag));
-        if ($target[0] !== that.imm._currentSection.element[0]) {
-          $.Immerse.scrollController.doScroll(that.imm, $target);
+        var target = $(this).data(that.sectionDataTag);
+        if (target !== that.imm._currentSection.id) {
+          $.Immerse.scrollController.doScroll(that.imm, target);
         }
       });
     },
@@ -53,7 +53,7 @@
     sectionChange: function() {
       var that = this;
       this.imm.$elem.on('sectionChanged', function(e, d) {
-        var navItem = $('.' + that.navListClass + ' li a[data-' + that.sectionDataTag + '="#' + d.current.element[0].id + '"]');
+        var navItem = $('.' + that.navListClass + ' li a[data-' + that.sectionDataTag + '="' + d.current.id + '"]');
         that.update.call(that, navItem);
       });
     },
@@ -69,7 +69,7 @@
 
       $.each(this.imm._sections, function(i, s) {
         if (!s.options.hideFromNav) {
-          str = str + '<li><a class="' + that.navLinkClass + '" data-' + that.sectionDataTag + '="#' + s.element[0].id + '"><span>' + s.name + '</span></a></li>';
+          str = str + '<li><a class="' + that.navLinkClass + '" data-' + that.sectionDataTag + '="' + s.id + '"><span>' + s.name + '</span></a></li>';
         }
       });
       nav.html(str);

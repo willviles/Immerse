@@ -121,6 +121,11 @@ var Immerse = function() {};
         }
       },
 
+      sectionify: function(id) {
+        var ns = this.utils.namespacify.call(this, 'section');
+        return (id !== undefined) ? this.utils.datatagify(ns, id) : this.utils.datatagify(ns);
+      },
+
       cookies: {
         set: function(name, value, expiresInSeconds) {
           var r = new Date;
