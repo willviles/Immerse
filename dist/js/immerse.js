@@ -1547,7 +1547,7 @@ var Immerse = function() {};
       // Generate Nav list
       this.addToDOM.call(this);
       // Set current
-      var navItem = $('.' + this.navListClass + ' li a[data-' + this.sectionDataTag + '="#' + this.imm._currentSection.id + '"]');
+      var navItem = $('.' + this.navListClass + ' li a[data-' + this.sectionDataTag + '="' + this.imm._currentSection.id + '"]');
       this.update.call(this, navItem);
       // Handle nav item click
       this.handleClick.call(this);
