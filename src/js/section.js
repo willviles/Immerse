@@ -110,8 +110,7 @@
 
       // Setup all defined sections
       $.each(this.imm.setup.sections, function(i, s) {
-        // Replace generated section if manually setup.
-        // E.g If $(s.element) matches $(this.imm._sections[i].element), remove that record and replace with new one.
+        // Replace generated section if section is setup specifically via js.
         $.each(that.imm._sections, function(i, _s) {
           that.imm._sections[i] = _s.id === s.id ? s : _s;
         });
