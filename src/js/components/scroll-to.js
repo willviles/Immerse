@@ -26,11 +26,7 @@ new Immerse().component({
       var $button = $(this),
           target = $button.data(that.scrollToNamespace);
 
-      if (target !== 'NEXT' && target !== 'PREV' && target !== 'DOWN' && target !== 'UP') {
-        target = (target.charAt(0) === '#') ? $(target) : $('#' + target);
-      }
-
-      $.Immerse.scrollController.doScroll(that.imm, target);
+      if (typeof target === 'string') { $.Immerse.scrollController.doScroll(that.imm, target); }
     });
 
     return this;
