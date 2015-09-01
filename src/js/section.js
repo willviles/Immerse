@@ -43,7 +43,8 @@
       section.element = $(this.imm.utils.sectionify.call(this.imm, id));
 
       // Get defined defaults
-      var defaults = (!this.imm.setup.hasOwnProperty('sectionDefaults')) ? this.extendAllDefaults.call(this) : this.imm.setup.sectionDefaults;
+      var defaults = (!this.imm.setup.hasOwnProperty('sectionDefaults')) ?
+                      this.extendAllDefaults.call(this) : this.imm.setup.sectionDefaults;
 
       // Extend upon defaults with section options
       section = $.extend(true, {}, defaults, section);

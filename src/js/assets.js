@@ -22,6 +22,9 @@
       // Get a handle on the Immerse object
       this.imm = imm;
 
+      // If no assets defined, bugger it
+      if (this.imm._assets === undefined) { return false; }
+
       var assetQueueLoaded = jQuery.Deferred(),
           assetQueue = [],
           assetLoadingFailed,

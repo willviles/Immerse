@@ -13,14 +13,26 @@ new Immerse().component({
   // Initialize function
   init: function(opts) {
     this.imm = opts.immerse;
-    this.videoDataTag = this.imm.utils.namespacify.call(this.imm, 'video');
+    this.videoNamespace = this.imm.utils.namespacify.call(this.imm, 'video');
 
     var section = opts.section,
         $section = $(section.element),
         that = this;
 
-    var sectionVideos = $section.find('[data-' + this.videoDataTag + ']');
+    var sectionVideos = $section.find('[data-' + this.videoNamespace + ']');
     $.each(sectionVideos, function(i, wrapper) {
+
+      var videoName = $(wrapper).data(that.videoNamespace);
+
+      if (that.imm.setup.hasOwnProperty('assets')) {
+        if (!that.imm.setup.assets.hasOwnProperty(videoName)) {
+          that.imm.utils.log(that.imm, "Asset Failure: Could not preload video asset '" + videoName + "'"); return;
+        }
+      } else {
+        that.imm.utils.log(that.imm, "Asset Failure: Could not preload video asset '" + videoName + "'"); return;
+      }
+
+      // If asset matches, initialize the video
       that.handler.call(that, opts.immerse, section, wrapper);
     });
 

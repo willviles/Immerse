@@ -236,11 +236,12 @@ var Immerse = function() {};
       // Set both the id and the element
 
       section.id = id;
-      section.name = (section.hasOwnProperty('name')) ? section.name: this.imm.utils.stringify(id);
+      section.name = (section.hasOwnProperty('name')) ? section.name : this.imm.utils.stringify(id);
       section.element = $(this.imm.utils.sectionify.call(this.imm, id));
 
       // Get defined defaults
-      var defaults = (!this.imm.setup.hasOwnProperty('sectionDefaults')) ? this.extendAllDefaults.call(this) : this.imm.setup.sectionDefaults;
+      var defaults = (!this.imm.setup.hasOwnProperty('sectionDefaults')) ?
+                      this.extendAllDefaults.call(this) : this.imm.setup.sectionDefaults;
 
       // Extend upon defaults with section options
       section = $.extend(true, {}, defaults, section);
@@ -1643,6 +1644,9 @@ var Immerse = function() {};
       // Get a handle on the Immerse object
       this.imm = imm;
 
+      // If no assets defined, bugger it
+      if (this.imm._assets === undefined) { return false; }
+
       var assetQueueLoaded = jQuery.Deferred(),
           assetQueue = [],
           assetLoadingFailed,
@@ -2742,14 +2746,26 @@ new Immerse().component({
   // Initialize function
   init: function(opts) {
     this.imm = opts.immerse;
-    this.videoDataTag = this.imm.utils.namespacify.call(this.imm, 'video');
+    this.videoNamespace = this.imm.utils.namespacify.call(this.imm, 'video');
 
     var section = opts.section,
         $section = $(section.element),
         that = this;
 
-    var sectionVideos = $section.find('[data-' + this.videoDataTag + ']');
+    var sectionVideos = $section.find('[data-' + this.videoNamespace + ']');
     $.each(sectionVideos, function(i, wrapper) {
+
+      var videoName = $(wrapper).data(that.videoNamespace);
+
+      if (that.imm.setup.hasOwnProperty('assets')) {
+        if (!that.imm.setup.assets.hasOwnProperty(videoName)) {
+          that.imm.utils.log(that.imm, "Asset Failure: Could not preload video asset '" + videoName + "'"); return;
+        }
+      } else {
+        that.imm.utils.log(that.imm, "Asset Failure: Could not preload video asset '" + videoName + "'"); return;
+      }
+
+      // If asset matches, initialize the video
       that.handler.call(that, opts.immerse, section, wrapper);
     });
 
