@@ -111,7 +111,7 @@ Once a video asset is registered, it can be easily used as a video background fo
 
 ```html
 
-<section data-imm-section="foo" class="imm-fullscreen">
+<section data-imm-section="foo">
   <!-- The imm-video element will stretch to any div positioned relatively -->
   <div data-imm-video="videoName"></div>
 </section>
