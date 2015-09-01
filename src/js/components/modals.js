@@ -210,6 +210,9 @@ new Immerse().component({
 
     open: function(id) {
       var $modal = $(this.imm.utils.datatagify.call(this.imm, this.modalId, id));
+      if ($modal.length === 0) {
+        this.imm.utils.log(this.imm, "Modal Failure: No modal defined with id '" + id + "'"); return;
+      }
       $modal.closest('.' + this.modalWrapper).addClass('opened');
       $.Immerse.scrollController.htmlScroll(this.imm, 'lock');
       $modal.focus();
