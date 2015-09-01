@@ -31,9 +31,15 @@
     // Add Section to Immerse
     ///////////////////////////////////////////////////////
 
-    add: function(imm, section) {
+    add: function(imm, id, section) {
 
       this.imm = imm;
+
+      // Generate correct jQuery reference to section here
+      // Set both the id and the element
+
+      section.id = id;
+      section.element = $('#' + id);
 
       // Get defined defaults
       var defaults = (!this.imm.setup.hasOwnProperty('sectionDefaults')) ? this.extendAllDefaults.call(this) : this.imm.setup.sectionDefaults;
@@ -85,11 +91,15 @@
 
       // Generate all sections from DOM elements
       $.each($allSectionElems, function(i, $s) {
+
         var generatedSection = sectionDefaults,
-            n = that.imm.utils.stringify($($s)[0].id),
+            // Generate name from data tag id
+            id = $($s)[0].id,
+            n = that.imm.utils.stringify(id),
             u = $($s).hasClass(fullscreenClass) ? false : true,
             newVals = {
               element: $($s),
+              id: id,
               name: n,
               options: {
                 unbindScroll: u
@@ -101,13 +111,10 @@
 
       // Setup all defined sections
       $.each(this.imm.setup.sections, function(i, s) {
-
-        var $s = $(s.element);
-
         // Replace generated section if manually setup.
         // E.g If $(s.element) matches $(this.imm._sections[i].element), remove that record and replace with new one.
         $.each(that.imm._sections, function(i, _s) {
-          that.imm._sections[i] = $(_s.element)[0] === $(s.element)[0] ? s : _s;
+          that.imm._sections[i] = _s.id === s.id ? s : _s;
         });
 
         that.initSection.call(that, that.imm, s);
@@ -128,6 +135,10 @@
       });
 
       return this;
+    },
+
+    addDOMElemReference: function() {
+
     },
 
     // Init section
@@ -447,9 +458,9 @@
       return c;
     },
 
-    add: function(imm, section) {
+    add: function(imm, id, section) {
       var c = new controller[n](this);
-      c.add.call(c, imm, section);
+      c.add.call(c, imm, id, section);
       return c;
     },
 

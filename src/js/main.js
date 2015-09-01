@@ -158,8 +158,8 @@ var Immerse = function() {};
     ///////////////////////////////////////////////////////
 
     // Description: Add a section to a page
-    section: function(section) {
-      return $.Immerse.sectionController.add(this, section);
+    section: function(id, section) {
+      return $.Immerse.sectionController.add(this, id, section);
     },
 
     // Description: Register a new component with Immerse

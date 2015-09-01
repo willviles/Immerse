@@ -317,12 +317,9 @@
         // Setup Header
         ///////////////////////////////////////////
 
-        pageName.section({
-
+        pageName.section('header', {
           // Unique name for the section
           name: 'Intro',
-          // Set the element. Must be able to take either a string, javascript or jquery selector
-          element: $('#header'),
           // Define animations
           animations: {
             // Animation #1
@@ -377,11 +374,9 @@
           },
         });
 
-        pageName.section({
+        pageName.section('boards', {
           // Unique name for the section
           name: 'Boards',
-          // Set the element. Must be able to take either a string, javascript or jquery selector
-          element: $('#boards'),
           options: {
             unbindScroll: ['mobile', 'tablet']
           },
@@ -425,11 +420,9 @@
           }
         });
 
-        pageName.section({
+        pageName.section('tutors', {
           // Unique name for the section
           name: 'Tutors',
-          // Set the element. Must be able to take either a string, javascript or jquery selector
-          element: $('#tutors'),
           options: {
             unbindScroll: ['mobile', 'tablet']
           },
@@ -460,11 +453,9 @@
           }
         });
 
-        pageName.section({
+        pageName.section('learn', {
           // Unique name for the section
           name: 'Learn',
-          // Set the element. Must be able to take either a string, javascript or jquery selector
-          element: $('#learn'),
           options: {
             unbindScroll: true
           },
@@ -476,11 +467,9 @@
           }
         });
 
-        pageName.section({
+        pageName.section('join', {
           // Unique name for the section
           name: 'Join',
-          // Set the element. Must be able to take either a string, javascript or jquery selector
-          element: $('#join'),
           // Custom Attributes get changed in the custom attributes dictionary. Fires an observer
           attributes: {
             'navColor': { value: '' }
