@@ -1,4 +1,4 @@
-# Immerse.js [v1.0.11](https://github.com/willviles/Immerse.js/blob/master/CHANGELOG.md "Immerse.js Changelog") [![Build Status](https://api.travis-ci.org/willviles/Immerse.js.svg?branch=master)](https://travis-ci.org/willviles/Immerse.js) 
+# Immerse.js [v1.0.12](https://github.com/willviles/Immerse.js/blob/master/CHANGELOG.md "Immerse.js Changelog") [![Build Status](https://api.travis-ci.org/willviles/Immerse.js.svg?branch=master)](https://travis-ci.org/willviles/Immerse.js) 
 #### Build immersive, media driven web experiences - the easy way.
 
 Immerse.js offers a javascript framework for building complex, media-driven web experiences.
@@ -39,11 +39,11 @@ At its most basic configuration, Immerse.js will build your section based page f
 ```html
 <body>
 
-  <!-- Create a free scrolling section. -->
-  <section id="foo" class="imm-section"></section>
+  <!-- Create an Immerse section. -->
+  <section data-imm-section="foo"></section>
   
   <!-- Create a fullpage fixed scrolling section. -->
-  <section id="bar" class="imm-section imm-fullscreen"></section>
+  <section data-imm-section="bar" class="imm-fullscreen"></section>
   
   <!-- Navigation will be injected here. -->
   <ul class="imm-nav"></ul>
@@ -71,13 +71,10 @@ page.init();
 Sections can be configured through registering one on the page variable. The following markup is the most basic configuration:
 
 ```js
-page.section({
+page.section('foo', {
 
-  // Name to show in navigation
-  name: 'Section Name',
-  
-  // Reference the section DOM element
-  element: $('#foo'),
+  // Name to show in navigation. If not set, will capitalize section id.
+  name: 'Custom Foo Name'
   
 });
 ```
@@ -116,9 +113,9 @@ Once a video asset is registered, it can be easily used as a video background fo
 
 ```html
 
-<section id="foo" class="imm-section imm-fullscreen">
-  <!-- Ensure your .imm-video element is a direct child of the section and pass your video name into the data tag -->
-  <div class="imm-video" data-imm-video="videoName"></div>
+<section data-imm-section="foo" class="imm-fullscreen">
+  <!-- The imm-video element will stretch to any div positioned relatively -->
+  <div data-imm-video="videoName"></div>
 </section>
 ```
 
@@ -151,7 +148,7 @@ new Immerse().setup({
 Soundtracks can also be defined for each section of the page. Inside your Immerse section, just define a new soundtrack and the audio will change to your new soundtrack when the section is scrolled to.
 
 ```js
-page.section({
+page.section('foo', {
   
   audio: {
     'differentMainAudio': { volume: .8, changeDuration: 1.5 },
@@ -206,7 +203,7 @@ Multiple animations can be set on a single DOM element and each animation will b
 Below is the most verbose example of defining and executing one GSAP Timeline in Immerse:
 
 ```js
-page.section({
+page.section('foo', {
   
   animations: {
     
@@ -287,7 +284,7 @@ new Immerse().setup({
 In your chosen section, define the new attribute value.
 
 ```js
-page.section({
+page.section('foo', {
   
   attributes: {
     'navColor': { value: 'blue' }
@@ -316,7 +313,7 @@ $('body').on('navColor', function(e, value) {
 Immerse also allows for any custom code to be triggered using device and runtime targeting.
 
 ```js
-page.section({
+page.section('foo', {
   
   actions: {
     
@@ -350,10 +347,10 @@ Immerse infers which sections should be fixed height and which should be free sc
 
 ```html
 <!-- Free scrolling section -->
-<section class="imm-section"></section>
+<section data-imm-section="foo"></section>
 
 <!-- Fixed scrolling section -->
-<section class="imm-section imm-fullscreen"></section> 
+<section data-imm-section="foo" class="imm-fullscreen"></section> 
 ```
 
 *Not sure what we mean by fixed vs free scroll? Check out the <a href="http://immerse.vil.es" title="Immerse.js Official Website" target="_blank">official plugin website</a> for examples.*
@@ -363,7 +360,7 @@ Immerse infers which sections should be fixed height and which should be free sc
 It's possible to create responsive solutions for fixed scrolling sections by unbinding the scroll at certain breakpoints.
 
 ```js
-page.section({
+page.section('foo', {
   
   options: {
     
@@ -382,8 +379,8 @@ page.section({
 Adding buttons which link to other Immerse page sections can be achieved through data tags:
 
 ```HTML
-<!-- Pass either the name of the section or with a starting # -->
-<button data-imm-scroll-to="linked-section">Go to linked-section</button>
+<!-- Pass the id of the section -->
+<button data-imm-scroll-to="foo">Scroll to foo</button>
 
 <!-- You can also add either UP or DOWN to go to the next/prev sections. Must be in caps. -->
 <button data-imm-scroll-to="DOWN">Go down a section</button>
@@ -394,7 +391,7 @@ Adding buttons which link to other Immerse page sections can be achieved through
 It's also possible to control scrolling programmatically:
 
 ```js
-page.changeSection('linked-section');
+page.changeSection('foo');
 page.changeSection('DOWN');
 ```
 
@@ -457,7 +454,7 @@ new Immerse().setup({
 Or globally inside Immerse setup:
 
 ```js
-page.section({
+page.section('foo', {
   
   components: { 
     modals: {
@@ -542,8 +539,8 @@ namespace: 'foo', ...
 This will ensure, for example:
 
 ```html
-<section class="foo-section foo-fullscreen">
-  <div class="foo-video" data-foo-video="videoName"></div>
+<section data-foo-section="foo" class="foo-fullscreen">
+  <div data-foo-video="videoName"></div>
 </section> 
 ```
 
