@@ -282,7 +282,7 @@
         var currentSection = this.imm._currentSection;
 
         // If we're on the section the animation is registered on, set animation progress to finished
-        if (currentSection !== undefined && $(currentSection.element)[0] === registration.$section[0]) {
+        if (currentSection !== undefined && currentSection.id === registration.section.id) {
           obj._timeline.progress(1, false);
         } else {
           obj._timeline.pause(0, true);

@@ -67,9 +67,8 @@
 
     findSection: function(hash) {
 
-      var section = this.imm.utils.sectionify.call(this.imm, hash);
       return this.imm._sections.filter(function(s) {
-        return s.element[0] === $(section)[0];
+        return s.id === hash;
       });
     },
 

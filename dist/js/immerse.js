@@ -479,7 +479,7 @@ var Immerse = function() {};
         var currentSection = this.imm._currentSection;
 
         // If we're on the section the animation is registered on, set animation progress to finished
-        if (currentSection !== undefined && $(currentSection.element)[0] === registration.$section[0]) {
+        if (currentSection !== undefined && currentSection.id === registration.section.id) {
           obj._timeline.progress(1, false);
         } else {
           obj._timeline.pause(0, true);
@@ -2080,9 +2080,8 @@ var Immerse = function() {};
 
     findSection: function(hash) {
 
-      var section = this.imm.utils.sectionify.call(this.imm, hash);
       return this.imm._sections.filter(function(s) {
-        return s.element[0] === $(section)[0];
+        return s.id === hash;
       });
     },
 
