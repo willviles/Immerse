@@ -760,8 +760,25 @@ var Immerse = function() {};
       // Scroll Handler
       scroll: {
 
+        prevTime: new Date().getTime(),
+
+        records: [],
+
+        recordAverage: function(elements, number) {
+          var sum = 0;
+
+          //taking `number` elements from the end to make the average, if there are not enought, 1
+          var lastElements = elements.slice(Math.max(elements.length - number, 1));
+
+          for(var i = 0; i < lastElements.length; i++){
+              sum = sum + lastElements[i];
+          }
+
+          return Math.ceil(sum/number);
+        },
+
         detect: function(e) {
-          if (!this.imm._canScroll) { return false; }
+
           // Always allow default scrolling on elements showing when main page is locked
           if (this.imm._htmlScrollLocked) {
             this.handlers.scroll.toggle('enable', e);
@@ -773,11 +790,37 @@ var Immerse = function() {};
             } else {
               // Disable browser scroll
               this.handlers.scroll.toggle('disable', e);
-
-              var direction = this.utils.getScrollDirection(e);
-
-              this.ifCanThenGo.call(this, this.imm, direction);
+              this.handlers.scroll.manage.call(this, e);
             }
+          }
+        },
+
+        manage: function(e) {
+          var curTime = new Date().getTime(),
+              value = e.wheelDelta || -e.deltaY || -e.detail;
+
+          //Limiting the array to 150 (lets not waste memory!)
+          if (this.handlers.scroll.records.length > 149) { this.handlers.scroll.records.shift(); }
+
+          this.handlers.scroll.records.push(Math.abs(value));
+
+          var timeDiff = curTime - this.handlers.scroll.prevTime;
+          this.handlers.scroll.prevTime = curTime;
+
+          //haven't they scrolled in a while?
+          //(enough to be consider a different scrolling action to scroll another section)
+          if(timeDiff > 200){
+            //emptying the array, we dont care about old scrollings for our averages
+            this.handlers.scroll.records = [];
+          }
+
+          var averageEnd = this.handlers.scroll.recordAverage(this.handlers.scroll.records, 10);
+          var averageMiddle = this.handlers.scroll.recordAverage(this.handlers.scroll.records, 70);
+          var isAccelerating = averageEnd >= averageMiddle;
+
+          if (isAccelerating) {
+            var direction = this.utils.getScrollDirection(e);
+            this.ifCanThenGo.call(this, this.imm, direction);
           }
         },
 
@@ -925,10 +968,8 @@ var Immerse = function() {};
 
     ifCanThenGo: function(imm, goVar) {
       this.imm = (this.imm === undefined) ? imm : this.imm;
-      if (this.imm._isScrolling === false && this.imm._canScroll === true && this.imm._htmlScrollLocked !== true) {
-        this.imm._isScrolling = true;
+      if (this.imm._isScrolling === false && this.imm._htmlScrollLocked !== true) {
         this.go.fire.call(this, goVar);
-
       }
     },
 
@@ -977,8 +1018,6 @@ var Immerse = function() {};
         var opts = this.go.prepare.call(this, o);
 
         if (opts === false) {
-          this.imm._isScrolling = false;
-          this.imm._canScroll = true;
           return false;
         }
 
@@ -1016,6 +1055,8 @@ var Immerse = function() {};
 
       animate: function(opts) {
 
+        this.imm._isScrolling = true;
+
         // New section scroll offset
         var dist = opts.nextSection.scrollOffset,
             dur = this.imm.setup.options.scroll.duration,
@@ -1051,12 +1092,8 @@ var Immerse = function() {};
             opts.$nextSection.trigger(opts.triggers.entered);
             // Set current section to exited
             opts.$currentSection.trigger(opts.triggers.exited);
-
-            setTimeout(function() {
-              // Reset flags
-              that.imm._isScrolling = false;
-              that.imm._canScroll = true;
-            }, 1000);
+            // Reset flags
+            that.imm._isScrolling = false;
           }
         });
       },
@@ -1084,9 +1121,6 @@ var Immerse = function() {};
           below: that.imm._sectionBelow,
           above: that.imm._sectionAbove
         }]);
-
-        this.imm._isScrolling = false;
-        this.imm._canScroll = true;
       }
     },
 
