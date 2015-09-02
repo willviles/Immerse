@@ -1,4 +1,4 @@
-# Immerse.js [v1.0.15](https://github.com/willviles/Immerse.js/blob/master/CHANGELOG.md "Immerse.js Changelog") [![Build Status](https://api.travis-ci.org/willviles/Immerse.js.svg?branch=master)](https://travis-ci.org/willviles/Immerse.js) 
+# Immerse.js [v1.0.16](https://github.com/willviles/Immerse.js/blob/master/CHANGELOG.md "Immerse.js Changelog") [![Build Status](https://api.travis-ci.org/willviles/Immerse.js.svg?branch=master)](https://travis-ci.org/willviles/Immerse.js) 
 #### Build immersive, media driven web experiences - the easy way.
 
 Immerse.js offers a javascript framework for building complex, media-driven web experiences.
