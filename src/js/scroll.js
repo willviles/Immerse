@@ -122,26 +122,21 @@
           var curTime = new Date().getTime(),
               value = e.wheelDelta || -e.deltaY || -e.detail;
 
-          //Limiting the array to 150 (lets not waste memory!)
+          // Manage memory
           if (this.handlers.scroll.records.length > 149) { this.handlers.scroll.records.shift(); }
-
           this.handlers.scroll.records.push(Math.abs(value));
 
           var timeDiff = curTime - this.handlers.scroll.prevTime;
           this.handlers.scroll.prevTime = curTime;
+          // Empty scroll array if no scroll in 200ms
+          if (timeDiff > 200) { console.log('Emptying array'); this.handlers.scroll.records = []; }
 
-          //haven't they scrolled in a while?
-          //(enough to be consider a different scrolling action to scroll another section)
-          if(timeDiff > 200){
-            //emptying the array, we dont care about old scrollings for our averages
-            this.handlers.scroll.records = [];
-          }
-
-          var averageEnd = this.handlers.scroll.recordAverage(this.handlers.scroll.records, 10);
-          var averageMiddle = this.handlers.scroll.recordAverage(this.handlers.scroll.records, 70);
-          var isAccelerating = averageEnd >= averageMiddle;
+          var averageEnd = this.handlers.scroll.recordAverage(this.handlers.scroll.records, 10),
+              averageMiddle = this.handlers.scroll.recordAverage(this.handlers.scroll.records, 70),
+              isAccelerating = averageEnd >= averageMiddle;
 
           if (isAccelerating) {
+            console.log('Is accelerating!');
             var direction = this.utils.getScrollDirection(e);
             this.ifCanThenGo.call(this, this.imm, direction);
           }
@@ -415,7 +410,8 @@
             opts.$nextSection.trigger(opts.triggers.entered);
             // Set current section to exited
             opts.$currentSection.trigger(opts.triggers.exited);
-            // Reset flags
+            // Reset flags & empty scroll record array
+            that.handlers.scroll.records = [];
             that.imm._isScrolling = false;
           }
         });
