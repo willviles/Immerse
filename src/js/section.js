@@ -314,20 +314,24 @@
 
         // Prepare runtimes
         $.each(obj.runtime, function(i, r) { obj._runtimeStr = obj._runtimeStr + ' ' + r; });
+        // Prepare resets
+        $.each(obj.reset, function(i, r) { obj._resetStr = obj._resetStr + ' ' + r; });
 
-        obj._run = function() {
-          setTimeout(function() {
-            that.imm.utils.log(that.imm, "Running " + registration.type + " '" + registration.name + "'");
-            obj.action.call(that, s);
-          }, obj.delay);
+        if (obj.hasOwnProperty('fire')) {
+          obj._run = function() {
+            setTimeout(function() {
+              that.imm.utils.log(that.imm, "Firing " + registration.type + " '" + registration.name + "'");
+              obj.fire.call(registration.obj, registration.section);
+            }, obj.delay);
+          }
         }
 
-        s.on(obj._runtimeStr, obj['_run']);
+        registration.$section.on(obj._runtimeStr, obj['_run']);
 
-        if (obj.clear) {
+        if (obj.hasOwnProperty('clear')) {
           obj._reset = function() {
             that.imm.utils.log(that.imm, "Clearing " + registration.type + " '" + registration.name + "'");
-            obj.clear.call(that, s);
+            obj.clear.call(registration.obj, registration.section);
           }
           registration.$section.on(obj._resetStr, obj['_reset']);
         }

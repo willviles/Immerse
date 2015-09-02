@@ -322,11 +322,17 @@ page.section('foo', {
       devices: ['touch', 'desktop'],
       breakpoints: ['mobile', 'tablet', 'mdDesktop', 'lgDesktop'],
       runtime: ['enteringDown', 'enteringUp'],
+      reset: ['exitedDown', 'exitedUp'],
       
-      // Define the default value
-      action: function($section) {
+      fire: function($section) {
         
         // Execute your custom code here.
+        
+      },
+      
+      clear: function($section) {
+        
+        // Code to clear action on reset.
         
       }
     }

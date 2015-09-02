@@ -456,6 +456,15 @@
         });
 
         pageName.section('join', {
+          // Actions
+          actions: {
+            'actionOne': {
+              runtime: ['enteringDown'],
+              reset: ['exitedUp'],
+              fire: function(s) { },
+              clear: function(s) { }
+            }
+          },
           // Custom Attributes get changed in the custom attributes dictionary. Fires an observer
           attributes: {
             'navColor': { value: '' }
