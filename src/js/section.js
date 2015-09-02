@@ -355,8 +355,7 @@
 
         obj._run = function(e) {
           setTimeout(function() {
-            var typeString = that.imm.utils.stringify(registration.type);
-            that.imm.utils.log(that.imm, typeString + " '" + registration.name + "' updated to '" + obj.value + "'");
+            that.imm.utils.log(that.imm, 'Updating ' + registration.type + " '" + registration.name + "' to '" + obj.value + "'");
             that.imm.$elem.trigger(registration.name, obj.value);
           }, obj.delay);
         }
