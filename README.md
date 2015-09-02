@@ -298,7 +298,7 @@ When the page is scrolled to the chosen section, an event will be triggered. Lis
 ```js
 $('body').on('navColor', function(e, value) {
   
-  var $nav = $(nav);
+  var $nav = $('[data-imm-nav]');
   var currentColor = $nav.data('color');
   
   $nav.removeClass(currentColor).addClass(value).data('color', value);
