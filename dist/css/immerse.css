@@ -22,7 +22,8 @@ body::-webkit-scrollbar {
   transform: translateY(-50%);
 }
 
-.imm-loading {
+/* Default Styles */
+[data-imm-loading] {
   position: absolute;
   top: 0;
   bottom: 0;
@@ -32,8 +33,82 @@ body::-webkit-scrollbar {
   background-color: white;
   z-index: 1001;
 }
+[data-imm-loading].imm-loaded {
+  -moz-transform: translate(-100%, -100%);
+  -ms-transform: translate(-100%, -100%);
+  -webkit-transform: translate(-100%, -100%);
+  transform: translate(-100%, -100%);
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
+  opacity: 0;
+}
+[data-imm-loading] > div {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  -moz-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
 
-/* Default Styles */
+@-moz-keyframes imm-loading-fade {
+  0%, 99% {
+    -moz-transform: translate(0, 0);
+    transform: translate(0, 0);
+  }
+  0% {
+    opacity: 1;
+  }
+  99% {
+    opacity: 0;
+  }
+  100% {
+    -moz-transform: translate(-100%, -100%);
+    transform: translate(-100%, -100%);
+  }
+}
+@-webkit-keyframes imm-loading-fade {
+  0%, 99% {
+    -webkit-transform: translate(0, 0);
+    transform: translate(0, 0);
+  }
+  0% {
+    opacity: 1;
+  }
+  99% {
+    opacity: 0;
+  }
+  100% {
+    -webkit-transform: translate(-100%, -100%);
+    transform: translate(-100%, -100%);
+  }
+}
+@keyframes imm-loading-fade {
+  0%, 99% {
+    -moz-transform: translate(0, 0);
+    -ms-transform: translate(0, 0);
+    -webkit-transform: translate(0, 0);
+    transform: translate(0, 0);
+  }
+  0% {
+    opacity: 1;
+  }
+  99% {
+    opacity: 0;
+  }
+  100% {
+    -moz-transform: translate(-100%, -100%);
+    -ms-transform: translate(-100%, -100%);
+    -webkit-transform: translate(-100%, -100%);
+    transform: translate(-100%, -100%);
+  }
+}
+[data-imm-loading="fade"].imm-loaded {
+  -moz-animation: imm-loading-fade 0.3s linear;
+  -webkit-animation: imm-loading-fade 0.3s linear;
+  animation: imm-loading-fade 0.3s linear;
+}
+
 [data-imm-nav="side"] {
   position: fixed;
   top: 50%;

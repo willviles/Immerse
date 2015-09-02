@@ -2422,16 +2422,7 @@ nav.top-nav.white-grey div button {
   background-color: white;
 }
 
-.imm-loading .spinner {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  -moz-transform: translate(-50%, -50%);
-  -ms-transform: translate(-50%, -50%);
-  -webkit-transform: translate(-50%, -50%);
-  transform: translate(-50%, -50%);
-}
-.imm-loading .spinner object {
+[data-imm-loading] object {
   width: 100px;
   height: auto;
   -moz-animation: bounce 1s infinite 0.5s;

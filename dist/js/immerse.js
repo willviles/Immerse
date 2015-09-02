@@ -1832,7 +1832,9 @@ var Immerse = function() {};
     loading: function(imm) {
 
       this.imm = imm;
-      var loadingOverlayClass = this.imm.utils.namespacify.call(this.imm, 'loading'),
+      var loadingNamespace = this.imm.utils.namespacify.call(this.imm, 'loading'),
+          loadingDataTag = this.imm.utils.datatagify.call(this.imm, loadingNamespace),
+          loadedNamespace = this.imm.utils.namespacify.call(this.imm, 'loaded'),
           minLoadingTime = this.imm.setup.options.minLoadingTime,
           minLoadingTime = (minLoadingTime !== undefined) ? minLoadingTime : 0,
           minLoadingTime = ($.isNumeric(minLoadingTime)) ? minLoadingTime : 0,
@@ -1862,7 +1864,7 @@ var Immerse = function() {};
             that.imm.$elem.trigger('immInit');
             that.imm._isInitialized = true;
             // Hide loading
-            $('.' + loadingOverlayClass).hide();
+            $(loadingDataTag).addClass(loadedNamespace);
           }, remainingLoad);
 
         },

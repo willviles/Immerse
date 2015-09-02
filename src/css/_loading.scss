@@ -1,0 +1,21 @@
+[data-#{$prefix}-loading] {
+  @include stretch(); position: fixed; background-color: white; z-index: 1001;
+  &.#{$prefix}-loaded { @include translate(-100%, -100%); @include opacity(0); }
+  & > div {
+    position: fixed; top: 50%; left: 50%;
+    @include translate(-50%, -50%);
+  }
+}
+
+@include keyframes(imm-loading-fade) {
+	0%, 99% { @include translate(0, 0); }
+  0% { @include opacity(1); }
+  99% { @include opacity(0); }
+  100% { @include translate(-100%, -100%); }
+}
+
+[data-#{$prefix}-loading="fade"] {
+  &.#{$prefix}-loaded {
+    @include animation(imm-loading-fade .3s linear);
+  }
+}

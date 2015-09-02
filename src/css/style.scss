@@ -22,12 +22,9 @@ body::-webkit-scrollbar { width: 0 !important; }
   .#{$prefix}-vertcenter { position: absolute; top: 50%; left: 0; width: 100%; @include translateY(-50%); }
 }
 
-.#{$prefix}-loading {
-  @include stretch(); position: fixed; background-color: white; z-index: 1001;
-}
-
 /* Default Styles */
 
+@import 'loading';
 @import 'navigation';
 
 /* Default Components */
