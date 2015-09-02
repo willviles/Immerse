@@ -187,6 +187,10 @@ body::-webkit-scrollbar {
     height: 95%;
   }
 }
+[data-imm-modal-youtube] {
+  overflow: hidden !important;
+}
+
 /*
 Plugin: Immerse.js
 Component: Tooltips

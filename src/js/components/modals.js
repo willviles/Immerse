@@ -199,7 +199,7 @@ new Immerse().component({
 
     close: function(modal, id) {
       var videoId = id.replace('youtube-','');
-      this.youtube.players[videoId].stopVideo().seekTo(0, true);
+      this.youtube.players[videoId].stopVideo().seekTo(0, true).stopVideo();
     }
   },
 
