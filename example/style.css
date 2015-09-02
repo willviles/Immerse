@@ -1978,194 +1978,95 @@ button.fullwidth {
   box-shadow: 0px 0px 0px 3px white inset;
 }
 
-nav.side-nav {
-  position: fixed;
-  top: 50%;
-  right: 30px;
-  width: 25px;
-  z-index: 1000;
-}
-nav.side-nav ul {
-  -moz-transform: translateY(-50%);
-  -ms-transform: translateY(-50%);
-  -webkit-transform: translateY(-50%);
-  transform: translateY(-50%);
-}
-nav.side-nav ul li {
-  display: block;
-  height: 25px;
-  position: relative;
-}
-nav.side-nav ul li a {
-  display: block;
-  width: 25px;
-  height: 25px;
-  cursor: pointer;
-  position: relative;
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
-nav.side-nav ul li a:before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 15px;
-  height: 15px;
-  margin-left: -7.5px;
-  margin-top: -7.5px;
-  -moz-border-radius: 50%;
-  -webkit-border-radius: 50%;
-  border-radius: 50%;
-  -moz-transform: scale(0.66, 0.66);
-  -ms-transform: scale(0.66, 0.66);
-  -webkit-transform: scale(0.66, 0.66);
-  transform: scale(0.66, 0.66);
-  -moz-transition: -moz-transform 0.3s cubic-bezier(0.25, 1.43, 0.55, 0.99);
-  -o-transition: -o-transform 0.3s cubic-bezier(0.25, 1.43, 0.55, 0.99);
-  -webkit-transition: -webkit-transform 0.3s cubic-bezier(0.25, 1.43, 0.55, 0.99);
-  transition: transform 0.3s cubic-bezier(0.25, 1.43, 0.55, 0.99);
-}
-nav.side-nav ul li a.current:before {
-  -moz-transform: scale(1, 1);
-  -ms-transform: scale(1, 1);
-  -webkit-transform: scale(1, 1);
-  transform: scale(1, 1);
-  -moz-transition: -moz-transform 0.3s cubic-bezier(0.25, 1.43, 0.55, 0.99);
-  -o-transition: -o-transform 0.3s cubic-bezier(0.25, 1.43, 0.55, 0.99);
-  -webkit-transition: -webkit-transform 0.3s cubic-bezier(0.25, 1.43, 0.55, 0.99);
-  transition: transform 0.3s cubic-bezier(0.25, 1.43, 0.55, 0.99);
-}
-nav.side-nav ul li a span {
-  display: none;
-  position: absolute;
-  top: 50%;
-  right: 100%;
-  -moz-transform: translateY(-50%);
-  -ms-transform: translateY(-50%);
-  -webkit-transform: translateY(-50%);
-  transform: translateY(-50%);
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
-  border-radius: 5px;
-  padding: .25em .5em;
-  font-size: .8em;
-  font-weight: bold;
-}
-nav.side-nav ul li a span:before {
-  position: absolute;
-  top: 50%;
-  left: 100%;
-  margin-top: -4px;
-  content: '';
-  width: 0;
-  height: 0;
-  border-top: 4px solid transparent;
-  border-bottom: 4px solid transparent;
-}
-nav.side-nav ul li a:hover:before {
-  -moz-transform: scale(0.75, 0.75);
-  -ms-transform: scale(0.75, 0.75);
-  -webkit-transform: scale(0.75, 0.75);
-  transform: scale(0.75, 0.75);
-}
-nav.side-nav ul li a:hover span {
-  display: block;
-}
-
-nav.side-nav ul li a:before {
+[data-imm-nav="side"] ul li a:before {
   -moz-box-shadow: 0 0 0 3px white inset;
   -webkit-box-shadow: 0 0 0 3px white inset;
   box-shadow: 0 0 0 3px white inset;
 }
-nav.side-nav ul li a.current:before {
+[data-imm-nav="side"] ul li a.current:before {
   background-color: #f5da55;
   -moz-box-shadow: 0 0 0 3px #f5da55 inset;
   -webkit-box-shadow: 0 0 0 3px #f5da55 inset;
   box-shadow: 0 0 0 3px #f5da55 inset;
 }
-nav.side-nav ul li a span {
+[data-imm-nav="side"] ul li a span {
   background-color: white;
   color: #43433b;
 }
-nav.side-nav ul li a span:before {
+[data-imm-nav="side"] ul li a span:before {
   border-left: 4px solid white;
 }
-nav.side-nav ul li a:hover span {
+[data-imm-nav="side"] ul li a:hover span {
   display: block;
 }
-nav.side-nav ul li a.current span {
+[data-imm-nav="side"] ul li a.current span {
   background-color: #f5da55;
   color: #43433b;
 }
-nav.side-nav ul li a.current span:before {
+[data-imm-nav="side"] ul li a.current span:before {
   border-left: 4px solid #f5da55;
 }
 
-nav.side-nav.grey ul li a:before {
+[data-imm-nav="side"].grey ul li a:before {
   -moz-box-shadow: 0 0 0 3px #43433b inset;
   -webkit-box-shadow: 0 0 0 3px #43433b inset;
   box-shadow: 0 0 0 3px #43433b inset;
 }
-nav.side-nav.grey ul li a.current:before {
+[data-imm-nav="side"].grey ul li a.current:before {
   background-color: #f5da55;
   -moz-box-shadow: 0 0 0 3px #f5da55 inset;
   -webkit-box-shadow: 0 0 0 3px #f5da55 inset;
   box-shadow: 0 0 0 3px #f5da55 inset;
 }
-nav.side-nav.grey ul li a span {
+[data-imm-nav="side"].grey ul li a span {
   background-color: #43433b;
   color: white;
 }
-nav.side-nav.grey ul li a span:before {
+[data-imm-nav="side"].grey ul li a span:before {
   border-left: 4px solid #43433b;
 }
-nav.side-nav.grey ul li a:hover span {
+[data-imm-nav="side"].grey ul li a:hover span {
   display: block;
 }
-nav.side-nav.grey ul li a.current span {
+[data-imm-nav="side"].grey ul li a.current span {
   background-color: #f5da55;
   color: #43433b;
 }
-nav.side-nav.grey ul li a.current span:before {
+[data-imm-nav="side"].grey ul li a.current span:before {
   border-left: 4px solid #f5da55;
 }
 
-nav.side-nav.white-grey ul li a:before {
+[data-imm-nav="side"].white-grey ul li a:before {
   -moz-box-shadow: 0 0 0 3px white inset;
   -webkit-box-shadow: 0 0 0 3px white inset;
   box-shadow: 0 0 0 3px white inset;
 }
-nav.side-nav.white-grey ul li a.current:before {
+[data-imm-nav="side"].white-grey ul li a.current:before {
   background-color: #43433b;
   -moz-box-shadow: 0 0 0 3px #43433b inset;
   -webkit-box-shadow: 0 0 0 3px #43433b inset;
   box-shadow: 0 0 0 3px #43433b inset;
 }
-nav.side-nav.white-grey ul li a span {
+[data-imm-nav="side"].white-grey ul li a span {
   background-color: white;
   color: #43433b;
 }
-nav.side-nav.white-grey ul li a span:before {
+[data-imm-nav="side"].white-grey ul li a span:before {
   border-left: 4px solid white;
 }
-nav.side-nav.white-grey ul li a:hover span {
+[data-imm-nav="side"].white-grey ul li a:hover span {
   display: block;
 }
-nav.side-nav.white-grey ul li a.current span {
+[data-imm-nav="side"].white-grey ul li a.current span {
   background-color: #43433b;
   color: #f5da55;
 }
-nav.side-nav.white-grey ul li a.current span:before {
+[data-imm-nav="side"].white-grey ul li a.current span:before {
   border-left: 4px solid #43433b;
 }
 
 @media screen and (max-width: 768px) {
-  nav.side-nav {
+  [data-imm-nav="side"] {
     display: none;
   }
 }

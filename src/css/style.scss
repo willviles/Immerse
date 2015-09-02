@@ -1,5 +1,6 @@
 @import 'compass';
 @import 'compass/layout';
+@import 'mixins';
 
 // Namespace
 $prefix: 'imm';
@@ -24,6 +25,10 @@ body::-webkit-scrollbar { width: 0 !important; }
 .#{$prefix}-loading {
   @include stretch(); position: fixed; background-color: white; z-index: 1001;
 }
+
+/* Default Styles */
+
+@import 'navigation';
 
 /* Default Components */
 

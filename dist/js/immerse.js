@@ -1579,14 +1579,15 @@ var Immerse = function() {};
 
     init: function(imm) {
       this.imm = imm;
-      this.navListClass = this.imm.utils.namespacify.call(this.imm, 'nav');
+      this.navListNamespace = this.imm.utils.namespacify.call(this.imm, 'nav');
+      this.navListDataTag = this.imm.utils.datatagify.call(this.imm, this.navListNamespace);
       this.navLinkClass = this.imm.utils.namespacify.call(this.imm, 'nav-link');
       this.sectionDataTag = this.imm.utils.namespacify.call(this.imm, 'to-section');
       var that = this;
       // Generate Nav list
       this.addToDOM.call(this);
       // Set current
-      var navItem = $('.' + this.navListClass + ' li a[data-' + this.sectionDataTag + '="' + this.imm._currentSection.id + '"]');
+      var navItem = $(this.navListDataTag + ' a[data-' + this.sectionDataTag + '="' + this.imm._currentSection.id + '"]');
       this.update.call(this, navItem);
       // Handle nav item click
       this.handleClick.call(this);
@@ -1599,7 +1600,7 @@ var Immerse = function() {};
 
     handleClick: function() {
       var that = this;
-      $('.' + this.navListClass + ' li a', 'body').on('click', function() {
+      $(this.navListDataTag + ' li a', 'body').on('click', function() {
         var target = $(this).data(that.sectionDataTag);
         if (target !== that.imm._currentSection.id) {
           $.Immerse.scrollController.doScroll(that.imm, target);
@@ -1613,7 +1614,7 @@ var Immerse = function() {};
     sectionChange: function() {
       var that = this;
       this.imm.$elem.on('sectionChanged', function(e, d) {
-        var navItem = $('.' + that.navListClass + ' li a[data-' + that.sectionDataTag + '="' + d.current.id + '"]');
+        var navItem = $(that.navListDataTag + ' a[data-' + that.sectionDataTag + '="' + d.current.id + '"]');
         that.update.call(that, navItem);
       });
     },
@@ -1622,7 +1623,7 @@ var Immerse = function() {};
     ///////////////////////////////////////////////////////
 
     addToDOM: function() {
-      var nav = $('.' + this.navListClass);
+      var nav = $(this.navListDataTag);
       if (nav.length === 0) { return false; }
       var str = '',
           that = this;
@@ -1632,14 +1633,15 @@ var Immerse = function() {};
           str = str + '<li><a class="' + that.navLinkClass + '" data-' + that.sectionDataTag + '="' + s.id + '"><span>' + s.name + '</span></a></li>';
         }
       });
-      nav.html(str);
+
+      nav.html('<ul>' + str + '</ul>');
     },
 
     // Update nav
     ///////////////////////////////////////////////////////
 
     update: function($e) {
-      $('.' + this.navListClass + ' li a').removeClass('current');
+      $(this.navListDataTag + ' li a').removeClass('current');
       if ($e.length > 0) { $e.addClass('current'); }
     }
 

@@ -254,9 +254,7 @@
       </div>
     </section>
 
-    <nav class="side-nav">
-      <ul class="imm-nav"></ul>
-    </nav>
+    <nav data-imm-nav="side"></nav>
 
     <nav class="top-nav">
       <div><button class="open-menu"><i class="fa fa-bars"></i></button></div>
@@ -473,7 +471,7 @@
 
         $('body').on('navColor', function(e, value) {
 
-          var $navs = $('.side-nav, .top-nav');
+          var $navs = $('[data-imm-nav="side"], .top-nav');
           $.each($navs, function(i, nav) {
             var $nav = $(nav),
                 currentColor = $nav.data('color');
