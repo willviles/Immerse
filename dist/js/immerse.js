@@ -1015,6 +1015,11 @@ var Immerse = function() {};
           return false;
         }
 
+        // Log change
+        this.imm.utils.log(this.imm, "-------------------------------------");
+        this.imm.utils.log(this.imm, "Changing section to '" + opts.nextSection.id + "'");
+        this.imm.utils.log(this.imm, "-------------------------------------");
+
         // If we've passed a direct trigger, just do the scroll and don't worry about bound status
         if (opts.justDoScroll === true) {
           this.go.animate.call(this, opts);
