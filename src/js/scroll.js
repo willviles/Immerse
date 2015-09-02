@@ -129,14 +129,13 @@
           var timeDiff = curTime - this.handlers.scroll.prevTime;
           this.handlers.scroll.prevTime = curTime;
           // Empty scroll array if no scroll in 200ms
-          if (timeDiff > 200) { console.log('Emptying array'); this.handlers.scroll.records = []; }
+          if (timeDiff > 200) { this.handlers.scroll.records = []; }
 
           var averageEnd = this.handlers.scroll.recordAverage(this.handlers.scroll.records, 10),
               averageMiddle = this.handlers.scroll.recordAverage(this.handlers.scroll.records, 70),
               isAccelerating = averageEnd >= averageMiddle;
 
           if (isAccelerating) {
-            console.log('Is accelerating!');
             var direction = this.utils.getScrollDirection(e);
             this.ifCanThenGo.call(this, this.imm, direction);
           }
