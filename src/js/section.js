@@ -258,6 +258,7 @@
         obj._timelineContent = obj.timeline(registration.$section);
         obj.delay = !isNaN(obj.delay) ? obj.delay : null;
         obj.runtime = obj.hasOwnProperty('runtime') ? obj.runtime : ['enteringDown', 'enteringUp'];
+        obj.reset = obj.hasOwnProperty('reset') ? obj.reset : ['exitedDown', 'exitedUp'];
 
         // If there's a delay, add it to start of timeline
         if (obj.delay !== null) { obj._timeline.set({}, {}, "+=" + obj.delay); }
@@ -309,6 +310,7 @@
 
         obj.delay = !isNaN(obj.delay) ? obj.delay : null;
         obj.runtime = obj.hasOwnProperty('runtime') ? obj.runtime : ['enteringDown', 'enteringUp'];
+        obj.reset = obj.hasOwnProperty('reset') ? obj.reset : ['exitedDown', 'exitedUp'];
 
         obj._runtimeStr = ''; obj._resetStr = '';
 
@@ -351,6 +353,7 @@
 
         obj.delay = !isNaN(obj.delay) ? obj.delay : null;
         obj.runtime = obj.hasOwnProperty('runtime') ? obj.runtime : ['enteringDown', 'enteringUp'];
+        obj.reset = obj.hasOwnProperty('reset') ? obj.reset : ['exitedDown', 'exitedUp'];
 
         obj._runtimeStr = '';
 
