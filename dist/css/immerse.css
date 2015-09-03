@@ -185,6 +185,7 @@ body::-webkit-scrollbar {
   border-radius: 5px;
   padding: .25em .5em;
   font-size: .8em;
+  white-space: nowrap;
   font-weight: bold;
 }
 [data-imm-nav="side"] ul li a span:before {

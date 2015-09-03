@@ -30,6 +30,7 @@ $jumpBezier: cubic-bezier(.25,1.43,.55,.99);
           @include translateY(-50%);
           @include border-radius(5px);
           padding: .25em .5em; font-size: .8em;
+          white-space: nowrap;
           font-weight: bold;
           &:before {
             position: absolute; top: 50%; left: 100%; margin-top: -4px;
