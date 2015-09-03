@@ -451,7 +451,10 @@ var Immerse = function() {};
         var obj = registration.obj,
             that = this;
 
-        obj._timeline = new TimelineMax({ paused: true });
+        obj._settings = obj.hasOwnProperty('settings') ? obj.settings : { };
+        obj._settings['paused'] = true;
+
+        obj._timeline = new TimelineMax(obj._settings);
         obj._timelineContent = obj.timeline(registration.$section);
         obj.delay = !isNaN(obj.delay) ? obj.delay : null;
         obj.runtime = obj.hasOwnProperty('runtime') ? obj.runtime : ['enteringDown', 'enteringUp'];
