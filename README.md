@@ -224,6 +224,12 @@ page.section('foo', {
       // Add a delay to the start of the timeline
       delay: 1,
       
+      // Repeat the timeline animation. Default is no repeat, but 'true' or integer can be passed.
+      repeat: true,
+      
+      // Can define any further GSAP timeline settings in settings object.
+      settings: { onComplete: function() { // }, ... }, 
+      
       // Timeline. Add content of a GreenSock Timeline here.
       // The jQuery object of the section is available to use to specifically find section elements to animate.
       timeline: function($section) {
