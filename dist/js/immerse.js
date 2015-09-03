@@ -815,7 +815,7 @@ var Immerse = function() {};
 
         manage: function(e) {
           var curTime = new Date().getTime(),
-              value = e.wheelDelta || -e.deltaY || -e.detail;
+              value = e.originalEvent.wheelDelta || -e.originalEvent.deltaY || -e.originalEvent.detail;
 
           // Manage memory
           if (this.handlers.scroll.records.length > 149) { this.handlers.scroll.records.shift(); }
@@ -1109,8 +1109,7 @@ var Immerse = function() {};
             opts.$nextSection.trigger(opts.triggers.entered);
             // Set current section to exited
             opts.$currentSection.trigger(opts.triggers.exited);
-            // Reset flags & empty scroll record array
-            that.handlers.scroll.records = [];
+            // Reset flags
             that.imm._isScrolling = false;
           }
         });
