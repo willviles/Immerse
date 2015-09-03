@@ -778,7 +778,7 @@ var Immerse = function() {};
       // Scroll Handler
       scroll: {
 
-        prevTime: new Date().getTime(),
+        previousTimestamp: new Date().getTime(),
 
         records: [],
 
@@ -814,23 +814,23 @@ var Immerse = function() {};
         },
 
         manage: function(e) {
-          var curTime = new Date().getTime(),
-              value = e.originalEvent.wheelDelta || -e.originalEvent.deltaY || -e.originalEvent.detail;
+          var currentTimestamp = new Date().getTime(),
+              scrollValue = e.originalEvent.wheelDelta || -e.originalEvent.deltaY || -e.originalEvent.detail;
 
           // Manage memory
           if (this.handlers.scroll.records.length > 149) { this.handlers.scroll.records.shift(); }
-          this.handlers.scroll.records.push(Math.abs(value));
+          this.handlers.scroll.records.push(Math.abs(scrollValue));
 
-          var timeDiff = curTime - this.handlers.scroll.prevTime;
-          this.handlers.scroll.prevTime = curTime;
+          var timeDifference = currentTimestamp - this.handlers.scroll.previousTimestamp;
+          this.handlers.scroll.previousTimestamp = currentTimestamp;
           // Empty scroll array if no scroll in 200ms
-          if (timeDiff > 200) { this.handlers.scroll.records = []; }
+          if (timeDifference > 200) { this.handlers.scroll.records = []; }
 
-          var averageEnd = this.handlers.scroll.recordAverage(this.handlers.scroll.records, 10),
-              averageMiddle = this.handlers.scroll.recordAverage(this.handlers.scroll.records, 70),
-              isAccelerating = averageEnd >= averageMiddle;
+          var averageRecordEnd = this.handlers.scroll.recordAverage(this.handlers.scroll.records, 10),
+              averageRecordMiddle = this.handlers.scroll.recordAverage(this.handlers.scroll.records, 70),
+              scrollAccelerating = averageRecordEnd >= averageRecordMiddle;
 
-          if (isAccelerating) {
+          if (scrollAccelerating) {
             var direction = this.utils.getScrollDirection(e);
             this.ifCanThenGo.call(this, this.imm, direction);
           }
