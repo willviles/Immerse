@@ -50,12 +50,15 @@ new Immerse().component({
       var openModal = that.modalOpen,
           modalYouTube = that.modalYouTube,
           openStr = $(this).attr('data-' + openModal),
+          niceId = $.camelCase(openStr),
+          openEvent = section.components[that.pluginName][niceId]['onOpen'],
           isYoutubeURL = $(this).attr('data-' + modalYouTube);
 
       if (isYoutubeURL) {
         that.youtube.open.call(that, openStr);
       } else {
-        that.actions.open.call(that, openStr);
+        that.actions.open.call(that, openStr, openEvent);
+
       }
     });
 
@@ -208,11 +211,14 @@ new Immerse().component({
 
   actions: {
 
-    open: function(id) {
+    open: function(id, openEvent) {
       var $modal = $(this.imm.utils.datatagify.call(this.imm, this.modalId, id));
       if ($modal.length === 0) {
         this.imm.utils.log(this.imm, "Modal Failure: No modal defined with id '" + id + "'"); return;
       }
+
+      if (typeof openEvent === 'function') { openEvent($modal); }
+
       $modal.closest('.' + this.modalWrapper).addClass('opened');
       $.Immerse.scrollController.htmlScroll(this.imm, 'lock');
       $modal.focus();
@@ -232,7 +238,7 @@ new Immerse().component({
 
   defaults: {
     'default': {
-      onConfirm: 'close', onCancel: 'close', onClose: 'close', onEscape: 'close', onWrapperClick: 'close'
+      onConfirm: 'close', onCancel: 'close', onClose: 'close', onEscape: 'close', onWrapperClick: 'close', onOpen: null
     }
   }
 

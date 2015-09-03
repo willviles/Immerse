@@ -447,7 +447,8 @@ new Immerse().setup({
       'default': {
         onCancel: function(modal) { /* Custom function */ },
         onConfirm: function(modal) { /* Custom function */ },
-        onClose: function(modal) { /* Custom function */ }
+        onClose: function(modal) { /* Custom function */ },
+        onOpen: function(modal) { /* Custom function */ } 
       },
       
       // Will set specific settings on modal
