@@ -451,12 +451,21 @@ var Immerse = function() {};
         var obj = registration.obj,
             that = this;
 
+        // Get timeline settings
         obj._settings = obj.hasOwnProperty('settings') ? obj.settings : { };
+        // Always ensure timeline is paused to start off with so Immerse runtime hooks can be used
         obj._settings['paused'] = true;
 
+        // Get delay and repeats
+        obj.delay = !isNaN(obj.delay) ? obj.delay : null;
+        obj.repeat = !isNaN(obj.repeat) ? obj.repeat : null;
+        if (obj.repeat) { obj._settings['repeat'] = obj.repeat; }
+
+        // Create timeline and add content
         obj._timeline = new TimelineMax(obj._settings);
         obj._timelineContent = obj.timeline(registration.$section);
-        obj.delay = !isNaN(obj.delay) ? obj.delay : null;
+
+        // Runtime and reset targeting defaults
         obj.runtime = obj.hasOwnProperty('runtime') ? obj.runtime : ['enteringDown', 'enteringUp'];
         obj.reset = obj.hasOwnProperty('reset') ? obj.reset : ['exitedDown', 'exitedUp'];
 
