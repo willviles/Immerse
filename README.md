@@ -565,6 +565,14 @@ Development mode logs all changes to animations, attributes and actions. It also
 devMode: true, ...
 ```
 
+#### Kill Immerse
+It's easy to kill all events attached to an Immerse page. You may need to do this when managing multiple Immerse instances on an asynchronously delivered website.
+
+```js
+// Your page variable reference
+page.kill();
+```
+
 ## Custom components
 Custom Immerse.js components will be available for anyone to develop in the near future once the API is locked down and documentation is up to speed! Follow <a href="https://twitter.com/willviles" title="Will Viles Twitter @willviles" target="_blank">@willviles</a> for updates.
 
