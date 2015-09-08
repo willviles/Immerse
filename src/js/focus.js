@@ -19,10 +19,9 @@
 
     init: function(imm) {
       this.imm = imm;
+      var that = this;
       this.imm.$elem.on('sectionChanged', function(e, d) {
-        if (document.activeElement !== $('body')[0]) {
-          $(document.activeElement).blur();
-        }
+        that.returnFocusToBody();
       });
       return this;
     },
@@ -76,6 +75,16 @@
       });
 
       return this;
+    },
+
+    returnFocusToBody: function() {
+      if (document.activeElement !== $('body')[0]) {
+        $(document.activeElement).blur();
+      }
+    },
+
+    kill: function() {
+      this.returnFocusToBody();
     }
 
   // End of controller
@@ -91,6 +100,10 @@
     },
     tabPress: function(imm, e) {
       return new controller[n](this).tabPress(imm, e);
+    },
+    kill: function() {
+      var c = new controller[n](this);
+      c.kill.call(c);
     }
   }
 

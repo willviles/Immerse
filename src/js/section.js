@@ -176,6 +176,7 @@
       $.each(s.actions, function(name, action) {
         var registration = { section: s, $section: $s };
         registration.type = 'action'; registration.name = name; registration.obj = action;
+        s.registration = registration;
         that.registrationHandler.call(that, registration);
       });
       // Register Attributes
@@ -465,6 +466,37 @@
 
         return defaults;
       }
+    },
+
+    // Extend defaults
+    ///////////////////////////////////////////////////////
+
+    killAllEvents: function(imm) {
+
+      this.imm = (this.imm === undefined) ? imm : this.imm;
+
+      var that = this;
+
+      $.each(this.imm._sections, function(i, s) {
+
+        // Run all reset events of custom actions
+        if (s.hasOwnProperty('actions')) {
+          $.each(s.actions, function(name, a) {
+            if (a.hasOwnProperty('clear')) { a.clear.call(s.registration, s); }
+          });
+        }
+
+        // Kill all events attached to section runtimes
+        s.element.off();
+
+        // Kill all events attached to attribute changes
+        if (s.hasOwnProperty('attributes')) {
+          $.each(s.attributes, function(name, a) {
+            that.imm.$elem.off(name);
+          });
+        }
+      });
+
     }
 
   // End of controller
@@ -491,6 +523,11 @@
       var c = new controller[n](this);
       c.reinitSections.call(c, imm);
       return c;
+    },
+
+    kill: function(imm) {
+      var c = new controller[n](this);
+      c.killAllEvents.call(c, imm);
     }
   }
 

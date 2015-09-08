@@ -217,6 +217,18 @@
         var currentAudio = that.imm._currentSection.audio;
         if (!that.imm._muted) { that.start.call(that, currentAudio); }
       });
+    },
+
+    // Kill
+    ///////////////////////////////////////////////////////
+
+    kill: function(imm) {
+      this.imm = (this.imm === undefined) ? imm : this.imm;
+
+      var audioToMute = this.imm._audioPlaying,
+          that = this;
+
+      if (!this.imm._muted) { that.mute.call(that, audioToMute); }
     }
 
   // End of controller
@@ -242,6 +254,11 @@
         c.muteBtns.muteAll.call(c, imm);
       }
       return c;
+    },
+
+    kill: function(imm) {
+      var c = new controller[n](this);
+      c.kill.call(c, imm);
     }
   }
 

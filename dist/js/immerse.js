@@ -167,6 +167,22 @@ var Immerse = function() {};
       return $.Immerse.sectionController.add(this, id, section);
     },
 
+    kill: function() {
+
+
+      this.$elem.off('immInit sectionChanged'); // Kill all events attached to Immerse init event or sectionChanged
+      $.Immerse.sectionController.kill(this); // Kill all events attached to section controller
+      $.Immerse.audioController.kill(this); // Kill all audio
+      $.Immerse.focusController.kill(); // Return focus to body
+      $.Immerse.viewportController.kill(); // Unbind all viewport listeners
+      $.Immerse.scrollController.kill(this); // Unbind all scroll events and return to normal scroll
+
+      // If deleted successfully, log the fact it has.
+      this.utils.log(this, 'Immerse instance successfully deleted.');
+
+      return true;
+    },
+
     // Description: Register a new component with Immerse
     component: function(opts) {
       return $.Immerse.componentController.add(opts);
@@ -373,6 +389,7 @@ var Immerse = function() {};
       $.each(s.actions, function(name, action) {
         var registration = { section: s, $section: $s };
         registration.type = 'action'; registration.name = name; registration.obj = action;
+        s.registration = registration;
         that.registrationHandler.call(that, registration);
       });
       // Register Attributes
@@ -662,6 +679,37 @@ var Immerse = function() {};
 
         return defaults;
       }
+    },
+
+    // Extend defaults
+    ///////////////////////////////////////////////////////
+
+    killAllEvents: function(imm) {
+
+      this.imm = (this.imm === undefined) ? imm : this.imm;
+
+      var that = this;
+
+      $.each(this.imm._sections, function(i, s) {
+
+        // Run all reset events of custom actions
+        if (s.hasOwnProperty('actions')) {
+          $.each(s.actions, function(name, a) {
+            if (a.hasOwnProperty('clear')) { a.clear.call(s.registration, s); }
+          });
+        }
+
+        // Kill all events attached to section runtimes
+        s.element.off();
+
+        // Kill all events attached to attribute changes
+        if (s.hasOwnProperty('attributes')) {
+          $.each(s.attributes, function(name, a) {
+            that.imm.$elem.off(name);
+          });
+        }
+      });
+
     }
 
   // End of controller
@@ -688,6 +736,11 @@ var Immerse = function() {};
       var c = new controller[n](this);
       c.reinitSections.call(c, imm);
       return c;
+    },
+
+    kill: function(imm) {
+      var c = new controller[n](this);
+      c.killAllEvents.call(c, imm);
     }
   }
 
@@ -721,6 +774,8 @@ var Immerse = function() {};
 
       // If element initiated on is body, set the scroll target to window
       this.imm._scrollContainer = ($(this.imm.elem)[0] === $('body')[0]) ? $(window) : $(this.imm.elem);
+      // Test for corresponding mousewheelEvent for browser
+      this.imm._mousewheelEvent = (/Firefox/i.test(navigator.userAgent))? 'DOMMouseScroll' : 'mousewheel';
       // Get bound/unbound status of first section
       this.imm._scrollUnbound = this.utils.isScrollUnbound.call(this, this.imm, this.imm._currentSection);
       // Manage binding or unbind of scroll on sectionChange
@@ -739,9 +794,8 @@ var Immerse = function() {};
 
     events: {
       scroll: function() {
-        var mousewheelEvent = (/Firefox/i.test(navigator.userAgent))? 'DOMMouseScroll' : 'mousewheel';
-        this.imm._scrollContainer.off(mousewheelEvent + ' wheel')
-                                 .on(mousewheelEvent + ' wheel', this.handlers.scroll.detect.bind(this));
+        this.imm._scrollContainer.off( this.imm._mousewheelEvent + ' wheel')
+                                 .on( this.imm._mousewheelEvent + ' wheel', this.handlers.scroll.detect.bind(this));
       },
 
       keys: function() {
@@ -797,17 +851,18 @@ var Immerse = function() {};
 
         detect: function(e) {
 
+
           // Always allow default scrolling on elements showing when main page is locked
           if (this.imm._htmlScrollLocked) {
-            this.handlers.scroll.toggle('enable', e);
+            this.handlers.scroll.toggle.call(this, 'enable', e);
           } else {
             if (this.imm._scrollUnbound) {
               // Enable browser scroll
-              this.handlers.scroll.toggle('enable', e);
+              this.handlers.scroll.toggle.call(this, 'enable', e);
               this.unbound.call(this, e);
             } else {
               // Disable browser scroll
-              this.handlers.scroll.toggle('disable', e);
+              this.handlers.scroll.toggle.call(this, 'disable', e);
               this.handlers.scroll.manage.call(this, e);
             }
           }
@@ -837,17 +892,16 @@ var Immerse = function() {};
         },
 
         toggle: function(status, e) {
+
           function preventDefaultScroll(e) {
             e = e || window.event;
             if (e.preventDefault) { e.preventDefault(); }
             e.returnValue = false;
-          }
-
-          var mousewheelEvent = (/Firefox/i.test(navigator.userAgent))? 'DOMMouseScroll wheel' : 'mousewheel wheel';
+          };
 
           if (status === 'enable') {
             if (window.removeEventListener) {
-              window.removeEventListener(mousewheelEvent, preventDefaultScroll, false);
+              window.removeEventListener(this.imm._mousewheelEvent, preventDefaultScroll, false);
             }
             window.onmousewheel = document.onmousewheel = null;
             window.onwheel = null;
@@ -855,7 +909,7 @@ var Immerse = function() {};
 
           } else if (status === 'disable') {
             if (window.addEventListener) {
-              window.addEventListener(mousewheelEvent, preventDefaultScroll, false);
+              window.addEventListener(this.imm._mousewheelEvent, preventDefaultScroll, false);
             }
             window.onwheel = preventDefaultScroll; // modern standard
             window.onmousewheel = document.onmousewheel = preventDefaultScroll; // older browsers, IE
@@ -1292,6 +1346,23 @@ var Immerse = function() {};
 
     },
 
+    kill: function(imm) {
+      this.imm = (this.imm === undefined) ? imm : this.imm;
+      // Remove all Immerse scroll event handlers
+      $(document).off('keydown keyup touchmove touchstart swipedown swipeup');
+      // Remove all events attached to the mousewheel and wheel events
+      this.imm._scrollContainer.off(this.imm._mousewheelEvent + ' wheel');
+      // Ensure default behaviour is restored
+      this.imm._scrollContainer.on(this.imm._mousewheelEvent + ' wheel', function(e) {
+        window.onmousewheel = document.onmousewheel = null;
+        window.onwheel = null;
+        window.ontouchmove = null;
+        return true;
+      });
+
+
+    }
+
 
 
   // End of controller
@@ -1326,6 +1397,10 @@ var Immerse = function() {};
     },
     isScrollUnbound: function(imm, section) {
       return new controller[n](this).utils.isScrollUnbound(imm, section);
+    },
+    kill: function(imm) {
+      var c = new controller[n](this);
+      c.kill.call(c, imm);
     }
   }
 
@@ -1550,6 +1625,18 @@ var Immerse = function() {};
         var currentAudio = that.imm._currentSection.audio;
         if (!that.imm._muted) { that.start.call(that, currentAudio); }
       });
+    },
+
+    // Kill
+    ///////////////////////////////////////////////////////
+
+    kill: function(imm) {
+      this.imm = (this.imm === undefined) ? imm : this.imm;
+
+      var audioToMute = this.imm._audioPlaying,
+          that = this;
+
+      if (!this.imm._muted) { that.mute.call(that, audioToMute); }
     }
 
   // End of controller
@@ -1575,6 +1662,11 @@ var Immerse = function() {};
         c.muteBtns.muteAll.call(c, imm);
       }
       return c;
+    },
+
+    kill: function(imm) {
+      var c = new controller[n](this);
+      c.kill.call(c, imm);
     }
   }
 
@@ -1942,7 +2034,7 @@ var Immerse = function() {};
       this.imm.setup.options.breakpoints = this.prepareBreakpoints.call(this);
       this.detectDevice.call(this);
       this.set.call(this, this.imm._windowWidth);
-      this.resize.call(this);
+      $(window).on('resize', this.resize.bind(this));
 
       return this;
     },
@@ -2018,20 +2110,17 @@ var Immerse = function() {};
     ///////////////////////////////////////////////////////
 
     resize: function() {
-      var that = this;
-      $(window).on('resize', function() {
-        // Set new width and height
-        that.imm._windowWidth = $(window).width();
-        that.imm._windowHeight = $(window).height();
-        // Set viewport
-        that.set.call(that, that.imm._windowWidth);
-        // Update section offsets
-        $.Immerse.scrollController.updateSectionOffsets(that.imm);
-        // Stick current section to position
-        $.Immerse.scrollController.stickSection(that.imm);
-        // Call onResize function of each component
-        $.Immerse.componentController.resize(that.imm);
-      });
+      // Set new width and height
+      this.imm._windowWidth = $(window).width();
+      this.imm._windowHeight = $(window).height();
+      // Set viewport
+      this.set.call(this, this.imm._windowWidth);
+      // Update section offsets
+      $.Immerse.scrollController.updateSectionOffsets(this.imm);
+      // Stick current section to position
+      $.Immerse.scrollController.stickSection(this.imm);
+      // Call onResize function of each component
+      $.Immerse.componentController.resize(this.imm);
     },
 
     // IsView
@@ -2058,7 +2147,12 @@ var Immerse = function() {};
       return true;
     },
 
+    // Kill
+    ///////////////////////////////////////////////////////
 
+    kill: function() {
+      $(window).off('resize', this.resize);
+    }
 
   // End of controller
   ///////////////////////////////////////////////////////
@@ -2074,6 +2168,10 @@ var Immerse = function() {};
     },
     isView: function(imm, a) {
       return new controller[n](this).isView(imm, a);
+    },
+    kill: function() {
+      var c = new controller[n](this);
+      c.kill.call(this);
     }
   }
 
@@ -2228,10 +2326,9 @@ var Immerse = function() {};
 
     init: function(imm) {
       this.imm = imm;
+      var that = this;
       this.imm.$elem.on('sectionChanged', function(e, d) {
-        if (document.activeElement !== $('body')[0]) {
-          $(document.activeElement).blur();
-        }
+        that.returnFocusToBody();
       });
       return this;
     },
@@ -2285,6 +2382,16 @@ var Immerse = function() {};
       });
 
       return this;
+    },
+
+    returnFocusToBody: function() {
+      if (document.activeElement !== $('body')[0]) {
+        $(document.activeElement).blur();
+      }
+    },
+
+    kill: function() {
+      this.returnFocusToBody();
     }
 
   // End of controller
@@ -2300,6 +2407,10 @@ var Immerse = function() {};
     },
     tabPress: function(imm, e) {
       return new controller[n](this).tabPress(imm, e);
+    },
+    kill: function() {
+      var c = new controller[n](this);
+      c.kill.call(c);
     }
   }
 

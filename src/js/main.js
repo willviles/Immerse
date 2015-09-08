@@ -167,6 +167,22 @@ var Immerse = function() {};
       return $.Immerse.sectionController.add(this, id, section);
     },
 
+    kill: function() {
+
+
+      this.$elem.off('immInit sectionChanged'); // Kill all events attached to Immerse init event or sectionChanged
+      $.Immerse.sectionController.kill(this); // Kill all events attached to section controller
+      $.Immerse.audioController.kill(this); // Kill all audio
+      $.Immerse.focusController.kill(); // Return focus to body
+      $.Immerse.viewportController.kill(); // Unbind all viewport listeners
+      $.Immerse.scrollController.kill(this); // Unbind all scroll events and return to normal scroll
+
+      // If deleted successfully, log the fact it has.
+      this.utils.log(this, 'Immerse instance successfully deleted.');
+
+      return true;
+    },
+
     // Description: Register a new component with Immerse
     component: function(opts) {
       return $.Immerse.componentController.add(opts);

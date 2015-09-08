@@ -27,7 +27,7 @@
       this.imm.setup.options.breakpoints = this.prepareBreakpoints.call(this);
       this.detectDevice.call(this);
       this.set.call(this, this.imm._windowWidth);
-      this.resize.call(this);
+      $(window).on('resize', this.resize.bind(this));
 
       return this;
     },
@@ -103,20 +103,17 @@
     ///////////////////////////////////////////////////////
 
     resize: function() {
-      var that = this;
-      $(window).on('resize', function() {
-        // Set new width and height
-        that.imm._windowWidth = $(window).width();
-        that.imm._windowHeight = $(window).height();
-        // Set viewport
-        that.set.call(that, that.imm._windowWidth);
-        // Update section offsets
-        $.Immerse.scrollController.updateSectionOffsets(that.imm);
-        // Stick current section to position
-        $.Immerse.scrollController.stickSection(that.imm);
-        // Call onResize function of each component
-        $.Immerse.componentController.resize(that.imm);
-      });
+      // Set new width and height
+      this.imm._windowWidth = $(window).width();
+      this.imm._windowHeight = $(window).height();
+      // Set viewport
+      this.set.call(this, this.imm._windowWidth);
+      // Update section offsets
+      $.Immerse.scrollController.updateSectionOffsets(this.imm);
+      // Stick current section to position
+      $.Immerse.scrollController.stickSection(this.imm);
+      // Call onResize function of each component
+      $.Immerse.componentController.resize(this.imm);
     },
 
     // IsView
@@ -143,7 +140,12 @@
       return true;
     },
 
+    // Kill
+    ///////////////////////////////////////////////////////
 
+    kill: function() {
+      $(window).off('resize', this.resize);
+    }
 
   // End of controller
   ///////////////////////////////////////////////////////
@@ -159,6 +161,10 @@
     },
     isView: function(imm, a) {
       return new controller[n](this).isView(imm, a);
+    },
+    kill: function() {
+      var c = new controller[n](this);
+      c.kill.call(this);
     }
   }
 

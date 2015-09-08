@@ -26,6 +26,8 @@
 
       // If element initiated on is body, set the scroll target to window
       this.imm._scrollContainer = ($(this.imm.elem)[0] === $('body')[0]) ? $(window) : $(this.imm.elem);
+      // Test for corresponding mousewheelEvent for browser
+      this.imm._mousewheelEvent = (/Firefox/i.test(navigator.userAgent))? 'DOMMouseScroll' : 'mousewheel';
       // Get bound/unbound status of first section
       this.imm._scrollUnbound = this.utils.isScrollUnbound.call(this, this.imm, this.imm._currentSection);
       // Manage binding or unbind of scroll on sectionChange
@@ -44,9 +46,8 @@
 
     events: {
       scroll: function() {
-        var mousewheelEvent = (/Firefox/i.test(navigator.userAgent))? 'DOMMouseScroll' : 'mousewheel';
-        this.imm._scrollContainer.off(mousewheelEvent + ' wheel')
-                                 .on(mousewheelEvent + ' wheel', this.handlers.scroll.detect.bind(this));
+        this.imm._scrollContainer.off( this.imm._mousewheelEvent + ' wheel')
+                                 .on( this.imm._mousewheelEvent + ' wheel', this.handlers.scroll.detect.bind(this));
       },
 
       keys: function() {
@@ -102,17 +103,18 @@
 
         detect: function(e) {
 
+
           // Always allow default scrolling on elements showing when main page is locked
           if (this.imm._htmlScrollLocked) {
-            this.handlers.scroll.toggle('enable', e);
+            this.handlers.scroll.toggle.call(this, 'enable', e);
           } else {
             if (this.imm._scrollUnbound) {
               // Enable browser scroll
-              this.handlers.scroll.toggle('enable', e);
+              this.handlers.scroll.toggle.call(this, 'enable', e);
               this.unbound.call(this, e);
             } else {
               // Disable browser scroll
-              this.handlers.scroll.toggle('disable', e);
+              this.handlers.scroll.toggle.call(this, 'disable', e);
               this.handlers.scroll.manage.call(this, e);
             }
           }
@@ -142,17 +144,16 @@
         },
 
         toggle: function(status, e) {
+
           function preventDefaultScroll(e) {
             e = e || window.event;
             if (e.preventDefault) { e.preventDefault(); }
             e.returnValue = false;
-          }
-
-          var mousewheelEvent = (/Firefox/i.test(navigator.userAgent))? 'DOMMouseScroll wheel' : 'mousewheel wheel';
+          };
 
           if (status === 'enable') {
             if (window.removeEventListener) {
-              window.removeEventListener(mousewheelEvent, preventDefaultScroll, false);
+              window.removeEventListener(this.imm._mousewheelEvent, preventDefaultScroll, false);
             }
             window.onmousewheel = document.onmousewheel = null;
             window.onwheel = null;
@@ -160,7 +161,7 @@
 
           } else if (status === 'disable') {
             if (window.addEventListener) {
-              window.addEventListener(mousewheelEvent, preventDefaultScroll, false);
+              window.addEventListener(this.imm._mousewheelEvent, preventDefaultScroll, false);
             }
             window.onwheel = preventDefaultScroll; // modern standard
             window.onmousewheel = document.onmousewheel = preventDefaultScroll; // older browsers, IE
@@ -597,6 +598,23 @@
 
     },
 
+    kill: function(imm) {
+      this.imm = (this.imm === undefined) ? imm : this.imm;
+      // Remove all Immerse scroll event handlers
+      $(document).off('keydown keyup touchmove touchstart swipedown swipeup');
+      // Remove all events attached to the mousewheel and wheel events
+      this.imm._scrollContainer.off(this.imm._mousewheelEvent + ' wheel');
+      // Ensure default behaviour is restored
+      this.imm._scrollContainer.on(this.imm._mousewheelEvent + ' wheel', function(e) {
+        window.onmousewheel = document.onmousewheel = null;
+        window.onwheel = null;
+        window.ontouchmove = null;
+        return true;
+      });
+
+
+    }
+
 
 
   // End of controller
@@ -631,6 +649,10 @@
     },
     isScrollUnbound: function(imm, section) {
       return new controller[n](this).utils.isScrollUnbound(imm, section);
+    },
+    kill: function(imm) {
+      var c = new controller[n](this);
+      c.kill.call(c, imm);
     }
   }
 

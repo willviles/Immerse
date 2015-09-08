@@ -360,6 +360,7 @@
               }
             }
           },
+
           // Custom Attributes get changed in the custom attributes dictionary. Fires an observer
           attributes: {
             'navColor': {
@@ -486,6 +487,10 @@
             $nav.removeClass(currentColor).addClass(value).data('color', value);
           });
 
+        });
+
+        $('.open-menu').on('click', function() {
+          pageName.kill();
         });
 
 
