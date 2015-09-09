@@ -47,7 +47,7 @@ At its most basic configuration, Immerse.js will build your section based page f
   <nav data-imm-nav="side"></nav>
   
   <!-- Loading overlay displays until the page's assets have fully loaded -->
-  <div data-imm-loading="fade"></div>
+  <div class="imm-loading" data-imm-loading="fade"></div>
   
 </body>
 ```
