@@ -23,7 +23,7 @@ body::-webkit-scrollbar {
 }
 
 /* Default Styles */
-[data-imm-loading] {
+.imm-loading {
   position: absolute;
   top: 0;
   bottom: 0;
@@ -33,7 +33,7 @@ body::-webkit-scrollbar {
   background-color: white;
   z-index: 1001;
 }
-[data-imm-loading].imm-loaded {
+.imm-loading.imm-loaded {
   -moz-transform: translate(-100%, -100%);
   -ms-transform: translate(-100%, -100%);
   -webkit-transform: translate(-100%, -100%);
@@ -41,7 +41,7 @@ body::-webkit-scrollbar {
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
   opacity: 0;
 }
-[data-imm-loading] > div {
+.imm-loading > div {
   position: fixed;
   top: 50%;
   left: 50%;
