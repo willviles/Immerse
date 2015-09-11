@@ -17,32 +17,51 @@ new Immerse().component({
 
     this.imm = opts.immerse;
 
-    // Ensure all elements are namespaced
-    this.modalWrapper = this.imm.utils.namespacify.call(this.imm, 'modal-wrapper');
-    this.modalId = this.imm.utils.namespacify.call(this.imm, 'modal-id');
-    this.modalIdDataTag = this.imm.utils.datatagify.call(this.imm, this.modalId);
-    this.modalOpen = this.imm.utils.namespacify.call(this.imm, 'modal-open');
-    this.modalOpenDataTag = this.imm.utils.datatagify.call(this.imm, this.modalOpen);
-    this.modalAction = this.imm.utils.namespacify.call(this.imm, 'modal-action');
-    this.modalYouTube = this.imm.utils.namespacify.call(this.imm, 'modal-youtube');
-    this.pluginName = this.name;
+    var that = this;
+
+    // Do this only once
+    if (!this._initialized) {
+
+      // Ensure all elements are namespaced
+      this.modalsNamespace = this.imm.utils.namespacify.call(this.imm, 'modals');
+      this.$modalsContainer = '<div class="' + this.modalsNamespace + '"></div>';
+      this.modalWrapper = this.imm.utils.namespacify.call(this.imm, 'modal-wrapper');
+      this.modalId = this.imm.utils.namespacify.call(this.imm, 'modal-id');
+      this.modalIdDataTag = this.imm.utils.datatagify.call(this.imm, this.modalId);
+      this.modalOpen = this.imm.utils.namespacify.call(this.imm, 'modal-open');
+      this.modalOpenDataTag = this.imm.utils.datatagify.call(this.imm, this.modalOpen);
+      this.modalAction = this.imm.utils.namespacify.call(this.imm, 'modal-action');
+      this.modalYouTube = this.imm.utils.namespacify.call(this.imm, 'modal-youtube');
+      this.modalSection = this.imm.utils.namespacify.call(this.imm, 'modal-section');
+
+      // get all .imm-modal-close, .imm-modal-cancel, .imm-modal-confirm buttons
+      this.allActions = ['close', 'cancel', 'confirm', 'wrapperClick'],
+      this.allButtons = [];
+
+      $.each(this.allActions, function(i, name) {
+        var niceName = name.charAt(0).toUpperCase() + name.slice(1);
+        that['modal' + niceName + 'DataTag'] = that.imm.utils.datatagify.call(that.imm, that.modalAction, name);
+        that.allButtons.push(that['modal' + niceName + 'DataTag']);
+      });
+
+      this.pluginName = this.name;
+
+      // Create modals container
+      this.imm.$elem.append(this.$modalsContainer);
+
+      // Is initialized
+      this._initialized = true;
+    }
+
+    // Do this for each section
+
+    console.log(this.$modalsContainer);
 
     var section = opts.section,
-        $section = $(section.element),
-        that = this;
+        $section = $(section.element);
 
-    // Each modal open button
-    $.each($section.find(this.modalOpenDataTag), function(i, button) {
-      // Prepare button details
-      var openStr = $(button).data(that.modalOpen),
-          isYoutubeURL = openStr.match(that.youtube.test);
-
-      if (isYoutubeURL) {
-        var modalYouTube = that.imm.utils.namespacify.call(that.imm, 'modal-youtube');
-        $(button).attr('data-' + modalYouTube, 'true');
-        that.youtube.appendModal.call(that, section, button, openStr);
-      }
-    });
+    // Detect & init youtube modals
+    this.youtube.init.call(this, section, $section);
 
     // On modal open button click
     $(this.modalOpenDataTag, section.element).on('click', function(e) {
@@ -67,20 +86,11 @@ new Immerse().component({
       that.prepare.call(that, modal, section);
     });
 
-    // get all .imm-modal-close, .imm-modal-cancel, .imm-modal-confirm buttons
-    var allActions = ['close', 'cancel', 'confirm', 'wrapperClick'],
-        allButtons = [];
-
-    $.each(allActions, function(i, name) {
-      var niceName = name.charAt(0).toUpperCase() + name.slice(1);
-      that['modal' + niceName + 'DataTag'] = that.imm.utils.datatagify.call(that.imm, that.modalAction, name);
-      allButtons.push(that['modal' + niceName + 'DataTag']);
-    });
-
     // On modal button clicks
-    $section.find(allButtons.toString()).on('click', function(e) {
-      that.handleBtnClick.call(that, e, this, section);
+    $(this.allButtons.toString(), '.' + this.modalsNamespace).off().on('click', function(e) {
+      that.handleBtnClick.call(that, e, this);
     });
+
 
     return this;
   },
@@ -106,6 +116,11 @@ new Immerse().component({
       extendedSettings = $.extend({}, modalDefaults, userSettings);
       section.components[this.pluginName][niceId] = extendedSettings;
     }
+
+    // Add reference to section
+    $(modal).attr('data-' + this.modalSection, $.camelCase(section.id));
+    // Move modal to wrapper
+    $(modal).appendTo('.' + this.modalsNamespace);
     // Wrap section
     this.wrap.call(this, modal, id);
 
@@ -124,7 +139,10 @@ new Immerse().component({
   // Handle clicks
   ///////////////////////////////////////////////////////
 
-  handleBtnClick: function(e, button, section) {
+  handleBtnClick: function(e, button) {
+
+    // TO-DO - Get a reference to the section even though the modal has been moved out of the relevant section to its containing div
+
     // Action type
     var action = $(button).data(this.modalAction);
 
@@ -134,7 +152,10 @@ new Immerse().component({
     var actionNiceName = action.charAt(0).toUpperCase() + action.slice(1),
         modal = (action === 'wrapperClick') ? $(button).find(this.modalIdDataTag) : $(button).closest(this.modalIdDataTag),
         id = modal.data(this.modalId),
-        niceId = $.camelCase(id);
+        niceId = $.camelCase(id),
+        sectionId = modal.data(this.modalSection),
+        section = this.imm._sections.filter(function(s) { return s.id === sectionId; }),
+        section = section[0];
 
     $(section.components[this.pluginName][niceId].element).trigger(action);
 
@@ -150,6 +171,25 @@ new Immerse().component({
   youtube: {
 
     players: [],
+
+    init: function(section, $section) {
+
+      var that = this;
+
+      $.each($section.find(this.modalOpenDataTag), function(i, button) {
+        // Prepare button details
+        var openStr = $(button).data(that.modalOpen),
+            isYoutubeURL = openStr.match(that.youtube.test);
+
+        // If it is a Youtube URL
+        if (isYoutubeURL) {
+          var modalYouTube = that.imm.utils.namespacify.call(that.imm, 'modal-youtube');
+          $(button).attr('data-' + modalYouTube, 'true');
+          that.youtube.appendModal.call(that, section, button, openStr);
+        }
+      });
+
+    },
 
     test: '^(https?\:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$',
 
@@ -220,6 +260,7 @@ new Immerse().component({
       if (typeof openEvent === 'function') { openEvent($modal); }
 
       $modal.closest('.' + this.modalWrapper).addClass('opened');
+      this.imm.$pageContainer.addClass(this.modalOpen);
       $.Immerse.scrollController.htmlScroll(this.imm, 'lock');
       $modal.focus();
     },
@@ -227,6 +268,8 @@ new Immerse().component({
     close: function(modal, id) {
       var $modal = $(this.imm.utils.datatagify.call(this.imm, this.modalId, id)),
           $wrapper = $modal.closest('.' + this.modalWrapper).removeClass('opened');
+
+      this.imm.$pageContainer.removeClass(this.modalOpen);
 
       if ($modal.data(this.modalYouTube) == true) { this.youtube.close.call(this, modal, id); }
       $.Immerse.scrollController.htmlScroll(this.imm, 'unlock');
