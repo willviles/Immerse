@@ -103,8 +103,6 @@
 
         detect: function(e) {
 
-          console.log('Is it unbound?: ' + this.imm._scrollUnbound);
-
           // Always allow default scrolling on elements showing when main page is locked
           if (this.imm._htmlScrollLocked) {
             this.handlers.scroll.toggle.call(this, 'enable', e);
