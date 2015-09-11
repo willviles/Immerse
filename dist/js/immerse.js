@@ -801,7 +801,7 @@ var Immerse = function() {};
 
     events: {
       scroll: function() {
-        this.imm._scrollContainer.off( this.imm._mousewheelEvent + ' wheel')
+        this.imm._scrollContainer.off( this.imm._mousewheelEvent + ' wheel', this.handlers.scroll.detect)
                                  .on( this.imm._mousewheelEvent + ' wheel', this.handlers.scroll.detect.bind(this));
       },
 
@@ -858,18 +858,21 @@ var Immerse = function() {};
 
         detect: function(e) {
 
-
           // Always allow default scrolling on elements showing when main page is locked
           if (this.imm._htmlScrollLocked) {
             this.handlers.scroll.toggle.call(this, 'enable', e);
           } else {
             if (this.imm._scrollUnbound) {
               // Enable browser scroll
-              this.handlers.scroll.toggle.call(this, 'enable', e);
+              if (this.imm._browserScrollDisabled) {
+                this.handlers.scroll.toggle.call(this, 'enable', e);
+              }
               this.unbound.call(this, e);
             } else {
               // Disable browser scroll
-              this.handlers.scroll.toggle.call(this, 'disable', e);
+              if (!this.imm._browserScrollDisabled) {
+                this.handlers.scroll.toggle.call(this, 'disable', e);
+              }
               this.handlers.scroll.manage.call(this, e);
             }
           }
@@ -913,6 +916,7 @@ var Immerse = function() {};
             window.onmousewheel = document.onmousewheel = null;
             window.onwheel = null;
             window.ontouchmove = null;
+            this.imm._browserScrollDisabled = false;
 
           } else if (status === 'disable') {
             if (window.addEventListener) {
@@ -921,6 +925,7 @@ var Immerse = function() {};
             window.onwheel = preventDefaultScroll; // modern standard
             window.onmousewheel = document.onmousewheel = preventDefaultScroll; // older browsers, IE
             window.ontouchmove  = preventDefaultScroll; // mobile
+            this.imm._browserScrollDisabled = true;
 
           }
         }
