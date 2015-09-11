@@ -39,15 +39,20 @@ At its most basic configuration, Immerse.js will build your section based page f
 ```html
 <body>
 
-  <!-- Build your page structure with Immerse sections. -->
-  <section data-imm-section="foo"></section>
-  <section data-imm-section="bar"></section>
+  <!-- Wrap your page content so it can be hidden before loading -->
+  <main data-imm-page="page">
+
+    <!-- Build your page structure with Immerse sections. -->
+    <section data-imm-section="foo"></section>
+    <section data-imm-section="bar"></section>
+    
+    <!-- Navigation will be injected here. -->
+    <nav data-imm-nav="side"></nav>
   
-  <!-- Navigation will be injected here. -->
-  <nav data-imm-nav="side"></nav>
+  </main>
   
   <!-- Loading overlay displays until the page's assets have fully loaded -->
-  <div class="imm-loading" data-imm-loading="fade"></div>
+  <div data-imm-loading="fade"></div>
   
 </body>
 ```
