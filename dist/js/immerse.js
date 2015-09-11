@@ -782,7 +782,7 @@ var Immerse = function() {};
       // If element initiated on is body, set the scroll target to window
       this.imm._scrollContainer = ($(this.imm.elem)[0] === $('body')[0]) ? $(window) : $(this.imm.elem);
       // Test for corresponding mousewheelEvent for browser
-      this.imm._mousewheelEvent = (/Firefox/i.test(navigator.userAgent))? 'DOMMouseScroll' : 'mousewheel';
+      this.imm._mousewheelEvent = (/Firefox/i.test(navigator.userAgent))? 'DOMMouseScroll wheel' : 'mousewheel wheel';
       // Get bound/unbound status of first section
       this.imm._scrollUnbound = this.utils.isScrollUnbound.call(this, this.imm, this.imm._currentSection);
       // Manage binding or unbind of scroll on sectionChange
@@ -801,8 +801,8 @@ var Immerse = function() {};
 
     events: {
       scroll: function() {
-        this.imm._scrollContainer.off( this.imm._mousewheelEvent + ' wheel', this.handlers.scroll.detect)
-                                 .on( this.imm._mousewheelEvent + ' wheel', this.handlers.scroll.detect.bind(this));
+        this.imm._scrollContainer.off( this.imm._mousewheelEvent, this.handlers.scroll.detect)
+                                 .on( this.imm._mousewheelEvent, this.handlers.scroll.detect.bind(this));
       },
 
       keys: function() {
@@ -858,21 +858,19 @@ var Immerse = function() {};
 
         detect: function(e) {
 
+          console.log('Is it unbound?: ' + this.imm._scrollUnbound);
+
           // Always allow default scrolling on elements showing when main page is locked
           if (this.imm._htmlScrollLocked) {
             this.handlers.scroll.toggle.call(this, 'enable', e);
           } else {
             if (this.imm._scrollUnbound) {
               // Enable browser scroll
-              if (this.imm._browserScrollDisabled) {
-                this.handlers.scroll.toggle.call(this, 'enable', e);
-              }
-              this.unbound.call(this, e);
+              if (this.imm._browserScrollDisabled) { this.handlers.scroll.toggle.call(this, 'enable', e); }
+              if (this.imm._isScrolling === false) { this.unbound.call(this, e); }
             } else {
               // Disable browser scroll
-              if (!this.imm._browserScrollDisabled) {
-                this.handlers.scroll.toggle.call(this, 'disable', e);
-              }
+              if (!this.imm._browserScrollDisabled) { this.handlers.scroll.toggle.call(this, 'disable', e); }
               this.handlers.scroll.manage.call(this, e);
             }
           }
@@ -1214,6 +1212,7 @@ var Immerse = function() {};
 
       // If scrollTop is above current section
       if (isAbove) {
+
         // If it's a scroll event and we're not scrolling upwards (i.e, we're just at the top of the section)
         if (this.utils.isScrollEvent(e) && this.utils.getScrollDirection(e) !== 'UP') { return; }
         // If it's a keydown event and we're not pressing upwards
@@ -1232,6 +1231,7 @@ var Immerse = function() {};
       // If scrollTop is above current section
 
       } else if (isBelow) {
+
         // If it's a scroll event and we're not scrolling download (i.e, we're just at the bottom end of the section)
         if (this.utils.isScrollEvent(e) && this.utils.getScrollDirection(e) !== 'DOWN') { return; }
         // If it's a keydown event and we're not pressing upwards
@@ -1363,9 +1363,9 @@ var Immerse = function() {};
       // Remove all Immerse scroll event handlers
       $(document).off('keydown keyup touchmove touchstart swipedown swipeup');
       // Remove all events attached to the mousewheel and wheel events
-      this.imm._scrollContainer.off(this.imm._mousewheelEvent + ' wheel');
+      this.imm._scrollContainer.off(this.imm._mousewheelEvent);
       // Ensure default behaviour is restored
-      this.imm._scrollContainer.on(this.imm._mousewheelEvent + ' wheel', function(e) {
+      this.imm._scrollContainer.on(this.imm._mousewheelEvent, function(e) {
         window.onmousewheel = document.onmousewheel = null;
         window.onwheel = null;
         window.ontouchmove = null;
