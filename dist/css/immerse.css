@@ -23,7 +23,7 @@ body::-webkit-scrollbar {
 }
 
 /* Default Styles */
-.imm-loading {
+[data-imm-loading] {
   position: absolute;
   top: 0;
   bottom: 0;
@@ -33,7 +33,7 @@ body::-webkit-scrollbar {
   background-color: white;
   z-index: 1001;
 }
-.imm-loading.imm-loaded {
+[data-imm-loading].imm-loaded {
   -moz-transform: translate(-100%, -100%);
   -ms-transform: translate(-100%, -100%);
   -webkit-transform: translate(-100%, -100%);
@@ -41,7 +41,7 @@ body::-webkit-scrollbar {
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
   opacity: 0;
 }
-.imm-loading > div {
+[data-imm-loading] > div {
   position: fixed;
   top: 50%;
   left: 50%;
@@ -51,7 +51,7 @@ body::-webkit-scrollbar {
   transform: translate(-50%, -50%);
 }
 
-@-moz-keyframes imm-loading-fade {
+@-moz-keyframes imm-fade-out {
   0%, 99% {
     -moz-transform: translate(0, 0);
     transform: translate(0, 0);
@@ -67,7 +67,7 @@ body::-webkit-scrollbar {
     transform: translate(-100%, -100%);
   }
 }
-@-webkit-keyframes imm-loading-fade {
+@-webkit-keyframes imm-fade-out {
   0%, 99% {
     -webkit-transform: translate(0, 0);
     transform: translate(0, 0);
@@ -83,7 +83,7 @@ body::-webkit-scrollbar {
     transform: translate(-100%, -100%);
   }
 }
-@keyframes imm-loading-fade {
+@keyframes imm-fade-out {
   0%, 99% {
     -moz-transform: translate(0, 0);
     -ms-transform: translate(0, 0);
@@ -104,9 +104,18 @@ body::-webkit-scrollbar {
   }
 }
 [data-imm-loading="fade"].imm-loaded {
-  -moz-animation: imm-loading-fade 0.3s linear;
-  -webkit-animation: imm-loading-fade 0.3s linear;
-  animation: imm-loading-fade 0.3s linear;
+  -moz-animation: imm-fade-out 0.2s linear;
+  -webkit-animation: imm-fade-out 0.2s linear;
+  animation: imm-fade-out 0.2s linear;
+}
+
+[data-imm-page]:not(.imm-loaded) {
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
+  opacity: 0;
+  -moz-transform: translateX(-100%);
+  -ms-transform: translateX(-100%);
+  -webkit-transform: translateX(-100%);
+  transform: translateX(-100%);
 }
 
 [data-imm-nav="side"] {

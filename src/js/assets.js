@@ -199,6 +199,9 @@
             that.imm._isInitialized = true;
             // Hide loading
             $(loadingDataTag).addClass(loadedNamespace);
+            if (that.imm.pageContainer) {
+              that.imm.$pageContainer.addClass(loadedNamespace);
+            }
           }, remainingLoad);
 
         },

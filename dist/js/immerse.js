@@ -52,14 +52,21 @@ var Immerse = function() {};
     // Initialize
     ///////////////////////////////////////////////////////
 
-    init: function(elem) {
+    init: function() {
 
       // If elem not defined, find namespaced -scroll-container class
-      var scrollContainerClass = this.utils.namespacify.call(this, 'scroll-container');
+      var pageNamespace = this.utils.namespacify.call(this, 'page'),
+          pageDataTag = this.utils.datatagify.call(this, pageNamespace);
 
-      var $elem = elem ? elem : $('.' + scrollContainerClass);
-      this.$elem = $elem.length > 0 ? $elem : $('body');
+      // Need notion of body. It's called elem at the moment.
+      this.$elem = $('body');
       this.elem = this.$elem[0];
+
+      // Need notion of page
+      var pageContainer = $(pageDataTag);
+      this.$pageContainer = pageContainer.length > 0 ? pageContainer : null;
+      this.pageContainer = this.$pageContainer ? this.$pageContainer[0] : null;
+
       this._assets = this.setup.assets;
       this._sections = [];
       this._isInitialized = false;
@@ -1975,6 +1982,9 @@ var Immerse = function() {};
             that.imm._isInitialized = true;
             // Hide loading
             $(loadingDataTag).addClass(loadedNamespace);
+            if (that.imm.pageContainer) {
+              that.imm.$pageContainer.addClass(loadedNamespace);
+            }
           }, remainingLoad);
 
         },

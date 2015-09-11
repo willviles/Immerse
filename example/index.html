@@ -23,245 +23,249 @@
 
   <body>
 
-    <header data-imm-section="header">
-      <div data-imm-video="surf"></div>
-      <div class="imm-logo-full">
-        <div>
-          <object data="assets/images/imm-logo-full.svg" type="image/svg+xml">
-            <img src="assets/images/imm-logo-full.jpg" />
-          </object>
-          <a href="http://immerse.vil.es" target="_blank"></a>
-          </div>
-      </div>
-      <div class="imm-vertcenter">
-        <div class="container-fluid">
-          <div class="row text-center">
-            <div class="col-sm-10 col-sm-offset-1">
-              <h1 class="title">Learn <span class="yellow-text">to surf.</span></h1>
-              <h4 class="subtitle body-font">A super simple Immerse.js example page.</h4>
+    <main data-imm-page="learn-to-surf">
+      <header data-imm-section="header">
+        <div data-imm-video="surf"></div>
+        <div class="imm-logo-full">
+          <div>
+            <object data="assets/images/imm-logo-full.svg" type="image/svg+xml">
+              <img src="assets/images/imm-logo-full.jpg" />
+            </object>
+            <a href="http://immerse.vil.es" target="_blank"></a>
             </div>
-          </div>
-          <div class="buttons row">
-            <div class="col-sm-5 col-sm-offset-1 col-md-4 col-md-offset-2">
-              <button data-imm-modal-open="https://www.youtube.com/watch?v=DP278W0NVV8" class="button fullwidth">
-                <span>Watch Video <i class="fa fa-play-circle right"></i></span>
-              </button>
+        </div>
+        <div class="imm-vertcenter">
+          <div class="container-fluid">
+            <div class="row text-center">
+              <div class="col-sm-10 col-sm-offset-1">
+                <h1 class="title">Learn <span class="yellow-text">to surf.</span></h1>
+                <h4 class="subtitle body-font">A super simple Immerse.js example page.</h4>
+              </div>
             </div>
-            <div class="col-sm-5 col-md-4">
-              <button data-imm-scroll-to="DOWN" class="button fullwidth">
-                <span><i class="fa fa-angle-down"></i> Let's Go</span>
-              </button>
+            <div class="buttons row">
+              <div class="col-sm-5 col-sm-offset-1 col-md-4 col-md-offset-2">
+                <button data-imm-modal-open="https://www.youtube.com/watch?v=DP278W0NVV8" class="button fullwidth">
+                  <span>Watch Video <i class="fa fa-play-circle right"></i></span>
+                </button>
+              </div>
+              <div class="col-sm-5 col-md-4">
+                <button data-imm-scroll-to="DOWN" class="button fullwidth">
+                  <span><i class="fa fa-angle-down"></i> Let's Go</span>
+                </button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </header>
+      </header>
 
-    <section data-imm-section="boards">
-      <div class="imm-vertcenter">
-        <div class="container-fluid">
-          <div class="row text-center">
-            <h3><span class="yellow-text">Grab a</span> board.</h3>
-            <p>
-              <button data-imm-scroll-to="tutors" class="button small">
-                <span><i class="fa fa-angle-down"></i> Next</span>
-              </button>
-            </p>
+      <section data-imm-section="boards">
+        <div class="imm-vertcenter">
+          <div class="container-fluid">
+            <div class="row text-center">
+              <h3><span class="yellow-text">Grab a</span> board.</h3>
+              <p>
+                <button data-imm-scroll-to="tutors" class="button small">
+                  <span><i class="fa fa-angle-down"></i> Next</span>
+                </button>
+              </p>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div class="example-boards">
+        <div class="example-boards">
+          <div class="container">
+            <ul class="row">
+              <li class="col-xs-4">
+                <button data-imm-modal-open="board-one"></button>
+              </li>
+              <li class="col-xs-4">
+                <button data-imm-modal-open="board-two"></button>
+              </li>
+              <li class="col-xs-4">
+                <button data-imm-modal-open="board-three"></button>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="board-modal" data-imm-modal-id="board-one">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-sm-4">
+                <div class="board-image-container">
+                  <img src="assets/images/board-1@2x.jpg" />
+                </div>
+              </div>
+              <div class="board-info col-sm-8">
+                <h3>Board One</h3>
+                <p class="lead">Beginner board.</p>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quae cum praeponunt, ut sit aliqua rerum selectio, naturam videntur sequi; Qui enim existimabit posse se miserum esse beatus non erit. An vero, inquit, quisquam potest probare, quod perceptfum, quod. Quamquam non negatis nos intellegere quid sit voluptas, sed quid ille dicat.</p>
+                <p>Multa sunt dicta ab antiquis de contemnendis ac despiciendis rebus humanis;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Familiares nostros, credo, Sironem dicis et Philodemum, cum optimos viros, tum homines doctissimos.</p>
+                <br />
+                <p>
+                  <button data-imm-modal-action="confirm" class="button">
+                    <span><i class="left fa fa-shopping-cart"></i> Buy now</span>
+                  </button>
+                  <button data-imm-modal-action="cancel" class="button">
+                    <span><i class="left fa fa-times"></i> Cancel</span>
+                  </button>
+                </p>
+              </div>
+            </div>
+          </div>
+          <button class="top-right" data-imm-modal-action="close"><i class="fa fa-times"></i></button>
+        </div>
+
+        <div class="board-modal" data-imm-modal-id="board-two">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-sm-4">
+                <div class="board-image-container">
+                  <img src="assets/images/board-2@2x.jpg" />
+                </div>
+              </div>
+              <div class="board-info col-sm-8">
+                <h3>Board Two</h3>
+                <p class="lead">Advanced board.</p>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quae cum praeponunt, ut sit aliqua rerum selectio, naturam videntur sequi; Qui enim existimabit posse se miserum esse beatus non erit. An vero, inquit, quisquam potest probare, quod perceptfum, quod. Quamquam non negatis nos intellegere quid sit voluptas, sed quid ille dicat.</p>
+                <p>Multa sunt dicta ab antiquis de contemnendis ac despiciendis rebus humanis;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Familiares nostros, credo, Sironem dicis et Philodemum, cum optimos viros, tum homines doctissimos.</p>
+                <br />
+                <p>
+                  <button data-imm-modal-action="confirm" class="button">
+                    <span><i class="left fa fa-shopping-cart"></i> Buy now</span>
+                  </button>
+                  <button data-imm-modal-action="cancel" class="button">
+                    <span><i class="left fa fa-times"></i> Cancel</span>
+                  </button>
+                </p>
+              </div>
+            </div>
+          </div>
+          <button class="top-right" data-imm-modal-action="close"><i class="fa fa-times"></i></button>
+        </div>
+
+        <div class="board-modal" data-imm-modal-id="board-three">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-sm-4">
+                <div class="board-image-container">
+                  <img src="assets/images/board-3@2x.jpg" />
+                </div>
+              </div>
+              <div class="board-info col-sm-8">
+                <h3>Board Three</h3>
+                <p class="lead">Professional board.</p>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quae cum praeponunt, ut sit aliqua rerum selectio, naturam videntur sequi; Qui enim existimabit posse se miserum esse beatus non erit. An vero, inquit, quisquam potest probare, quod perceptfum, quod. Quamquam non negatis nos intellegere quid sit voluptas, sed quid ille dicat.</p>
+                <p>Multa sunt dicta ab antiquis de contemnendis ac despiciendis rebus humanis;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Familiares nostros, credo, Sironem dicis et Philodemum, cum optimos viros, tum homines doctissimos.</p>
+                <br />
+                <p>
+                  <button data-imm-modal-action="confirm" class="button">
+                    <span><i class="left fa fa-shopping-cart"></i> Buy now</span>
+                  </button>
+                  <button data-imm-modal-action="cancel" class="button">
+                    <span><i class="left fa fa-times"></i> Cancel</span>
+                  </button>
+                </p>
+              </div>
+            </div>
+          </div>
+          <button class="top-right" data-imm-modal-action="close"><i class="fa fa-times"></i></button>
+        </div>
+
+      </section>
+
+      <section data-imm-section="tutors">
+        <div class="imm-vertcenter">
+          <div class="container-fluid">
+            <div class="row text-center">
+              <h3 class="title"><span class="white-text">Meet the</span> tutors.</h3>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="steve">
+                  <span class="name">Steve</span>
+                  <img src="assets/images/tutor-steve.jpg" />
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="sarah">
+                  <span class="name">Sarah</span>
+                  <img src="assets/images/tutor-sarah.jpg" />
+                </div>
+              </div>
+            </div>
+            <div class="row text-center">
+              <p class="next">
+                <button data-imm-scroll-to="learn" class="button small white">
+                  <span><i class="fa fa-angle-down"></i> Next</span>
+                </button>
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section data-imm-section="learn" data-imm-unbound="true">
         <div class="container">
-          <ul class="row">
-            <li class="col-xs-4">
-              <button data-imm-modal-open="board-one"></button>
-            </li>
-            <li class="col-xs-4">
-              <button data-imm-modal-open="board-two"></button>
-            </li>
-            <li class="col-xs-4">
-              <button data-imm-modal-open="board-three"></button>
-            </li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="board-modal" data-imm-modal-id="board-one">
-        <div class="container-fluid">
-          <div class="row">
-            <div class="col-sm-4">
-              <div class="board-image-container">
-                <img src="assets/images/board-1@2x.jpg" />
-              </div>
-            </div>
-            <div class="board-info col-sm-8">
-              <h3>Board One</h3>
-              <p class="lead">Beginner board.</p>
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quae cum praeponunt, ut sit aliqua rerum selectio, naturam videntur sequi; Qui enim existimabit posse se miserum esse beatus non erit. An vero, inquit, quisquam potest probare, quod perceptfum, quod. Quamquam non negatis nos intellegere quid sit voluptas, sed quid ille dicat.</p>
-              <p>Multa sunt dicta ab antiquis de contemnendis ac despiciendis rebus humanis;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Familiares nostros, credo, Sironem dicis et Philodemum, cum optimos viros, tum homines doctissimos.</p>
-              <br />
-              <p>
-                <button data-imm-modal-action="confirm" class="button">
-                  <span><i class="left fa fa-shopping-cart"></i> Buy now</span>
-                </button>
-                <button data-imm-modal-action="cancel" class="button">
-                  <span><i class="left fa fa-times"></i> Cancel</span>
-                </button>
-              </p>
-            </div>
-          </div>
-        </div>
-        <button class="top-right" data-imm-modal-action="close"><i class="fa fa-times"></i></button>
-      </div>
-
-      <div class="board-modal" data-imm-modal-id="board-two">
-        <div class="container-fluid">
-          <div class="row">
-            <div class="col-sm-4">
-              <div class="board-image-container">
-                <img src="assets/images/board-2@2x.jpg" />
-              </div>
-            </div>
-            <div class="board-info col-sm-8">
-              <h3>Board Two</h3>
-              <p class="lead">Advanced board.</p>
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quae cum praeponunt, ut sit aliqua rerum selectio, naturam videntur sequi; Qui enim existimabit posse se miserum esse beatus non erit. An vero, inquit, quisquam potest probare, quod perceptfum, quod. Quamquam non negatis nos intellegere quid sit voluptas, sed quid ille dicat.</p>
-              <p>Multa sunt dicta ab antiquis de contemnendis ac despiciendis rebus humanis;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Familiares nostros, credo, Sironem dicis et Philodemum, cum optimos viros, tum homines doctissimos.</p>
-              <br />
-              <p>
-                <button data-imm-modal-action="confirm" class="button">
-                  <span><i class="left fa fa-shopping-cart"></i> Buy now</span>
-                </button>
-                <button data-imm-modal-action="cancel" class="button">
-                  <span><i class="left fa fa-times"></i> Cancel</span>
-                </button>
-              </p>
-            </div>
-          </div>
-        </div>
-        <button class="top-right" data-imm-modal-action="close"><i class="fa fa-times"></i></button>
-      </div>
-
-      <div class="board-modal" data-imm-modal-id="board-three">
-        <div class="container-fluid">
-          <div class="row">
-            <div class="col-sm-4">
-              <div class="board-image-container">
-                <img src="assets/images/board-3@2x.jpg" />
-              </div>
-            </div>
-            <div class="board-info col-sm-8">
-              <h3>Board Three</h3>
-              <p class="lead">Professional board.</p>
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quae cum praeponunt, ut sit aliqua rerum selectio, naturam videntur sequi; Qui enim existimabit posse se miserum esse beatus non erit. An vero, inquit, quisquam potest probare, quod perceptfum, quod. Quamquam non negatis nos intellegere quid sit voluptas, sed quid ille dicat.</p>
-              <p>Multa sunt dicta ab antiquis de contemnendis ac despiciendis rebus humanis;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Familiares nostros, credo, Sironem dicis et Philodemum, cum optimos viros, tum homines doctissimos.</p>
-              <br />
-              <p>
-                <button data-imm-modal-action="confirm" class="button">
-                  <span><i class="left fa fa-shopping-cart"></i> Buy now</span>
-                </button>
-                <button data-imm-modal-action="cancel" class="button">
-                  <span><i class="left fa fa-times"></i> Cancel</span>
-                </button>
-              </p>
-            </div>
-          </div>
-        </div>
-        <button class="top-right" data-imm-modal-action="close"><i class="fa fa-times"></i></button>
-      </div>
-
-    </section>
-
-    <section data-imm-section="tutors">
-      <div class="imm-vertcenter">
-        <div class="container-fluid">
           <div class="row text-center">
-            <h3 class="title"><span class="white-text">Meet the</span> tutors.</h3>
-          </div>
-          <div class="row">
-            <div class="col-md-6">
-              <div class="steve">
-                <span class="name">Steve</span>
-                <img src="assets/images/tutor-steve.jpg" />
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="sarah">
-                <span class="name">Sarah</span>
-                <img src="assets/images/tutor-sarah.jpg" />
-              </div>
+            <div class="col-sm-8 col-sm-offset-2">
+              <h3 class="title">Learn at <span class="yellow-text">Bondi Beach.</span></h3>
+              <p class="lead">What better place to learn to surf than on world-famous Bondi Beach? Here you'll find fantastic waves, sunbathing models, year-round sun and the coolest beachside vibe anywhere.</p>
+              <p><img class="surfers-bondi" src="assets/images/surfers-bondi.jpg" width="100%" height="auto"/></p>
             </div>
           </div>
           <div class="row text-center">
-            <p class="next">
-              <button data-imm-scroll-to="learn" class="button small white">
-                <span><i class="fa fa-angle-down"></i> Next</span>
-              </button>
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section data-imm-section="learn" data-imm-unbound="true">
-      <div class="container">
-        <div class="row text-center">
-          <div class="col-sm-8 col-sm-offset-2">
-            <h3 class="title">Learn at <span class="yellow-text">Bondi Beach.</span></h3>
-            <p class="lead">What better place to learn to surf than on world-famous Bondi Beach? Here you'll find fantastic waves, sunbathing models, year-round sun and the coolest beachside vibe anywhere.</p>
-            <p><img class="surfers-bondi" src="assets/images/surfers-bondi.jpg" width="100%" height="auto"/></p>
-          </div>
-        </div>
-        <div class="row text-center">
-          <div class="col-sm-6">
-            <h2><i class="fa fa-user"></i></h2>
-            <p><h5>Private tuition.</h5></p>
-            <div data-imm-tooltip-content="your-tooltip">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</div>
-            <p>Lorem ipsum dolor sit amet, <span data-imm-tooltip="#your-tooltip">tooltip</span> consectetur adipiscing elit. Videmus igitur ut conquiescere ne infantes quidem possint. Duo Reges: constructio interrete. Hoc non est positum in nostra actione. Ex ea difficultate illae fallaciloquae, ut ait Accius, malitiae natae sunt. An ea, quae per vinitorem antea consequebatur, per se ipsa curabit? Equidem etiam Epicurum, in physicis quidem, Democriteum puto.</p>
-          </div>
-          <div class="col-sm-6">
-            <h2><i class="fa fa-users"></i></h2>
-            <p><h5>Group tuition.</h5></p>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit <span data-imm-tooltip="Tooltip content! Yay!">tooltip</span>. Igitur neque stultorum quisquam beatus neque sapientium non beatus. Rapior illuc, revocat autem Antiochus, nec est praeterea, quem audiamus. Haec igitur Epicuri non probo, inquam. Itaque primos congressus copulationesque et consuetudinum instituendarum voluntates fieri propter voluptatem; Duo Reges: constructio interrete.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section data-imm-section="join">
-      <div data-imm-video="waves"></div>
-      <div class="imm-vertcenter">
-        <form class="container">
-          <div class="row text-center">
-            <h3 class="title"><span class="yellow-text">Join us</span> on the waves.</h3>
-            <p class="lead">Enter your details and we'll get in touch.</p>
-          </div>
-          <div class="row">
-            <div class="col-sm-5 col-sm-offset-1">
-              <input type="text" id="name" placeholder="Your Name" />
+            <div class="col-sm-6">
+              <h2><i class="fa fa-user"></i></h2>
+              <p><h5>Private tuition.</h5></p>
+              <div data-imm-tooltip-content="your-tooltip">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</div>
+              <p>Lorem ipsum dolor sit amet, <span data-imm-tooltip="#your-tooltip">tooltip</span> consectetur adipiscing elit. Videmus igitur ut conquiescere ne infantes quidem possint. Duo Reges: constructio interrete. Hoc non est positum in nostra actione. Ex ea difficultate illae fallaciloquae, ut ait Accius, malitiae natae sunt. An ea, quae per vinitorem antea consequebatur, per se ipsa curabit? Equidem etiam Epicurum, in physicis quidem, Democriteum puto.</p>
             </div>
-            <div class="col-sm-5">
-              <input type="email" id="email" placeholder="your@email.com" />
+            <div class="col-sm-6">
+              <h2><i class="fa fa-users"></i></h2>
+              <p><h5>Group tuition.</h5></p>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit <span data-imm-tooltip="Tooltip content! Yay!">tooltip</span>. Igitur neque stultorum quisquam beatus neque sapientium non beatus. Rapior illuc, revocat autem Antiochus, nec est praeterea, quem audiamus. Haec igitur Epicuri non probo, inquam. Itaque primos congressus copulationesque et consuetudinum instituendarum voluntates fieri propter voluptatem; Duo Reges: constructio interrete.</p>
             </div>
           </div>
-          <div class="row text-center">
-            <div class="col-xs-12">
-              <button class="button"><span>Submit</span></button>
+        </div>
+      </section>
+
+      <section data-imm-section="join">
+        <div data-imm-video="waves"></div>
+        <div class="imm-vertcenter">
+          <form class="container">
+            <div class="row text-center">
+              <h3 class="title"><span class="yellow-text">Join us</span> on the waves.</h3>
+              <p class="lead">Enter your details and we'll get in touch.</p>
             </div>
-          </div>
-        </form>
-      </div>
-    </section>
+            <div class="row">
+              <div class="col-sm-5 col-sm-offset-1">
+                <input type="text" id="name" placeholder="Your Name" />
+              </div>
+              <div class="col-sm-5">
+                <input type="email" id="email" placeholder="your@email.com" />
+              </div>
+            </div>
+            <div class="row text-center">
+              <div class="col-xs-12">
+                <button class="button"><span>Submit</span></button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </section>
 
-    <nav data-imm-nav="side"></nav>
+      <nav data-imm-nav="side"></nav>
 
-    <nav class="top-nav">
-      <div><button class="open-menu"><i class="fa fa-bars"></i></button></div>
-      <div><button class="imm-mute"></button></div>
-    </nav>
+      <nav class="top-nav">
+        <div><button class="open-menu"><i class="fa fa-bars"></i></button></div>
+        <div><button class="imm-mute"></button></div>
+      </nav>
 
-    <div class="imm-loading" data-imm-loading="fade">
+    <!-- Ending main -->
+    </main>
+
+    <div data-imm-loading="fade">
       <div>
         <object data="assets/images/imm-logo.svg" type="image/svg+xml">
           <img src="assets/images/imm-logo.jpg" />
@@ -284,7 +288,7 @@
               unmuted: '<i class="fa fa-volume-up"></i>',
               muted: '<i class="fa fa-volume-off"></i>',
             },
-            minLoadingTime: 1000,
+            minLoadingTime: 4000,
             devMode: true
           },
 
