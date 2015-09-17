@@ -11,7 +11,7 @@ new Immerse().component({
   name: 'videos',
 
   // Initialize function
-  init: function(opts) {
+  initSection: function(opts) {
     this.imm = opts.immerse;
     this.videoNamespace = this.imm.utils.namespacify.call(this.imm, 'video');
 

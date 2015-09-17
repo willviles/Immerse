@@ -13,9 +13,9 @@ new Immerse().component({
   // Initialize component
   ///////////////////////////////////////////////////////
 
-  init: function(opts) {
+  init: function(imm) {
 
-    this.imm = opts.immerse;
+    this.imm = imm;
 
     // Ensure all elements are namespaced
     this.modalWrapper = this.imm.utils.namespacify.call(this.imm, 'modal-wrapper');
@@ -26,6 +26,12 @@ new Immerse().component({
     this.modalAction = this.imm.utils.namespacify.call(this.imm, 'modal-action');
     this.modalYouTube = this.imm.utils.namespacify.call(this.imm, 'modal-youtube');
     this.pluginName = this.name;
+
+  },
+
+  initSection: function(opts) {
+
+    this.imm = opts.immerse;
 
     var section = opts.section,
         $section = $(section.element),
@@ -83,6 +89,10 @@ new Immerse().component({
     });
 
     return this;
+  },
+
+  sectionEnter: function(opts) {
+//     console.log(opts.section);
   },
 
   // Prepare Modal
