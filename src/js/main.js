@@ -103,6 +103,8 @@ var Immerse = function() {};
 
     utils: {
 
+      cssAnimationEvents: 'webkitAnimationEnd oanimationend msAnimationEnd animationend',
+
       stringify: function(str) {
         return str.replace(/[-_]/g, ' ').replace(/([a-z])([A-Z])/g, '$1 $2').toLowerCase().replace(/\b[a-z]/g, function(letter) {
           return letter.toUpperCase();

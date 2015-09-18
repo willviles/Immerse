@@ -103,6 +103,8 @@ var Immerse = function() {};
 
     utils: {
 
+      cssAnimationEvents: 'webkitAnimationEnd oanimationend msAnimationEnd animationend',
+
       stringify: function(str) {
         return str.replace(/[-_]/g, ' ').replace(/([a-z])([A-Z])/g, '$1 $2').toLowerCase().replace(/\b[a-z]/g, function(letter) {
           return letter.toUpperCase();
@@ -2859,7 +2861,10 @@ new Immerse().component({
     this.modalAction = this.imm.utils.namespacify.call(this.imm, 'modal-action');
     this.modalYouTube = this.imm.utils.namespacify.call(this.imm, 'modal-youtube');
     this.modalSection = this.imm.utils.namespacify.call(this.imm, 'modal-section');
+    this.opening = this.imm.utils.namespacify.call(this.imm, 'opening');
     this.opened = this.imm.utils.namespacify.call(this.imm, 'opened');
+    this.closing = this.imm.utils.namespacify.call(this.imm, 'closing');
+    this.closed = this.imm.utils.namespacify.call(this.imm, 'closed');
 
     // get all .imm-modal-close, .imm-modal-cancel, .imm-modal-confirm buttons
     this.allActions = ['close', 'cancel', 'confirm', 'wrapperClick'],
@@ -2895,14 +2900,12 @@ new Immerse().component({
       var openModal = that.modalOpen,
           modalYouTube = that.modalYouTube,
           openStr = $(this).attr('data-' + openModal),
-          niceId = $.camelCase(openStr),
-          openEvent = section.components[that.pluginName][niceId]['onOpen'],
           isYoutubeURL = $(this).attr('data-' + modalYouTube);
 
       if (isYoutubeURL) {
         that.youtube.open.call(that, openStr);
       } else {
-        that.actions.open.call(that, openStr, openEvent);
+        that.actions.open.call(that, openStr, section);
 
       }
     });
@@ -2929,28 +2932,38 @@ new Immerse().component({
     var id = $(modal).data(this.modalId),
         niceId = $.camelCase(id),
         userSettings, extendedSettings,
-        modalDefaults = section.components[this.pluginName].default;
+        sectionSettings = section.components[this.pluginName],
+        modalDefaults = sectionSettings.default;
 
     modalDefaults.element = $(this);
 
     // If no user settings defined, just add our modal defaults
-    if (!section.components[this.pluginName].hasOwnProperty(niceId)) {
-      section.components[this.pluginName][niceId] = modalDefaults;
+    if (!sectionSettings.hasOwnProperty(niceId)) {
+      sectionSettings[niceId] = modalDefaults;
     // However, if user has specified in section setup, extend settings over the defaults
     } else {
-      userSettings = section.components[this.pluginName][niceId];
+      userSettings = sectionSettings[niceId];
       extendedSettings = $.extend({}, modalDefaults, userSettings);
-      section.components[this.pluginName][niceId] = extendedSettings;
+      sectionSettings[niceId] = extendedSettings;
+    }
+
+    // If close animation defined but no other default closing animations defined, use the close animation
+    if (sectionSettings[niceId]['animations'].hasOwnProperty('close')) {
+      var closeAnim = sectionSettings[niceId]['animations']['close'];
+      $.each(this.allActions, function(i, name) {
+        if (sectionSettings[niceId]['animations'].hasOwnProperty(name)) { return; }
+        sectionSettings[niceId]['animations'][name] = closeAnim;
+      });
     }
 
     // Add reference to section
     $(modal).attr('data-' + this.modalSection, $.camelCase(section.id));
-    // Get reference to animation
-    var animName = $(modal).attr('data-' + this.modalAnimation);
+
     // Move modal to wrapper
     $(modal).appendTo('.' + this.modalsNamespace);
+
     // Wrap section
-    this.wrap.call(this, modal, id, animName);
+    this.wrap.call(this, modal, id);
 
     // Fix to add keyboard focus to modal
     $(modal).attr('tabindex', 0);
@@ -2959,13 +2972,9 @@ new Immerse().component({
   // Wrap Modal
   ///////////////////////////////////////////////////////
 
-  wrap: function(modal, id, animName) {
+  wrap: function(modal, id) {
     var data = 'class="' + this.modalWrapper + '"',
         data = data + ' data-' + this.modalAction + '="wrapperClick"';
-
-    if (animName) {
-      data = data + ' data-' + this.modalAnimation + '="' + animName + '"';
-    }
 
     var $wrapper = $('<div ' + data + '></div>');
     $(modal).wrap($wrapper);
@@ -2990,16 +2999,21 @@ new Immerse().component({
         niceId = $.camelCase(id),
         sectionId = modal.data(this.modalSection),
         section = this.imm._sections.filter(function(s) { return s.id === sectionId; }),
-        section = section[0];
+        section = section[0],
+        modalSettings = section.components[this.pluginName][niceId];
 
-    $(section.components[this.pluginName][niceId].element).trigger(action);
+    $(modalSettings.element).trigger(action);
 
-    var actionObj = section.components[this.pluginName][niceId]['on' + actionNiceName];
+    var actionsObj = modalSettings.actions,
+        animName = modalSettings.animations[action];
 
-    if (actionObj === 'close') {
-      this.actions.close.call(this, modal, id);
-    } else if ($.isFunction(actionObj)) {
-      actionObj(modal);
+    if (actionsObj.hasOwnProperty(action)
+        && $.isFunction(actionsObj[action])) {
+
+      actionsObj[action](modal);
+
+    } else {
+      this.actions.close.call(this, modal, id, animName);
     }
   },
 
@@ -3086,37 +3100,87 @@ new Immerse().component({
 
   actions: {
 
-    open: function(id, openEvent) {
-      var $modal = $(this.imm.utils.datatagify.call(this.imm, this.modalId, id));
+    open: function(id, section) {
+      var $modal = $(this.imm.utils.datatagify.call(this.imm, this.modalId, id)),
+          that = this;
+
       if ($modal.length === 0) {
         this.imm.utils.log(this.imm, "Modal Failure: No modal defined with id '" + id + "'"); return;
       }
 
+      var $modalWrapper = $modal.closest('.' + this.modalWrapper),
+          niceId = $.camelCase(id),
+          modalSettings = section.components[this.pluginName][niceId],
+          openEvent = modalSettings.actions.open,
+          hasOpenAnimation = modalSettings.animations.hasOwnProperty('open'),
+          openAnimation = hasOpenAnimation ? ' ' + modalSettings.animations.open : '';
+
       if (typeof openEvent === 'function') { openEvent($modal); }
 
-      $modal.closest('.' + this.modalWrapper).addClass(this.opened);
-      this.imm.$pageContainer.addClass(this.modalOpen);
       $.Immerse.scrollController.htmlScroll(this.imm, 'lock');
-      $modal.focus();
+
+      // Animation
+      $modalWrapper.addClass(this.opening + openAnimation);
+
+      if (hasOpenAnimation) {
+        $modal
+          .off(this.imm.utils.cssAnimationEvents)
+          .one(this.imm.utils.cssAnimationEvents, function(e) {
+            $modalWrapper.removeClass(that.opening + openAnimation);
+            $modalWrapper.addClass(that.opened);
+            $modal.focus();
+          });
+
+      } else {
+        $modalWrapper.removeClass(that.opening + openAnimation);
+        $modalWrapper.addClass(that.opened);
+        $modal.focus();
+      }
+
     },
 
-    close: function(modal, id) {
+    close: function(modal, id, animName) {
       var $modal = $(this.imm.utils.datatagify.call(this.imm, this.modalId, id)),
-          $wrapper = $modal.closest('.' + this.modalWrapper).removeClass(this.opened);
+          $modalWrapper = $modal.closest('.' + this.modalWrapper),
+          hasCloseAnimation = typeof animName === 'string',
+          closeAnimation = hasCloseAnimation ? ' ' + animName : '',
+          that = this;
 
-      this.imm.$pageContainer.removeClass(this.modalOpen);
+      // Animation
+      $modalWrapper.removeClass(this.open).addClass(this.closing + closeAnimation);
 
-      if ($modal.data(this.modalYouTube) == true) { this.youtube.close.call(this, modal, id); }
-      $.Immerse.scrollController.htmlScroll(this.imm, 'unlock');
-      this.imm._scrollContainer.focus();
-      $modal.scrollTop(0);
+      if (hasCloseAnimation) {
+        $modal
+          .off(this.imm.utils.cssAnimationEvents)
+          .one(this.imm.utils.cssAnimationEvents, function(e) {
+            $modalWrapper.removeClass(that.opened + ' ' + that.closing + closeAnimation);
+            $modal.focus();
+            if ($modal.data(that.modalYouTube) == true) { that.youtube.close.call(that, modal, id); }
+            $.Immerse.scrollController.htmlScroll(that.imm, 'unlock');
+            that.imm._scrollContainer.focus();
+            $modal.scrollTop(0);
+          });
+
+      } else {
+        $modalWrapper.removeClass(that.closing + closeAnimation);
+        $modal.focus();
+        $.Immerse.scrollController.htmlScroll(that.imm, 'unlock');
+        that.imm._scrollContainer.focus();
+        $modal.scrollTop(0);
+      }
+
+//       this.imm.$pageContainer.removeClass(this.modalOpen);
+
     }
 
   },
 
+  // Set the defaults for the plugin
+
   defaults: {
     'default': {
-      onConfirm: 'close', onCancel: 'close', onClose: 'close', onEscape: 'close', onWrapperClick: 'close', onOpen: null
+      animations: {},
+      actions: {}
     }
   }
 

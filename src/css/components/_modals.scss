@@ -1,20 +1,30 @@
+$wrapper-opacity: .6;
+$wrapper-color: black;
+
+// Basic scaffold
+
 .#{$prefix}-modal-wrapper {
   @include stretch();
   position: fixed;
   @include translateX(-100%);
-  background-color: rgba(black, .5);
   z-index: 9999;
-  &.#{$prefix}-opened {
-    @include translateX(0);
-    cursor: pointer;
+  &:before {
+    content: ''; @include stretch(); @include opacity(0);
+    background-color: rgba($wrapper-color, $wrapper-opacity);
+  }
+  &.#{$prefix}-opening, &.#{$prefix}-opened, &.#{$prefix}-closing {
+    @include translateX(0); cursor: pointer;
+  }
+  &.#{$prefix}-opening, &.#{$prefix}-opened {
+    &:before { @include opacity(1); }
   }
 }
 
 [data-#{$prefix}-modal-id] {
   position: absolute;
-  left: 50%; top: 50%;
-  width: 80%; height: 80%;
-  @include translate(-50%, -50%);
+  left: 0; top: 0;
+  width: 80%; height: 80vh;
+  margin-left: 10%; margin-top: 10vh;
   background-color: white;
   overflow-y: scroll;
   -webkit-overflow-scrolling: touch;
@@ -26,19 +36,61 @@
 
 @media screen and (max-width: $tablet-break) {
   [data-#{$prefix}-modal-id] {
-    width: 90%; height: 90%;
+    width: 90%; height: 90vh;
+    margin-left: 5%; margin-top: 5vh;
   }
 }
 
 @media screen and (max-width: $mobile-break) {
   [data-#{$prefix}-modal-id] {
-    width: 95%; height: 95%;
+    width: 96%; height: 96vh;
+    margin-left: 2%; margin-top: 2vh;
   }
 }
 
 [data-#{$prefix}-modal-youtube] {
   overflow: hidden !important;
 }
+
+// Animations
+
+@include keyframes(fade-in) { 0% { @include opacity(0) } 100% { @include opacity(1) } }
+@include keyframes(fade-out) { 0% { @include opacity(1); } 100% { @include opacity(0); } }
+@mixin fadeInWrapper($dur, $delay) {
+  &:before { @include animation(fade-in $dur $delay linear forwards); }
+}
+@mixin fadeOutWrapper($dur, $delay) {
+  &:before { @include animation(fade-out $dur $delay linear forwards); }
+}
+
+@include keyframes(fade-up-open) {
+  0% { @include opacity(0); @include scale(.9); }
+  100% { @include opacity(1); @include scale(1); }
+}
+
+@include keyframes(fade-up-close) {
+  0% { @include opacity(1); @include scale(1); }
+  100% { @include opacity(0); @include scale(1.1); }
+}
+
+.#{$prefix}-modal-wrapper.fade-up {
+  &.#{$prefix}-opening {
+    @include fadeInWrapper(.2s, 0s);
+    [data-#{$prefix}-modal-id] {
+      @include transform-origin(50%, 50%);
+      @include animation(fade-up-open .3s cubic-bezier(.17,.67,.59,1.27));
+    }
+  }
+  &.#{$prefix}-closing {
+    @include fadeOutWrapper(.2s, 0s);
+    [data-#{$prefix}-modal-id] {
+      @include transform-origin(50%, 50%);
+      @include animation(fade-up-close .3s cubic-bezier(.17,.67,.59,1.27));
+    }
+  }
+}
+
+// Page animation
 
 [data-#{$prefix}-page] {
   &.#{$prefix}-modal-open {

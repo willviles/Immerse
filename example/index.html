@@ -44,9 +44,11 @@
             </div>
             <div class="buttons row">
               <div class="col-sm-5 col-sm-offset-1 col-md-4 col-md-offset-2">
+<!--
                 <button data-imm-modal-open="https://www.youtube.com/watch?v=DP278W0NVV8" class="button fullwidth">
                   <span>Watch Video <i class="fa fa-play-circle right"></i></span>
                 </button>
+-->
               </div>
               <div class="col-sm-5 col-md-4">
                 <button data-imm-scroll-to="DOWN" class="button fullwidth">
@@ -410,8 +412,14 @@
           components: {
             modals: {
               'default': {
-                onConfirm: function(modal) {
-                  alert('Fire a custom script!');
+                animations: {
+                  open: 'fade-up',
+                  close: 'fade-up'
+                },
+                actions: {
+                  confirm: function(modal) {
+                    alert('Fire a custom script!');
+                  }
                 }
               }
             }
