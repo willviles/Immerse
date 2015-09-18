@@ -52,3 +52,21 @@
 }
 
 @include attachModalAnim($animName: 'bounce-down', $animInDur: .5s, $animOutDur: .5s);
+
+// Bounce Up
+////////////////////////////////////
+
+@include keyframes(bounce-up-open) {
+	0% { @include opacity(0); @include translateY(2000px); }
+	60% { @include opacity(1); @include translateY(-30px); }
+	80% { @include translateY(10px); }
+	100% { @include translateY(0px); }
+}
+
+@include keyframes(bounce-up-close) {
+	0% { @include translateY(0); }
+	20% { @include opacity(1); @include translateY(20px); }
+	100% { @include opacity(0); @include translateY(-2000px); }
+}
+
+@include attachModalAnim($animName: 'bounce-up', $animInDur: .5s, $animOutDur: .7s);
