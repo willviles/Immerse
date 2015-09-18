@@ -353,17 +353,15 @@ var Immerse = function() {};
       	return obj1.scrollOffset - obj2.scrollOffset;
       });
 
-      // Add index to and initiate all components on all sections
+      // Add index to all sections
       $.each(this.imm._sections, function(i, s) {
         s.scrollIndex = i;
-        $.Immerse.componentController.init(that, s);
       });
 
+      // Init components
+      $.Immerse.componentController.init(that.imm);
+
       return this;
-    },
-
-    addDOMElemReference: function() {
-
     },
 
     // Init section
@@ -2500,10 +2498,47 @@ var Immerse = function() {};
     ///////////////////////////////////////////////////////
 
     init: function(imm, section) {
-      $.each($.Immerse.componentRegistry, function(name, component) {
-        var opts = { immerse: imm.imm, section: section };
-        component.init(opts);
+
+      this.imm = imm;
+
+      var that = this;
+
+      this.imm.$elem.on('immInit sectionChanged', function(e, d) {
+
+        var opts;
+
+        // Loop over each component
+
+        $.each($.Immerse.componentRegistry, function(name, component) {
+
+          if (e.type === 'immInit') {
+
+            // Init component globally
+            if (component.hasOwnProperty('init')) {
+              component.init(that.imm);
+            }
+
+            // Init component per section
+            if (component.hasOwnProperty('initSection')) {
+              $.each(that.imm._sections, function(i, s) {
+                opts = { immerse: imm, section: s };
+                component.initSection(opts);
+              });
+            }
+
+          // Fire section changed
+          } else if (e.type === 'sectionChanged') {
+
+            opts = { immerse: imm, section: d.current };
+            if (component.hasOwnProperty('sectionEnter')) {
+              component.sectionEnter(opts);
+            }
+
+          }
+        });
+
       });
+
     },
 
     // Call onResize function of any component
@@ -2807,52 +2842,48 @@ new Immerse().component({
   // Initialize component
   ///////////////////////////////////////////////////////
 
-  init: function(opts) {
+  init: function(imm) {
 
-    this.imm = opts.immerse;
+    this.imm = imm;
 
     var that = this;
 
-    // Do this only once
-    if (!this._initialized) {
+    // Ensure all elements are namespaced
+    this.modalsNamespace = this.imm.utils.namespacify.call(this.imm, 'modals');
+    this.$modalsContainer = '<div class="' + this.modalsNamespace + '"></div>';
+    this.modalWrapper = this.imm.utils.namespacify.call(this.imm, 'modal-wrapper');
+    this.modalId = this.imm.utils.namespacify.call(this.imm, 'modal-id');
+    this.modalIdDataTag = this.imm.utils.datatagify.call(this.imm, this.modalId);
+    this.modalOpen = this.imm.utils.namespacify.call(this.imm, 'modal-open');
+    this.modalOpenDataTag = this.imm.utils.datatagify.call(this.imm, this.modalOpen);
+    this.modalAction = this.imm.utils.namespacify.call(this.imm, 'modal-action');
+    this.modalYouTube = this.imm.utils.namespacify.call(this.imm, 'modal-youtube');
+    this.modalSection = this.imm.utils.namespacify.call(this.imm, 'modal-section');
 
-      // Ensure all elements are namespaced
-      this.modalsNamespace = this.imm.utils.namespacify.call(this.imm, 'modals');
-      this.$modalsContainer = '<div class="' + this.modalsNamespace + '"></div>';
-      this.modalWrapper = this.imm.utils.namespacify.call(this.imm, 'modal-wrapper');
-      this.modalId = this.imm.utils.namespacify.call(this.imm, 'modal-id');
-      this.modalIdDataTag = this.imm.utils.datatagify.call(this.imm, this.modalId);
-      this.modalOpen = this.imm.utils.namespacify.call(this.imm, 'modal-open');
-      this.modalOpenDataTag = this.imm.utils.datatagify.call(this.imm, this.modalOpen);
-      this.modalAction = this.imm.utils.namespacify.call(this.imm, 'modal-action');
-      this.modalYouTube = this.imm.utils.namespacify.call(this.imm, 'modal-youtube');
-      this.modalSection = this.imm.utils.namespacify.call(this.imm, 'modal-section');
+    // get all .imm-modal-close, .imm-modal-cancel, .imm-modal-confirm buttons
+    this.allActions = ['close', 'cancel', 'confirm', 'wrapperClick'],
+    this.allButtons = [];
 
-      // get all .imm-modal-close, .imm-modal-cancel, .imm-modal-confirm buttons
-      this.allActions = ['close', 'cancel', 'confirm', 'wrapperClick'],
-      this.allButtons = [];
+    $.each(this.allActions, function(i, name) {
+      var niceName = name.charAt(0).toUpperCase() + name.slice(1);
+      that['modal' + niceName + 'DataTag'] = that.imm.utils.datatagify.call(that.imm, that.modalAction, name);
+      that.allButtons.push(that['modal' + niceName + 'DataTag']);
+    });
 
-      $.each(this.allActions, function(i, name) {
-        var niceName = name.charAt(0).toUpperCase() + name.slice(1);
-        that['modal' + niceName + 'DataTag'] = that.imm.utils.datatagify.call(that.imm, that.modalAction, name);
-        that.allButtons.push(that['modal' + niceName + 'DataTag']);
-      });
+    this.pluginName = this.name;
 
-      this.pluginName = this.name;
+    // Create modals container
+    this.imm.$elem.append(this.$modalsContainer);
 
-      // Create modals container
-      this.imm.$elem.append(this.$modalsContainer);
+  },
 
-      // Is initialized
-      this._initialized = true;
-    }
+  initSection: function(opts) {
 
-    // Do this for each section
-
-    console.log(this.$modalsContainer);
+    this.imm = opts.immerse;
 
     var section = opts.section,
-        $section = $(section.element);
+        $section = $(section.element),
+        that = this;
 
     // Detect & init youtube modals
     this.youtube.init.call(this, section, $section);
@@ -2887,6 +2918,10 @@ new Immerse().component({
 
 
     return this;
+  },
+
+  sectionEnter: function(opts) {
+//     console.log(opts.section);
   },
 
   // Prepare Modal
@@ -3094,18 +3129,14 @@ new Immerse().component({
   name: 'scroll-to',
 
   // Initialize function
-  init: function(opts) {
-    this.imm = opts.immerse;
+  init: function(imm) {
+    this.imm = imm;
     this.scrollToNamespace = this.imm.utils.namespacify.call(this.imm, 'scroll-to');
     this.scrollToDataTag = this.imm.utils.datatagify.call(this.imm, this.scrollToNamespace);
 
-    var section = opts.section,
-        $section = $(section.element),
-        that = this;
-
     // On any click of a scroll-to button
 
-    $section.find(this.scrollToDataTag).on('click', function(e) {
+    $(this.scrollToDataTag).on('click', function(e) {
       var $button = $(this),
           target = $button.data(that.scrollToNamespace);
 
@@ -3195,7 +3226,7 @@ new Immerse().component({
   name: 'tooltips',
 
   // Initialize function
-  init: function(opts) {
+  initSection: function(opts) {
     this.imm = opts.immerse;
     this.tooltipClass = this.imm.utils.namespacify.call(this.imm, 'tooltip');
     this.tooltipContentClass = this.imm.utils.namespacify.call(this.imm, 'tooltip-content');
@@ -3261,7 +3292,7 @@ new Immerse().component({
   name: 'videos',
 
   // Initialize function
-  init: function(opts) {
+  initSection: function(opts) {
     this.imm = opts.immerse;
     this.videoNamespace = this.imm.utils.namespacify.call(this.imm, 'video');
 

@@ -69,10 +69,47 @@
     ///////////////////////////////////////////////////////
 
     init: function(imm, section) {
-      $.each($.Immerse.componentRegistry, function(name, component) {
-        var opts = { immerse: imm.imm, section: section };
-        component.init(opts);
+
+      this.imm = imm;
+
+      var that = this;
+
+      this.imm.$elem.on('immInit sectionChanged', function(e, d) {
+
+        var opts;
+
+        // Loop over each component
+
+        $.each($.Immerse.componentRegistry, function(name, component) {
+
+          if (e.type === 'immInit') {
+
+            // Init component globally
+            if (component.hasOwnProperty('init')) {
+              component.init(that.imm);
+            }
+
+            // Init component per section
+            if (component.hasOwnProperty('initSection')) {
+              $.each(that.imm._sections, function(i, s) {
+                opts = { immerse: imm, section: s };
+                component.initSection(opts);
+              });
+            }
+
+          // Fire section changed
+          } else if (e.type === 'sectionChanged') {
+
+            opts = { immerse: imm, section: d.current };
+            if (component.hasOwnProperty('sectionEnter')) {
+              component.sectionEnter(opts);
+            }
+
+          }
+        });
+
       });
+
     },
 
     // Call onResize function of any component

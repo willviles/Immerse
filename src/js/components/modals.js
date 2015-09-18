@@ -13,52 +13,48 @@ new Immerse().component({
   // Initialize component
   ///////////////////////////////////////////////////////
 
-  init: function(opts) {
+  init: function(imm) {
 
-    this.imm = opts.immerse;
+    this.imm = imm;
 
     var that = this;
 
-    // Do this only once
-    if (!this._initialized) {
+    // Ensure all elements are namespaced
+    this.modalsNamespace = this.imm.utils.namespacify.call(this.imm, 'modals');
+    this.$modalsContainer = '<div class="' + this.modalsNamespace + '"></div>';
+    this.modalWrapper = this.imm.utils.namespacify.call(this.imm, 'modal-wrapper');
+    this.modalId = this.imm.utils.namespacify.call(this.imm, 'modal-id');
+    this.modalIdDataTag = this.imm.utils.datatagify.call(this.imm, this.modalId);
+    this.modalOpen = this.imm.utils.namespacify.call(this.imm, 'modal-open');
+    this.modalOpenDataTag = this.imm.utils.datatagify.call(this.imm, this.modalOpen);
+    this.modalAction = this.imm.utils.namespacify.call(this.imm, 'modal-action');
+    this.modalYouTube = this.imm.utils.namespacify.call(this.imm, 'modal-youtube');
+    this.modalSection = this.imm.utils.namespacify.call(this.imm, 'modal-section');
 
-      // Ensure all elements are namespaced
-      this.modalsNamespace = this.imm.utils.namespacify.call(this.imm, 'modals');
-      this.$modalsContainer = '<div class="' + this.modalsNamespace + '"></div>';
-      this.modalWrapper = this.imm.utils.namespacify.call(this.imm, 'modal-wrapper');
-      this.modalId = this.imm.utils.namespacify.call(this.imm, 'modal-id');
-      this.modalIdDataTag = this.imm.utils.datatagify.call(this.imm, this.modalId);
-      this.modalOpen = this.imm.utils.namespacify.call(this.imm, 'modal-open');
-      this.modalOpenDataTag = this.imm.utils.datatagify.call(this.imm, this.modalOpen);
-      this.modalAction = this.imm.utils.namespacify.call(this.imm, 'modal-action');
-      this.modalYouTube = this.imm.utils.namespacify.call(this.imm, 'modal-youtube');
-      this.modalSection = this.imm.utils.namespacify.call(this.imm, 'modal-section');
+    // get all .imm-modal-close, .imm-modal-cancel, .imm-modal-confirm buttons
+    this.allActions = ['close', 'cancel', 'confirm', 'wrapperClick'],
+    this.allButtons = [];
 
-      // get all .imm-modal-close, .imm-modal-cancel, .imm-modal-confirm buttons
-      this.allActions = ['close', 'cancel', 'confirm', 'wrapperClick'],
-      this.allButtons = [];
+    $.each(this.allActions, function(i, name) {
+      var niceName = name.charAt(0).toUpperCase() + name.slice(1);
+      that['modal' + niceName + 'DataTag'] = that.imm.utils.datatagify.call(that.imm, that.modalAction, name);
+      that.allButtons.push(that['modal' + niceName + 'DataTag']);
+    });
 
-      $.each(this.allActions, function(i, name) {
-        var niceName = name.charAt(0).toUpperCase() + name.slice(1);
-        that['modal' + niceName + 'DataTag'] = that.imm.utils.datatagify.call(that.imm, that.modalAction, name);
-        that.allButtons.push(that['modal' + niceName + 'DataTag']);
-      });
+    this.pluginName = this.name;
 
-      this.pluginName = this.name;
+    // Create modals container
+    this.imm.$elem.append(this.$modalsContainer);
 
-      // Create modals container
-      this.imm.$elem.append(this.$modalsContainer);
+  },
 
-      // Is initialized
-      this._initialized = true;
-    }
+  initSection: function(opts) {
 
-    // Do this for each section
-
-    console.log(this.$modalsContainer);
+    this.imm = opts.immerse;
 
     var section = opts.section,
-        $section = $(section.element);
+        $section = $(section.element),
+        that = this;
 
     // Detect & init youtube modals
     this.youtube.init.call(this, section, $section);
@@ -93,6 +89,10 @@ new Immerse().component({
 
 
     return this;
+  },
+
+  sectionEnter: function(opts) {
+//     console.log(opts.section);
   },
 
   // Prepare Modal

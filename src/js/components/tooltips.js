@@ -11,7 +11,7 @@ new Immerse().component({
   name: 'tooltips',
 
   // Initialize function
-  init: function(opts) {
+  initSection: function(opts) {
     this.imm = opts.immerse;
     this.tooltipClass = this.imm.utils.namespacify.call(this.imm, 'tooltip');
     this.tooltipContentClass = this.imm.utils.namespacify.call(this.imm, 'tooltip-content');

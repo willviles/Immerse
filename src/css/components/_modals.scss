@@ -42,9 +42,11 @@
 
 [data-#{$prefix}-page] {
   &.#{$prefix}-modal-open {
+/*
     @include stretch();
     overflow: hidden;
     @include scale(.95);
     @include transition(transform .5s cubic-bezier(.17,.67,.59,1.27));
+*/
   }
 }
