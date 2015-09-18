@@ -450,15 +450,24 @@ new Immerse().setup({
       
       // Set a default for all modals in this section
       'default': {
-        onCancel: function(modal) { /* Custom function */ },
-        onConfirm: function(modal) { /* Custom function */ },
-        onClose: function(modal) { /* Custom function */ },
-        onOpen: function(modal) { /* Custom function */ } 
+        animations: {
+          open: 'fade-down',
+          close: 'fade-up', // Will set animation for each close action unless defined like...
+          confirm: 'fly-left'
+        },
+        actions: {
+          cancel: function(modal) { /* Custom function */ },
+          confirm: function(modal) { /* Custom function */ },
+          close: function(modal) { /* Custom function */ },
+          open: function(modal) { /* Custom function */ } 
+        }
       },
       
       // Will set specific settings on modal
       'modalName': {
-        onCancel: function(modal) { /* Custom function */ }), ..
+        actions: {
+          cancel: function(modal) { /* Custom function */ }), ..
+        }
       }, ...
       
     }, ...  
