@@ -16,6 +16,8 @@ new Immerse().component({
     this.scrollToNamespace = this.imm.utils.namespacify.call(this.imm, 'scroll-to');
     this.scrollToDataTag = this.imm.utils.datatagify.call(this.imm, this.scrollToNamespace);
 
+    var that = this;
+
     // On any click of a scroll-to button
 
     $(this.scrollToDataTag).on('click', function(e) {
