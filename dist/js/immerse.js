@@ -2903,7 +2903,7 @@ new Immerse().component({
           isYoutubeURL = $(this).attr('data-' + modalYouTube);
 
       if (isYoutubeURL) {
-        that.youtube.open.call(that, openStr);
+        that.youtube.open.call(that, openStr, section);
       } else {
         that.actions.open.call(that, openStr, section);
 
@@ -2917,7 +2917,18 @@ new Immerse().component({
 
     // On modal button clicks
     $(this.allButtons.toString(), '.' + this.modalsNamespace).off().on('click', function(e) {
-      that.handleBtnClick.call(that, e, this);
+
+      // Get the action type
+      var action = $(this).data(that.modalAction);
+
+      // Ensure wrapperClick doesn't fire on modal itself
+      if (action === 'wrapperClick' && e.target != this)  { return };
+
+      // Get the modal
+      var modal = (action === 'wrapperClick') ? $(this).find(that.modalIdDataTag) : $(this).closest(that.modalIdDataTag);
+
+      that.handleClose.call(that, modal, action);
+
     });
 
 
@@ -2930,12 +2941,14 @@ new Immerse().component({
   prepare: function(modal, section) {
 
     var id = $(modal).data(this.modalId),
-        niceId = $.camelCase(id),
+        isYouTubeModal = $(modal).data(this.modalYouTube) !== undefined,
+        niceId = isYouTubeModal ? id : $.camelCase(id),
         userSettings, extendedSettings,
         sectionSettings = section.components[this.pluginName],
-        modalDefaults = sectionSettings.default;
+        modalDefaults = sectionSettings.default,
+        that = this;
 
-    modalDefaults.element = $(this);
+    modalDefaults.element = $(modal);
 
     // If no user settings defined, just add our modal defaults
     if (!sectionSettings.hasOwnProperty(niceId)) {
@@ -2947,14 +2960,23 @@ new Immerse().component({
       sectionSettings[niceId] = extendedSettings;
     }
 
+    console.log(sectionSettings);
+
     // If close animation defined but no other default closing animations defined, use the close animation
     if (sectionSettings[niceId]['animations'].hasOwnProperty('close')) {
-      var closeAnim = sectionSettings[niceId]['animations']['close'];
-      $.each(this.allActions, function(i, name) {
+      var closeAnim = sectionSettings[niceId]['animations']['close'],
+          allActions = $.merge([], that.allActions);
+
+      // If it's a YouTube modal add videoEnd action
+      if (isYouTubeModal) { allActions.push('videoEnd'); }
+
+      $.each(allActions, function(i, name) {
         if (sectionSettings[niceId]['animations'].hasOwnProperty(name)) { return; }
         sectionSettings[niceId]['animations'][name] = closeAnim;
       });
     }
+
+    console.log(sectionSettings);
 
     // Add reference to section
     $(modal).attr('data-' + this.modalSection, $.camelCase(section.id));
@@ -2980,23 +3002,17 @@ new Immerse().component({
     $(modal).wrap($wrapper);
   },
 
-  // Handle clicks
+  // Handle close
   ///////////////////////////////////////////////////////
 
-  handleBtnClick: function(e, button) {
+  handleClose: function(modal, action) {
 
-    // TO-DO - Get a reference to the section even though the modal has been moved out of the relevant section to its containing div
+    // Don't want references to button in here
 
-    // Action type
-    var action = $(button).data(this.modalAction);
-
-    // Ensure wrapperClick doesn't fire on modal itself
-    if (action === 'wrapperClick' && e.target != button)  { return };
-
-    var actionNiceName = action.charAt(0).toUpperCase() + action.slice(1),
-        modal = (action === 'wrapperClick') ? $(button).find(this.modalIdDataTag) : $(button).closest(this.modalIdDataTag),
+    var actionNiceName = action.charAt(0).toUpperCase() + action.slice(1)
         id = modal.data(this.modalId),
-        niceId = $.camelCase(id),
+        isYouTubeModal = $(modal).data(this.modalYouTube) !== undefined,
+        niceId = isYouTubeModal ? id : $.camelCase(id),
         sectionId = modal.data(this.modalSection),
         section = this.imm._sections.filter(function(s) { return s.id === sectionId; }),
         section = section[0],
@@ -3006,6 +3022,8 @@ new Immerse().component({
 
     var actionsObj = modalSettings.actions,
         animName = modalSettings.animations[action];
+
+    console.log(modalSettings);
 
     if (actionsObj.hasOwnProperty(action)
         && $.isFunction(actionsObj[action])) {
@@ -3078,15 +3096,17 @@ new Immerse().component({
       }
 
       function videoStateChange(e) {
-        if (e.data == 0) { that.actions.close.call(that, youTubeModal, 'youtube-' + videoId); }
+        if (e.data == 0) {
+          that.handleClose.call(that, youTubeModal, 'videoEnd');
+        }
       }
 
     },
 
-    open: function(openStr) {
+    open: function(openStr, section) {
       var videoId = openStr.replace('youtube-','');
       this.youtube.players[videoId].playVideo();
-      this.actions.open.call(this, openStr);
+      this.actions.open.call(this, openStr, section);
     },
 
     close: function(modal, id) {
@@ -3109,7 +3129,8 @@ new Immerse().component({
       }
 
       var $modalWrapper = $modal.closest('.' + this.modalWrapper),
-          niceId = $.camelCase(id),
+          isYouTubeModal = $modal.data(this.modalYouTube) !== undefined,
+          niceId = isYouTubeModal ? id : $.camelCase(id),
           modalSettings = section.components[this.pluginName][niceId],
           openEvent = modalSettings.actions.open,
           hasOpenAnimation = modalSettings.animations.hasOwnProperty('open'),
@@ -3140,10 +3161,12 @@ new Immerse().component({
     },
 
     close: function(modal, id, animName) {
-      var $modal = $(this.imm.utils.datatagify.call(this.imm, this.modalId, id)),
+
+      var $modal = $(modal),
           $modalWrapper = $modal.closest('.' + this.modalWrapper),
           hasCloseAnimation = typeof animName === 'string',
           closeAnimation = hasCloseAnimation ? ' ' + animName : '',
+          isYouTubeModal = $modal.data(this.modalYouTube) !== undefined,
           that = this;
 
       // Animation
@@ -3155,21 +3178,20 @@ new Immerse().component({
           .one(this.imm.utils.cssAnimationEvents, function(e) {
             $modalWrapper.removeClass(that.opened + ' ' + that.closing + closeAnimation);
             $modal.focus();
-            if ($modal.data(that.modalYouTube) == true) { that.youtube.close.call(that, modal, id); }
+            if (isYouTubeModal) { that.youtube.close.call(that, modal, id); }
             $.Immerse.scrollController.htmlScroll(that.imm, 'unlock');
             that.imm._scrollContainer.focus();
             $modal.scrollTop(0);
           });
 
       } else {
-        $modalWrapper.removeClass(that.closing + closeAnimation);
+        $modalWrapper.removeClass(that.opened + ' ' + that.closing + closeAnimation);
         $modal.focus();
+        if (isYouTubeModal) { that.youtube.close.call(that, modal, id); }
         $.Immerse.scrollController.htmlScroll(that.imm, 'unlock');
         that.imm._scrollContainer.focus();
         $modal.scrollTop(0);
       }
-
-//       this.imm.$pageContainer.removeClass(this.modalOpen);
 
     }
 
