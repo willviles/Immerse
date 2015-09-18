@@ -1,0 +1,54 @@
+// Animations
+
+// Fade Up
+////////////////////////////////////
+
+@include keyframes(fade-up-open) {
+  0%, 100% { @include transform-origin(50%, 50%); }
+  0% { @include opacity(0); @include scale(.9); }
+  100% { @include opacity(1); @include scale(1); }
+}
+
+@include keyframes(fade-up-close) {
+  0%, 100% { @include transform-origin(50%, 50%); }
+  0% { @include opacity(1); @include scale(1); }
+  100% { @include opacity(0); @include scale(1.1); }
+}
+
+@include attachModalAnim($animName: 'fade-up');
+
+// Fade Down
+////////////////////////////////////
+
+@include keyframes(fade-down-open) {
+  0%, 100% { @include transform-origin(50%, 50%); }
+  0% { @include opacity(0); @include scale(.9); }
+  100% { @include opacity(1); @include scale(1); }
+}
+
+@include keyframes(fade-down-close) {
+  0%, 100% { @include transform-origin(50%, 50%); }
+  0% { @include opacity(1); @include scale(1); }
+  100% { @include opacity(0); @include scale(.9); }
+}
+
+@include attachModalAnim($animName: 'fade-down');
+
+
+// Bounce Down
+////////////////////////////////////
+
+@include keyframes(bounce-down-open) {
+	0% { @include opacity(0); @include translateY(-2000px); }
+	60% { @include opacity(1); @include translateY(30px); }
+	80% { @include translateY(-10px); }
+	100% { @include translateY(0px); }
+}
+
+@include keyframes(bounce-down-close) {
+	0% { @include translateY(0); }
+	20% { @include opacity(1); @include translateY(-20px); }
+	100% { @include opacity(0); @include translateY(2000px); }
+}
+
+@include attachModalAnim($animName: 'bounce-down', $animInDur: .5s, $animOutDur: .5s);

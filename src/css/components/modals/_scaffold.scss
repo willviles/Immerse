@@ -1,0 +1,53 @@
+$wrapper-opacity: .6;
+$wrapper-color: black;
+
+// Basic scaffold
+
+.#{$prefix}-modal-wrapper {
+  @include stretch();
+  position: fixed;
+  @include translateX(-100%);
+  z-index: 9999;
+  &:before {
+    content: ''; @include stretch(); @include opacity(0);
+    background-color: rgba($wrapper-color, $wrapper-opacity);
+  }
+  &.#{$prefix}-opening, &.#{$prefix}-opened, &.#{$prefix}-closing {
+    @include translateX(0); cursor: pointer;
+  }
+  &.#{$prefix}-opening, &.#{$prefix}-opened {
+    &:before { @include opacity(1); }
+  }
+}
+
+[data-#{$prefix}-modal-id] {
+  position: absolute;
+  left: 0; top: 0;
+  width: 80%; height: 80vh;
+  margin-left: 10%; margin-top: 10vh;
+  background-color: white;
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+  cursor: default;
+  &:focus {
+    outline:0;
+  }
+}
+
+@media screen and (max-width: $tablet-break) {
+  [data-#{$prefix}-modal-id] {
+    width: 90%; height: 90vh;
+    margin-left: 5%; margin-top: 5vh;
+  }
+}
+
+@media screen and (max-width: $mobile-break) {
+  [data-#{$prefix}-modal-id] {
+    width: 96%; height: 96vh;
+    margin-left: 2%; margin-top: 2vh;
+  }
+}
+
+[data-#{$prefix}-modal-youtube] {
+  overflow: hidden !important;
+}
