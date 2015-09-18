@@ -90,6 +90,33 @@ $wrapper-color: black;
   }
 }
 
+@include keyframes(fade-down-open) {
+  0% { @include opacity(0); @include scale(.9); }
+  100% { @include opacity(1); @include scale(1); }
+}
+
+@include keyframes(fade-down-close) {
+  0% { @include opacity(1); @include scale(1); }
+  100% { @include opacity(0); @include scale(.9); }
+}
+
+.#{$prefix}-modal-wrapper.fade-down {
+  &.#{$prefix}-opening {
+    @include fadeInWrapper(.2s, 0s);
+    [data-#{$prefix}-modal-id] {
+      @include transform-origin(50%, 50%);
+      @include animation(fade-down-open .3s cubic-bezier(.17,.67,.59,1.27));
+    }
+  }
+  &.#{$prefix}-closing {
+    @include fadeOutWrapper(.2s, 0s);
+    [data-#{$prefix}-modal-id] {
+      @include transform-origin(50%, 50%);
+      @include animation(fade-down-close .3s cubic-bezier(.17,.67,.59,1.27));
+    }
+  }
+}
+
 // Page animation
 
 [data-#{$prefix}-page] {
