@@ -2845,7 +2845,6 @@ new Immerse().component({
   init: function(imm) {
 
     this.imm = imm;
-
     var that = this;
 
     // Ensure all elements are namespaced
@@ -2856,9 +2855,11 @@ new Immerse().component({
     this.modalIdDataTag = this.imm.utils.datatagify.call(this.imm, this.modalId);
     this.modalOpen = this.imm.utils.namespacify.call(this.imm, 'modal-open');
     this.modalOpenDataTag = this.imm.utils.datatagify.call(this.imm, this.modalOpen);
+    this.modalAnimation = this.imm.utils.namespacify.call(this.imm, 'modal-animation');
     this.modalAction = this.imm.utils.namespacify.call(this.imm, 'modal-action');
     this.modalYouTube = this.imm.utils.namespacify.call(this.imm, 'modal-youtube');
     this.modalSection = this.imm.utils.namespacify.call(this.imm, 'modal-section');
+    this.opened = this.imm.utils.namespacify.call(this.imm, 'opened');
 
     // get all .imm-modal-close, .imm-modal-cancel, .imm-modal-confirm buttons
     this.allActions = ['close', 'cancel', 'confirm', 'wrapperClick'],
@@ -2920,10 +2921,6 @@ new Immerse().component({
     return this;
   },
 
-  sectionEnter: function(opts) {
-//     console.log(opts.section);
-  },
-
   // Prepare Modal
   ///////////////////////////////////////////////////////
 
@@ -2948,10 +2945,12 @@ new Immerse().component({
 
     // Add reference to section
     $(modal).attr('data-' + this.modalSection, $.camelCase(section.id));
+    // Get reference to animation
+    var animName = $(modal).attr('data-' + this.modalAnimation);
     // Move modal to wrapper
     $(modal).appendTo('.' + this.modalsNamespace);
     // Wrap section
-    this.wrap.call(this, modal, id);
+    this.wrap.call(this, modal, id, animName);
 
     // Fix to add keyboard focus to modal
     $(modal).attr('tabindex', 0);
@@ -2960,8 +2959,15 @@ new Immerse().component({
   // Wrap Modal
   ///////////////////////////////////////////////////////
 
-  wrap: function(modal, id) {
-    $wrapper = $('<div class="' + this.modalWrapper + '" data-' + this.modalAction + '="wrapperClick"></div>');
+  wrap: function(modal, id, animName) {
+    var data = 'class="' + this.modalWrapper + '"',
+        data = data + ' data-' + this.modalAction + '="wrapperClick"';
+
+    if (animName) {
+      data = data + ' data-' + this.modalAnimation + '="' + animName + '"';
+    }
+
+    var $wrapper = $('<div ' + data + '></div>');
     $(modal).wrap($wrapper);
   },
 
@@ -3088,7 +3094,7 @@ new Immerse().component({
 
       if (typeof openEvent === 'function') { openEvent($modal); }
 
-      $modal.closest('.' + this.modalWrapper).addClass('opened');
+      $modal.closest('.' + this.modalWrapper).addClass(this.opened);
       this.imm.$pageContainer.addClass(this.modalOpen);
       $.Immerse.scrollController.htmlScroll(this.imm, 'lock');
       $modal.focus();
@@ -3096,7 +3102,7 @@ new Immerse().component({
 
     close: function(modal, id) {
       var $modal = $(this.imm.utils.datatagify.call(this.imm, this.modalId, id)),
-          $wrapper = $modal.closest('.' + this.modalWrapper).removeClass('opened');
+          $wrapper = $modal.closest('.' + this.modalWrapper).removeClass(this.opened);
 
       this.imm.$pageContainer.removeClass(this.modalOpen);
 

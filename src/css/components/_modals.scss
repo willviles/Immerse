@@ -4,7 +4,7 @@
   @include translateX(-100%);
   background-color: rgba(black, .5);
   z-index: 9999;
-  &.opened {
+  &.#{$prefix}-opened {
     @include translateX(0);
     cursor: pointer;
   }
