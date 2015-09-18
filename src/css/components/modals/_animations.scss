@@ -51,7 +51,7 @@
 	100% { @include opacity(0); @include translateY(2000px); }
 }
 
-@include attachModalAnim($animName: 'bounce-down', $animInDur: .5s, $animOutDur: .5s);
+@include attachModalAnim($animName: 'bounce-down', $animInDur: .5s, $animOutDur: .7s, $wrapperFadeOutDelay: .2s);
 
 // Bounce Up
 ////////////////////////////////////
@@ -106,3 +106,71 @@
 }
 
 @include attachModalAnim($animName: 'bounce-right', $animInDur: .5s, $animOutDur: .7s, $wrapperFadeOutDelay: .2s);
+
+// Flip X Up
+////////////////////////////////////
+
+@include keyframes(flip-x-up-open) {
+  0% { @include transform(perspective(400px) rotateX(45deg)); @include opacity(0); }
+  40% { @include transform(perspective(400px) rotateX(-5deg)); }
+  70% { @include transform(perspective(400px) rotateX(5deg)); }
+  100% {  @include transform(perspective(400px) rotateX(0deg)); @include opacity(1); }
+}
+
+@include keyframes(flip-x-up-close) {
+  0% { @include transform(perspective(400px) rotateX(0deg)); @include opacity(1); }
+	100% { @include transform(perspective(400px) rotateX(10deg)); @include opacity(0); }
+}
+
+@include attachModalAnim($animName: 'flip-x-up', $animInDur: .5s, $animOutDur: .3s);
+
+// Flip X Down
+////////////////////////////////////
+
+@include keyframes(flip-x-down-open) {
+  0% { @include transform(perspective(400px) rotateX(-45deg)); @include opacity(0); }
+  40% { @include transform(perspective(400px) rotateX(5deg)); }
+  70% { @include transform(perspective(400px) rotateX(-5deg)); }
+  100% {  @include transform(perspective(400px) rotateX(0deg)); @include opacity(1); }
+}
+
+@include keyframes(flip-x-down-close) {
+  0% { @include transform(perspective(400px) rotateX(0deg)); @include opacity(1); }
+	100% { @include transform(perspective(400px) rotateX(-10deg)); @include opacity(0); }
+}
+
+@include attachModalAnim($animName: 'flip-x-down', $animInDur: .5s, $animOutDur: .3s);
+
+// Flip Y Right
+////////////////////////////////////
+
+@include keyframes(flip-y-right-open) {
+  0% { @include transform(perspective(400px) rotateY(45deg)); @include opacity(0); }
+  40% { @include transform(perspective(400px) rotateY(-5deg)); }
+  70% { @include transform(perspective(400px) rotateY(5deg)); }
+  100% {  @include transform(perspective(400px) rotateY(0deg)); @include opacity(1); }
+}
+
+@include keyframes(flip-y-right-close) {
+  0% { @include transform(perspective(400px) rotateY(0deg)); @include opacity(1); }
+	100% { @include transform(perspective(400px) rotateY(10deg)); @include opacity(0); }
+}
+
+@include attachModalAnim($animName: 'flip-y-right', $animInDur: .5s, $animOutDur: .3s);
+
+// Flip Y Left
+////////////////////////////////////
+
+@include keyframes(flip-y-left-open) {
+  0% { @include transform(perspective(400px) rotateY(-45deg)); @include opacity(0); }
+  40% { @include transform(perspective(400px) rotateY(5deg)); }
+  70% { @include transform(perspective(400px) rotateY(-5deg)); }
+  100% {  @include transform(perspective(400px) rotateY(0deg)); @include opacity(1); }
+}
+
+@include keyframes(flip-y-left-close) {
+  0% { @include transform(perspective(400px) rotateY(0deg)); @include opacity(1); }
+	100% { @include transform(perspective(400px) rotateY(-10deg)); @include opacity(0); }
+}
+
+@include attachModalAnim($animName: 'flip-y-left', $animInDur: .5s, $animOutDur: .3s);
