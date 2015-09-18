@@ -129,8 +129,6 @@ new Immerse().component({
       sectionSettings[niceId] = extendedSettings;
     }
 
-    console.log(sectionSettings);
-
     // If close animation defined but no other default closing animations defined, use the close animation
     if (sectionSettings[niceId]['animations'].hasOwnProperty('close')) {
       var closeAnim = sectionSettings[niceId]['animations']['close'],
@@ -144,8 +142,6 @@ new Immerse().component({
         sectionSettings[niceId]['animations'][name] = closeAnim;
       });
     }
-
-    console.log(sectionSettings);
 
     // Add reference to section
     $(modal).attr('data-' + this.modalSection, $.camelCase(section.id));
@@ -191,8 +187,6 @@ new Immerse().component({
 
     var actionsObj = modalSettings.actions,
         animName = modalSettings.animations[action];
-
-    console.log(modalSettings);
 
     if (actionsObj.hasOwnProperty(action)
         && $.isFunction(actionsObj[action])) {
