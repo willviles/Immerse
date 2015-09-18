@@ -69,4 +69,40 @@
 	100% { @include opacity(0); @include translateY(-2000px); }
 }
 
-@include attachModalAnim($animName: 'bounce-up', $animInDur: .5s, $animOutDur: .7s);
+@include attachModalAnim($animName: 'bounce-up', $animInDur: .5s, $animOutDur: .7s, $wrapperFadeOutDelay: .2s);
+
+// Bounce Left
+////////////////////////////////////
+
+@include keyframes(bounce-left-open) {
+	0% { @include opacity(0); @include translateX(2000px); }
+	60% { @include opacity(1); @include translateX(-30px); }
+	80% { @include translateX(10px); }
+	100% { @include translateX(0px); }
+}
+
+@include keyframes(bounce-left-close) {
+	0% { @include translateY(0); }
+	20% { @include opacity(1); @include translateX(20px); }
+	100% { @include opacity(0); @include translateX(-2000px); }
+}
+
+@include attachModalAnim($animName: 'bounce-left', $animInDur: .5s, $animOutDur: .7s, $wrapperFadeOutDelay: .2s);
+
+// Bounce Right
+////////////////////////////////////
+
+@include keyframes(bounce-right-open) {
+	0% { @include opacity(0); @include translateX(-2000px); }
+	60% { @include opacity(1); @include translateX(30px); }
+	80% { @include translateX(-10px); }
+	100% { @include translateX(0px); }
+}
+
+@include keyframes(bounce-right-close) {
+	0% { @include translateY(0); }
+	20% { @include opacity(1); @include translateX(-20px); }
+	100% { @include opacity(0); @include translateX(2000px); }
+}
+
+@include attachModalAnim($animName: 'bounce-right', $animInDur: .5s, $animOutDur: .7s, $wrapperFadeOutDelay: .2s);
