@@ -116,7 +116,7 @@ body::-webkit-scrollbar {
 
 [data-imm-nav="side"] {
   position: fixed;
-  top: 50%;
+  top: 50vh;
   right: 30px;
   width: 25px;
   z-index: 1000;

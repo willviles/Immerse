@@ -3,7 +3,7 @@ $navItemDotSize: $navItemSize * 0.6;
 $jumpBezier: cubic-bezier(.25,1.43,.55,.99);
 
 [data-imm-nav="side"] {
-  position: fixed; top: 50%; right: 30px;
+  position: fixed; top: 50vh; right: 30px;
   width: $navItemSize; z-index: 1000;
   ul {
     @include translateY(-50%);
