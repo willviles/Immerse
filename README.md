@@ -443,17 +443,21 @@ Immerse offers support for modal overlays out-of-the-box.
 All modal actions can be overridden on a per-modal basis inside a specific Immerse section:
 
 ```js
-new Immerse().setup({
-  
+page.section('foo', {
+   
   components: {  
     modals: {
       
       // Set a default for all modals in this section
       'default': {
-        animations: {
-          open: 'fade-down',
-          close: 'fade-up', // Will set animation for each close action unless defined like...
-          confirm: 'fly-left'
+        transitions: {
+          open: 'push-up',
+          close: 'bounce-down', // Will set animation for each close action unless defined
+          confirm: {
+            animation: 'flip-y-left',
+            speed: 'slow',
+            blur: true
+          }
         },
         actions: {
           cancel: function(modal) { /* Custom function */ },
@@ -465,9 +469,7 @@ new Immerse().setup({
       
       // Will set specific settings on modal
       'modalName': {
-        actions: {
-          cancel: function(modal) { /* Custom function */ }), ..
-        }
+        ...
       }, ...
       
     }, ...  
@@ -476,10 +478,10 @@ new Immerse().setup({
 });
 ```
 
-Or globally inside Immerse setup:
+Or globally inside Immerse setup to set defaults for the whole page:
 
 ```js
-page.section('foo', {
+new Immerse().setup({
   
   components: { 
     modals: {
