@@ -381,16 +381,15 @@
               'youtube-DP278W0NVV8': {
                 transitions: {
                   open: {
-                    animation: 'bounce-down',
+                    animation: 'push-up',
                     speed: 'normal', //slow, normal, fast
                     blur: false,
                   },
                   close: {
-                    animation: 'bounce-up',
+                    animation: 'push-down',
                     speed: 'slow',
                     blur: false
-                  },
-                  confirm: 'fly-left'
+                  }
                 }
               }
             }
@@ -436,8 +435,8 @@
             modals: {
               'default': {
                 transitions: {
-                  open: 'push-up',
-                  close: 'push-down'
+                  open: 'bounce-down',
+                  close: 'bounce-down'
                 },
                 actions: {
                   confirm: function(modal) {
