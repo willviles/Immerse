@@ -2883,6 +2883,9 @@ new Immerse().component({
 
   },
 
+  // Initialize component on each section
+  ///////////////////////////////////////////////////////
+
   initSection: function(opts) {
 
     this.imm = opts.immerse;
@@ -2960,17 +2963,17 @@ new Immerse().component({
       sectionSettings[niceId] = extendedSettings;
     }
 
-    // If close animation defined but no other default closing animations defined, use the close animation
-    if (sectionSettings[niceId]['animations'].hasOwnProperty('close')) {
-      var closeAnim = sectionSettings[niceId]['animations']['close'],
+    // If close transition defined but no other default closing transition defined, use the close transition
+    if (sectionSettings[niceId]['transitions'].hasOwnProperty('close')) {
+      var closeAnim = sectionSettings[niceId]['transitions']['close'],
           allActions = $.merge([], that.allActions);
 
       // If it's a YouTube modal add videoEnd action
       if (isYouTubeModal) { allActions.push('videoEnd'); }
 
-      $.each(allActions, function(i, name) {
-        if (sectionSettings[niceId]['animations'].hasOwnProperty(name)) { return; }
-        sectionSettings[niceId]['animations'][name] = closeAnim;
+      $.each(allActions, function(i, action) {
+        if (sectionSettings[niceId]['transitions'].hasOwnProperty(action)) { return; }
+        sectionSettings[niceId]['transitions'][action] = closeAnim;
       });
     }
 
@@ -3016,8 +3019,7 @@ new Immerse().component({
 
     $(modalSettings.element).trigger(action);
 
-    var actionsObj = modalSettings.actions,
-        animName = modalSettings.animations[action];
+    var actionsObj = modalSettings.actions;
 
     if (actionsObj.hasOwnProperty(action)
         && $.isFunction(actionsObj[action])) {
@@ -3025,9 +3027,12 @@ new Immerse().component({
       actionsObj[action](modal);
 
     } else {
-      this.actions.close.call(this, modal, id, animName);
+      this.actions.close.call(this, modal, id, modalSettings.transitions, action);
     }
   },
+
+  // YouTube
+  ///////////////////////////////////////////////////////
 
   youtube: {
 
@@ -3114,6 +3119,9 @@ new Immerse().component({
 
   actions: {
 
+    // Open
+    ///////////////////////////////////////////////////////
+
     open: function(id, section) {
       var $modal = $(this.imm.utils.datatagify.call(this.imm, this.modalId, id)),
           that = this;
@@ -3126,51 +3134,60 @@ new Immerse().component({
           isYouTubeModal = $modal.data(this.modalYouTube) !== undefined,
           niceId = isYouTubeModal ? id : $.camelCase(id),
           modalSettings = section.components[this.pluginName][niceId],
-          openEvent = modalSettings.actions.open,
-          hasOpenAnimation = modalSettings.animations.hasOwnProperty('open'),
-          openAnimation = hasOpenAnimation ? ' ' + modalSettings.animations.open : '';
+          openEvent = modalSettings.actions.open;
 
       if (typeof openEvent === 'function') { openEvent($modal); }
 
+      var transition = this.getTransition(modalSettings.transitions, 'open');
+
       $.Immerse.scrollController.htmlScroll(this.imm, 'lock');
 
-      // Animation
-      $modalWrapper.addClass(this.opening + openAnimation);
+      if (transition === null) {
+        $modalWrapper.addClass(that.opened);
+        $modal.focus();
 
-      if (hasOpenAnimation) {
+      } else {
+
+        $modalWrapper.addClass(this.opening + ' ' + transition.animation + ' ' + transition.speed);
         $modal
           .off(this.imm.utils.cssAnimationEvents)
           .one(this.imm.utils.cssAnimationEvents, function(e) {
-            $modalWrapper.removeClass(that.opening + openAnimation);
+            $modalWrapper.removeClass(that.opening + ' ' + transition.animation + ' ' + transition.speed);
             $modalWrapper.addClass(that.opened);
             $modal.focus();
           });
 
-      } else {
-        $modalWrapper.removeClass(that.opening + openAnimation);
-        $modalWrapper.addClass(that.opened);
-        $modal.focus();
       }
 
     },
 
-    close: function(modal, id, animName) {
+    // Close
+    ///////////////////////////////////////////////////////
+
+    close: function(modal, id, t, action) {
 
       var $modal = $(modal),
           $modalWrapper = $modal.closest('.' + this.modalWrapper),
-          hasCloseAnimation = typeof animName === 'string',
-          closeAnimation = hasCloseAnimation ? ' ' + animName : '',
           isYouTubeModal = $modal.data(this.modalYouTube) !== undefined,
           that = this;
 
-      // Animation
-      $modalWrapper.removeClass(this.open).addClass(this.closing + closeAnimation);
+      var transition = this.getTransition(t, action);
 
-      if (hasCloseAnimation) {
+      if (transition === null) {
+        $modalWrapper.removeClass(this.open);
+        $modal.focus();
+        if (isYouTubeModal) { this.youtube.close.call(this, modal, id); }
+        $.Immerse.scrollController.htmlScroll(this.imm, 'unlock');
+        that.imm._scrollContainer.focus();
+        $modal.scrollTop(0);
+
+      } else {
+
+        $modalWrapper.removeClass(this.open).addClass(this.closing + ' ' + transition.animation + ' ' + transition.speed);
         $modal
           .off(this.imm.utils.cssAnimationEvents)
           .one(this.imm.utils.cssAnimationEvents, function(e) {
-            $modalWrapper.removeClass(that.opened + ' ' + that.closing + closeAnimation);
+            $modalWrapper.removeClass(that.opened + ' ' + that.closing + ' ' + transition.animation + ' ' + transition.speed);
             $modal.focus();
             if (isYouTubeModal) { that.youtube.close.call(that, modal, id); }
             $.Immerse.scrollController.htmlScroll(that.imm, 'unlock');
@@ -3178,17 +3195,34 @@ new Immerse().component({
             $modal.scrollTop(0);
           });
 
-      } else {
-        $modalWrapper.removeClass(that.opened + ' ' + that.closing + closeAnimation);
-        $modal.focus();
-        if (isYouTubeModal) { that.youtube.close.call(that, modal, id); }
-        $.Immerse.scrollController.htmlScroll(that.imm, 'unlock');
-        that.imm._scrollContainer.focus();
-        $modal.scrollTop(0);
       }
 
     }
 
+  },
+
+  // Get Animations
+  ///////////////////////////////////////////////////////
+
+  getTransition: function(t, type) {
+
+    var hasTransition = (typeof t === 'object' || typeof t === 'string' && t.hasOwnProperty(type));
+
+    if (hasTransition) {
+
+      if (typeof t[type] === 'string') {
+        return {
+          animation: t[type], speed: 'normal', blur: false
+        };
+
+      } else if (typeof t[type] === 'object') {
+        return t[type];
+
+      }
+
+    } else {
+      return null;
+    }
   },
 
   // Set the defaults for the plugin

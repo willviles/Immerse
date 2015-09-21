@@ -1,39 +1,38 @@
 // Animations
 
-// Fade Up
+// Push Up
 ////////////////////////////////////
 
-@include keyframes(fade-up-open) {
+@include keyframes(push-up-open) {
   0%, 100% { @include transform-origin(50%, 50%); }
   0% { @include opacity(0); @include scale(.9); }
   100% { @include opacity(1); @include scale(1); }
 }
 
-@include keyframes(fade-up-close) {
+@include keyframes(push-up-close) {
   0%, 100% { @include transform-origin(50%, 50%); }
   0% { @include opacity(1); @include scale(1); }
-  100% { @include opacity(0); @include scale(1.1); }
+  100% { @include opacity(0); @include scale(1.05); }
 }
 
-@include attachModalAnim($animName: 'fade-up');
+@include attachModalAnim($animName: 'push-up');
 
-// Fade Down
+// Push Down
 ////////////////////////////////////
 
-@include keyframes(fade-down-open) {
+@include keyframes(push-down-open) {
   0%, 100% { @include transform-origin(50%, 50%); }
   0% { @include opacity(0); @include scale(.9); }
   100% { @include opacity(1); @include scale(1); }
 }
 
-@include keyframes(fade-down-close) {
+@include keyframes(push-down-close) {
   0%, 100% { @include transform-origin(50%, 50%); }
   0% { @include opacity(1); @include scale(1); }
-  100% { @include opacity(0); @include scale(.9); }
+  100% { @include opacity(0); @include scale(.95); }
 }
 
-@include attachModalAnim($animName: 'fade-down');
-
+@include attachModalAnim($animName: 'push-down');
 
 // Bounce Down
 ////////////////////////////////////
@@ -51,7 +50,7 @@
 	100% { @include opacity(0); @include translateY(2000px); }
 }
 
-@include attachModalAnim($animName: 'bounce-down', $animInDur: .5s, $animOutDur: .7s, $wrapperFadeOutDelay: .2s);
+@include attachModalAnim($animName: 'bounce-down', $animInDur: .5s, $animInEasing: cubic-bezier(.17,.67,.59,1.27), $animOutDur: .7s, $animOutEasing: cubic-bezier(.17,.67,.59,1.27), $wrapperFadeOutDelay: .2s);
 
 // Bounce Up
 ////////////////////////////////////
@@ -69,7 +68,7 @@
 	100% { @include opacity(0); @include translateY(-2000px); }
 }
 
-@include attachModalAnim($animName: 'bounce-up', $animInDur: .5s, $animOutDur: .7s, $wrapperFadeOutDelay: .2s);
+@include attachModalAnim($animName: 'bounce-up', $animInDur: .5s, $animInEasing: cubic-bezier(.17,.67,.59,1.27), $animOutDur: .7s, $animOutEasing: cubic-bezier(.17,.67,.59,1.27), $wrapperFadeOutDelay: .2s);
 
 // Bounce Left
 ////////////////////////////////////
@@ -87,7 +86,7 @@
 	100% { @include opacity(0); @include translateX(-2000px); }
 }
 
-@include attachModalAnim($animName: 'bounce-left', $animInDur: .5s, $animOutDur: .7s, $wrapperFadeOutDelay: .2s);
+@include attachModalAnim($animName: 'bounce-left', $animInDur: .5s, $animInEasing: cubic-bezier(.17,.67,.59,1.27), $animOutDur: .7s, $animOutEasing: cubic-bezier(.17,.67,.59,1.27), $wrapperFadeOutDelay: .2s);
 
 // Bounce Right
 ////////////////////////////////////
@@ -105,7 +104,7 @@
 	100% { @include opacity(0); @include translateX(2000px); }
 }
 
-@include attachModalAnim($animName: 'bounce-right', $animInDur: .5s, $animOutDur: .7s, $wrapperFadeOutDelay: .2s);
+@include attachModalAnim($animName: 'bounce-right', $animInDur: .5s, $animInEasing: cubic-bezier(.17,.67,.59,1.27), $animOutDur: .7s, $animOutEasing: cubic-bezier(.17,.67,.59,1.27), $wrapperFadeOutDelay: .2s);
 
 // Flip X Up
 ////////////////////////////////////
@@ -145,7 +144,7 @@
 ////////////////////////////////////
 
 @include keyframes(flip-y-right-open) {
-  0% { @include transform(perspective(400px) rotateY(45deg)); @include opacity(0); }
+  0% { @include transform(perspective(400px) rotateY(25deg)); @include opacity(0); }
   40% { @include transform(perspective(400px) rotateY(-5deg)); }
   70% { @include transform(perspective(400px) rotateY(5deg)); }
   100% {  @include transform(perspective(400px) rotateY(0deg)); @include opacity(1); }
@@ -156,13 +155,13 @@
 	100% { @include transform(perspective(400px) rotateY(10deg)); @include opacity(0); }
 }
 
-@include attachModalAnim($animName: 'flip-y-right', $animInDur: .5s, $animOutDur: .3s);
+@include attachModalAnim($animName: 'flip-y-right', $animInDur: .5s, $animInEasing: ease-out, $animOutDur: .2s, $animOutEasing: ease-in);
 
 // Flip Y Left
 ////////////////////////////////////
 
 @include keyframes(flip-y-left-open) {
-  0% { @include transform(perspective(400px) rotateY(-45deg)); @include opacity(0); }
+  0% { @include transform(perspective(400px) rotateY(-25deg)); @include opacity(0); }
   40% { @include transform(perspective(400px) rotateY(5deg)); }
   70% { @include transform(perspective(400px) rotateY(-5deg)); }
   100% {  @include transform(perspective(400px) rotateY(0deg)); @include opacity(1); }
@@ -173,4 +172,35 @@
 	100% { @include transform(perspective(400px) rotateY(-10deg)); @include opacity(0); }
 }
 
-@include attachModalAnim($animName: 'flip-y-left', $animInDur: .5s, $animOutDur: .3s);
+@include attachModalAnim($animName: 'flip-y-left', $animInDur: .5s, $animInEasing: ease-out, $animOutDur: .2s, $animOutEasing: ease-in);
+
+// Roll Right
+////////////////////////////////////
+
+@include keyframes(roll-right-open) {
+	0% { @include opacity(0); @include transform(translateX(-50%) rotate(-20deg)); }
+	100% { @include opacity(1); @include transform(translateX(0px) rotate(0deg)); }
+}
+
+@include keyframes(roll-right-close) {
+	0% { @include opacity(1); @include transform(translateX(0px) rotate(0deg)); }
+	100% { @include opacity(0); @include transform(translateX(50%) rotate(20deg)); }
+}
+
+@include attachModalAnim($animName: 'roll-right', $animInDur: .2s, $animInEasing: ease-out, $animOutDur: .2s, $animOutEasing: ease-in);
+
+
+// Roll Left
+////////////////////////////////////
+
+@include keyframes(roll-left-open) {
+	0% { @include opacity(0); @include transform(translateX(50%) rotate(20deg)); }
+	100% { @include opacity(1); @include transform(translateX(0px) rotate(0deg)); }
+}
+
+@include keyframes(roll-left-close) {
+	0% { @include opacity(1); @include transform(translateX(0px) rotate(0deg)); }
+	100% { @include opacity(0); @include transform(translateX(-50%) rotate(-20deg)); }
+}
+
+@include attachModalAnim($animName: 'roll-left', $animInDur: .2s, $animInEasing: ease-out, $animOutDur: .2s, $animOutEasing: ease-in);

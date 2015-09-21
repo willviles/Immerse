@@ -22,6 +22,10 @@ body::-webkit-scrollbar { width: 0 !important; }
   .#{$prefix}-vertcenter { position: absolute; top: 50%; left: 0; width: 100%; @include translateY(-50%); }
 }
 
+[data-#{$prefix}-page].#{$prefix}-blur {
+  @include filter(blur(3px));
+}
+
 /* Default Styles */
 
 @import 'loading';

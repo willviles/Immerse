@@ -372,16 +372,29 @@
             }
           },
 
+          // TO-DO: NEW SYNTAX FOR MODAL TRANSITIONS
           // Component settings
           components: {
+
+            // Modals
             modals: {
               'youtube-DP278W0NVV8': {
-                animations: {
-                  open: 'fade-up',
-                  close: 'fade-up'
+                transitions: {
+                  open: {
+                    animation: 'bounce-down',
+                    speed: 'normal', //slow, normal, fast
+                    blur: false,
+                  },
+                  close: {
+                    animation: 'bounce-up',
+                    speed: 'slow',
+                    blur: false
+                  },
+                  confirm: 'fly-left'
                 }
               }
             }
+
           }
         });
 
@@ -422,9 +435,9 @@
           components: {
             modals: {
               'default': {
-                animations: {
-                  open: 'flip-y-left',
-                  close: 'flip-y-right'
+                transitions: {
+                  open: 'push-up',
+                  close: 'push-down'
                 },
                 actions: {
                   confirm: function(modal) {
