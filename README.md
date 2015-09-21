@@ -1,4 +1,4 @@
-# Immerse.js [v1.0.24](https://github.com/willviles/Immerse.js/blob/master/CHANGELOG.md "Immerse.js Changelog") [![Build Status](https://api.travis-ci.org/willviles/Immerse.js.svg?branch=master)](https://travis-ci.org/willviles/Immerse.js) 
+# Immerse.js [v1.0.25](https://github.com/willviles/Immerse.js/blob/master/CHANGELOG.md "Immerse.js Changelog") [![Build Status](https://api.travis-ci.org/willviles/Immerse.js.svg?branch=master)](https://travis-ci.org/willviles/Immerse.js) 
 #### Build immersive, media driven web experiences - the easy way.
 
 Immerse.js offers a javascript framework for building complex, media-driven web experiences.
@@ -594,8 +594,8 @@ Custom Immerse.js components will be available for anyone to develop in the near
 
 ## Future Developments
 &#10004; Section hash state management.  
-&#9744; Allow state tracking using history.pushState as well as history.replaceState.  
-&#9744; Set of easily-attachable modal window open/close animations. Inspiration <a href="http://tympanus.net/Development/ModalWindowEffects/" title="Codrops modal window effects inspiration" target="_blank">here</a>.  
+&#10004; Set of easily-attachable modal window open/close animations. Inspiration <a href="http://tympanus.net/Development/ModalWindowEffects/" title="Codrops modal window effects inspiration" target="_blank">here</a>. 
+&#9744; Allow state tracking using history.pushState as well as history.replaceState.   
 &#9744; Set of easily-attachable section transitions. Inspiration <a href="http://codyhouse.co/gem/page-scroll-effects/" title="Codyhouse page scroll effects" target="_blank">here</a>.  
 &#9744; In time, the project will be moved away from a dependency on jQuery toward pure ECMAScript 6 and be restructured to follow UMD patterns. 
 
