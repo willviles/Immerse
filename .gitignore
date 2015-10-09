@@ -3,6 +3,7 @@
 /.codekit-cache
 config.codekit
 config.rb
+example/
 Icon
 *.bak.js
 *.bak.html

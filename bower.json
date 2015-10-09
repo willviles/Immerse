@@ -10,7 +10,7 @@
     "scrolling", "immersive", "media", "video", "audio", "experiences", "asset management"
   ],
   "license": "MIT",
-  "dependencies": {
+  "devDependencies": {
     "gsap": "*",
     "jquery": "*"
   },
