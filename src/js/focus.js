@@ -47,13 +47,12 @@
       if ($inputs.length === 0) { e.preventDefault(); return; }
 
       var firstInput = $inputs[0],
-          lastInput = $inputs[$inputs.length - 1];
+          lastInput = $inputs[$inputs.length - 1],
+          that = this;
 
-      // If body is the active element, go for first input
-      if (document.activeElement === $('body')[0]) {
-        e.preventDefault();
-        $(firstInput).focus();
-      }
+      // Set first input as focus
+      e.preventDefault();
+      $(firstInput).focus();
 
       // Manage input handling
       $inputs.off('keydown').on('keydown', function(e) {
@@ -64,7 +63,7 @@
         // Give the last input a keydown function to return it to document
         if ($(this)[0] === $(lastInput)[0] && e.which === 9) {
           e.preventDefault();
-          $(this).blur();
+          that.returnFocusToPage.call(that);
           return;
         }
 
@@ -82,7 +81,7 @@
     },
 
     returnFocusToPage: function() {
-      if (document.activeElement !== this.imm.page) {
+      if (document.activeElement !== this.imm.$page[0]) {
         this.imm.$page.focus();
       }
     },

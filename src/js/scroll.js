@@ -213,6 +213,15 @@
 
             break;
 
+            case 32: // space
+
+              if (e.target == this.imm.$page[0]) {
+                e.preventDefault();
+                return false;
+              }
+
+            break;
+
             default: return; // exit this handler for other keys
           }
         },
