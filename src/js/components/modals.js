@@ -48,7 +48,7 @@ new Immerse().component({
     this.pluginName = this.name;
 
     // Create modals container
-    this.imm.$elem.append(this.$modalsContainer);
+    this.imm.$page.append(this.$modalsContainer);
 
   },
 

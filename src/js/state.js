@@ -64,7 +64,7 @@
       }
 
       // Set up hash handling on section change
-      this.imm.$elem.on('sectionChanged', function(e, d) {
+      this.imm.$page.on('sectionChanged', function(e, d) {
         that.hashChange.call(that, d);
       });
 
@@ -87,7 +87,7 @@
         this.imm._sectionAbove = this.imm._sections[this.imm._currentSection.scrollIndex - 1];
       }
 
-      this.imm.$elem.on('immInit', function(e) {
+      this.imm.$page.on('immInit', function(e) {
         that.imm._scrollContainer.scrollTop(that.imm._currentSection.scrollOffset);
         that.imm._currentSection.element.trigger('enteringDown');
         that.imm._currentSection.element.trigger('enteredDown');

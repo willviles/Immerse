@@ -90,7 +90,7 @@ new Immerse().component({
 
   onResize: function(imm) {
     var that = this;
-    $.each(imm.$elem.find('[data-' + this.videoDataTag + ']'), function(i, wrapper) {
+    $.each(imm.$page.find('[data-' + this.videoDataTag + ']'), function(i, wrapper) {
       that.doResize(wrapper);
     });
 

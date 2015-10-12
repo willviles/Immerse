@@ -20,9 +20,13 @@
     init: function(imm) {
       this.imm = imm;
       var that = this;
-      this.imm.$elem.on('sectionChanged', function(e, d) {
-        that.returnFocusToBody();
-      });
+
+      this.imm.$page.attr('tabindex', -1);
+      this.returnFocusToPage.call(this);
+
+      this.imm.$page.on('sectionChanged', function(e, d) {
+        this.returnFocusToPage.call(this);
+      }.bind(this));
       return this;
     },
 
@@ -77,14 +81,14 @@
       return this;
     },
 
-    returnFocusToBody: function() {
-      if (document.activeElement !== $('body')[0]) {
-        $(document.activeElement).blur();
+    returnFocusToPage: function() {
+      if (document.activeElement !== this.imm.page) {
+        this.imm.$page.focus();
       }
     },
 
     kill: function() {
-      this.returnFocusToBody();
+      this.returnFocusToPage.call(this);
     }
 
   // End of controller

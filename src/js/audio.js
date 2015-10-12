@@ -44,7 +44,7 @@
       // Setup audio for initial section
       this.handleChange.call(this, this, this.imm._currentSection.audio);
       // Setup audio change when a section changes
-      this.imm.$elem.on('sectionChanged', function(e, d) {
+      this.imm.$page.on('sectionChanged', function(e, d) {
         that.handleChange.call(that, that, d.current.audio);
       });
       // Handle muting when window is closed
@@ -131,7 +131,7 @@
             that = this;
 
         // Get a handle on all mute buttons
-        this.imm._$muteBtns = this.imm.$elem.find('.' + muteClass);
+        this.imm._$muteBtns = $('.' + muteClass, 'body');
 
         // Set initial value based on state
         if (this.imm.utils.cookies.get('immAudioState') === 'muted') {

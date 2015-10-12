@@ -25,13 +25,13 @@
       this.imm = imm;
 
       // If element initiated on is body, set the scroll target to window
-      this.imm._scrollContainer = ($(this.imm.elem)[0] === $('body')[0]) ? $(window) : $(this.imm.elem);
+      this.imm._scrollContainer = (this.imm.page === $('body')[0]) ? $(window) : this.imm.$page;
       // Test for corresponding mousewheelEvent for browser
       this.imm._mousewheelEvent = (/Firefox/i.test(navigator.userAgent))? 'DOMMouseScroll wheel' : 'mousewheel wheel';
       // Get bound/unbound status of first section
       this.imm._scrollUnbound = this.utils.isScrollUnbound.call(this, this.imm, this.imm._currentSection);
       // Manage binding or unbind of scroll on sectionChange
-      this.imm.$elem.on('immInit sectionChanged', function(e, d) {
+      this.imm.$page.on('immInit sectionChanged', function(e, d) {
         if (e.type === 'sectionChanged') {
           that.imm._scrollUnbound = that.utils.isScrollUnbound.call(that, that.imm, d.current);
         }
@@ -46,29 +46,29 @@
 
     events: {
       scroll: function() {
-        this.imm._scrollContainer.off( this.imm._mousewheelEvent, this.handlers.scroll.detect)
+        this.imm.$page.off( this.imm._mousewheelEvent, this.handlers.scroll.detect)
                                  .on( this.imm._mousewheelEvent, this.handlers.scroll.detect.bind(this));
       },
 
       keys: function() {
-        $(document).off('keydown keyup');
-        $(document).on('keydown', this.handlers.keys.down.bind(this));
-        $(document).on('keyup', this.handlers.keys.up.bind(this));
+        this.imm.$page.off('keydown keyup');
+        this.imm.$page.on('keydown', this.handlers.keys.down.bind(this));
+        this.imm.$page.on('keyup', this.handlers.keys.up.bind(this));
       },
 
       touch: function() {
         if (this.imm._isDesktop) { return false; };
         if (this.imm._htmlScrollLocked) { return };
 
-        $(document).off('touchstart touchmove touchend');
+        this.imm.$page.off('touchstart touchmove touchend');
 
         if (this.imm._scrollUnbound) {
-          $(document).on('touchmove', this.unbound.bind(this));
+          this.imm.$page.on('touchmove', this.unbound.bind(this));
         } else {
-          $(document).on('touchstart', this.handlers.touch.start.bind(this));
+          this.imm.$page.on('touchstart', this.handlers.touch.start.bind(this));
         }
 
-        $(document)
+        this.imm.$page
           .off('swipedown swipeup')
           .on('swipedown swipeup', this.handlers.touch.detect.bind(this));
       }
@@ -181,7 +181,7 @@
           if (this.imm._htmlScrollLocked) { return; };
 
           // If body isn't the active element, just behave normally
-          if (document.activeElement !== $('body')[0]) { return; }
+          if (document.activeElement !== this.imm.$page[0]) { return; }
 
           if (!this.imm._scrollUnbound && this.imm._lastKey && this.imm._lastKey.which == e.which) {
             e.preventDefault();
@@ -236,7 +236,7 @@
             coords: [ data.pageX, data.pageY ]
           };
 
-          $(document)
+          this.imm.$page
             .on('touchmove', this.handlers.touch.move.bind(this))
             .one('touchend', this.handlers.touch.end.bind(this));
         },
@@ -256,13 +256,13 @@
         },
 
         end: function(e) {
-          $(document).off('touchmove', this.handlers.touch.move);
+          this.imm.$page.off('touchmove', this.handlers.touch.move);
           if (this.imm._touchStartData && this.imm._touchStopData) {
             if (this.imm._touchStopData.time - this.imm._touchStartData.time < 1000 &&
                 Math.abs(this.imm._touchStartData.coords[1] - this.imm._touchStopData.coords[1]) > 30 &&
                 Math.abs(this.imm._touchStartData.coords[0] - this.imm._touchStopData.coords[0]) < 75) {
                   var direction = this.imm._touchStartData.coords[1] > this.imm._touchStopData.coords[1] ? 'swipeup' : 'swipedown';
-                  $(document).trigger(direction);
+                  this.imm.$page.trigger(direction);
             }
           }
           this.imm._touchStartData = this.imm._touchStopData = undefined;
@@ -401,14 +401,14 @@
         that.imm._currentSection = opts.nextSection;
 
         // Set new section as current section
-        that.imm.$elem.trigger('sectionChanged', [{
+        that.imm.$page.trigger('sectionChanged', [{
           last: that.imm._lastSection,
           current: that.imm._currentSection,
           below: that.imm._sectionBelow,
           above: that.imm._sectionAbove
         }]);
 
-        TweenLite.to(window, dur, {
+        TweenLite.to(that.imm.$page, dur, {
           scrollTo: { y: dist, autoKill: false },
           ease: easing,
           onComplete: function() {
@@ -439,7 +439,7 @@
         this.imm._lastSection = opts.currentSection;
         this.imm._currentSection = opts.nextSection;
         // We're done, so set new section as current section
-        this.imm.$elem.trigger('sectionChanged', [{
+        this.imm.$page.trigger('sectionChanged', [{
           last: that.imm._lastSection,
           current: that.imm._currentSection,
           below: that.imm._sectionBelow,
@@ -495,8 +495,8 @@
     detectAbove: function() {
       if (this.imm._sectionAbove === undefined) { return false; }
       return isAbove = this.imm._isTouch ?
-                      this.imm._scrollContainer.scrollTop() < this.imm._currentSection.scrollOffset :
-                      this.imm._scrollContainer.scrollTop() <= this.imm._currentSection.scrollOffset;
+                      this.imm.$page.scrollTop() < this.imm._currentSection.scrollOffset :
+                      this.imm.$page.scrollTop() <= this.imm._currentSection.scrollOffset;
     },
 
     detectBelow: function() {
@@ -509,21 +509,23 @@
                      this.imm._sectionBelow.scrollOffset;
 
       return isBelow = this.imm._isTouch ?
-                      this.imm._scrollContainer.scrollTop() > belowVal :
-                      this.imm._scrollContainer.scrollTop() >= belowVal;
+                      this.imm.$page.scrollTop() > belowVal :
+                      this.imm.$page.scrollTop() >= belowVal;
     },
 
     sectionOffset: {
-      set: function(s) {
-        s.scrollOffset = $(s.element).offset().top;
+      set: function(s, st) {
+        s.scrollOffset = st + $(s.element).position().top;
       },
 
       update: function(imm) {
         this.imm = (this.imm === undefined) ? imm : this.imm;
-        var that = this;
+
+        var st = this.imm.$page.scrollTop();
+
         $.each(this.imm._sections, function(i, s) {
-          that.sectionOffset.set.call(that, s);
-        });
+          this.sectionOffset.set.call(this, s, st);
+        }.bind(this));
 
       }
     },
@@ -532,7 +534,7 @@
       this.imm = (this.imm === undefined) ? imm : this.imm;
       if (!this.imm._scrollUnbound) {
         var t = this.imm._currentSection.scrollOffset;
-        this.imm._scrollContainer.scrollTop(t);
+        this.imm.$page.scrollTop(t);
       }
     },
 
@@ -604,11 +606,11 @@
     kill: function(imm) {
       this.imm = (this.imm === undefined) ? imm : this.imm;
       // Remove all Immerse scroll event handlers
-      $(document).off('keydown keyup touchmove touchstart swipedown swipeup');
+      this.imm.$page.off('keydown keyup touchmove touchstart swipedown swipeup');
       // Remove all events attached to the mousewheel and wheel events
-      this.imm._scrollContainer.off(this.imm._mousewheelEvent);
+      this.imm.$page.off(this.imm._mousewheelEvent);
       // Ensure default behaviour is restored
-      this.imm._scrollContainer.on(this.imm._mousewheelEvent, function(e) {
+      this.imm.$page.on(this.imm._mousewheelEvent, function(e) {
         window.onmousewheel = document.onmousewheel = null;
         window.onwheel = null;
         window.ontouchmove = null;

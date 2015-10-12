@@ -53,7 +53,7 @@
 
     sectionChange: function() {
       var that = this;
-      this.imm.$elem.on('sectionChanged', function(e, d) {
+      this.imm.$page.on('sectionChanged', function(e, d) {
         var navItem = $(that.navListDataTag + ' a[data-' + that.sectionDataTag + '="' + d.current.id + '"]');
         that.update.call(that, navItem);
       });

@@ -125,7 +125,7 @@
           sourceStr = sourceStr + '<source src="' + a.path + '.' + ft +'" type="audio/' + ft + '">';
         });
 
-        this.imm.$elem.append('<audio id="' + n + '" class="' + audioClass + '" ' + l + '>' + sourceStr + '</audio>');
+        this.imm.$page.append('<audio id="' + n + '" class="' + audioClass + '" ' + l + '>' + sourceStr + '</audio>');
         this.imm._allAudio.push(n);
         return true;
       },
@@ -140,7 +140,7 @@
         };
 
         var videoDataTag = this.imm.utils.namespacify.call(this.imm, 'video'),
-            $wrapper = this.imm.$elem.find('[data-' + videoDataTag + '="' + n + '"]'),
+            $wrapper = this.imm.$page.find('[data-' + videoDataTag + '="' + n + '"]'),
             fileTypes = ($.isArray(o.fileTypes)) ? o.fileTypes : ['mp4', 'ogv', 'webm'],
             loop = (o.loop === false) ? '' : 'loop="loop" ',
             sourceStr = '';
@@ -184,30 +184,28 @@
         function(s) {
 
           // Calculate remaining load time to meet min load time
-          var remainingLoad = minLoadingTime - that._loadingTime,
+          var remainingLoad = minLoadingTime - this._loadingTime,
               remainingLoad = (remainingLoad >= 0) ? remainingLoad : 0;
 
           clearInterval(timeSinceInit);
 
           setTimeout(function() {
             // Run init on all sections
-            $.each(that.imm._sections, function(i, s) {
+            $.each(this.imm._sections, function(i, s) {
               $(s.element).trigger('init');
             });
             // Trigger init of whole plugin
-            that.imm.$elem.trigger('immInit');
-            that.imm._isInitialized = true;
+            this.imm.$page.trigger('immInit');
+            this.imm._isInitialized = true;
             // Hide loading
             $(loadingDataTag).addClass(loadedNamespace);
-            if (that.imm.pageContainer) {
-              that.imm.$pageContainer.addClass(loadedNamespace);
-            }
-          }, remainingLoad);
+            this.imm.$page.addClass(loadedNamespace);
+          }.bind(this), remainingLoad);
 
-        },
+        }.bind(this),
         function(s) {
           alert('Asset loading failed');
-        }
+        }.bind(this)
       );
 
     }

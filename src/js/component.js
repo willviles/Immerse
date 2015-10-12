@@ -74,7 +74,7 @@
 
       var that = this;
 
-      this.imm.$elem.on('immInit sectionChanged', function(e, d) {
+      this.imm.$page.on('immInit sectionChanged', function(e, d) {
 
         var opts;
 

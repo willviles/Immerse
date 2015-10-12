@@ -54,18 +54,17 @@ var Immerse = function() {};
 
     init: function() {
 
-      // If elem not defined, find namespaced -scroll-container class
+      // Set the page
       var pageNamespace = this.utils.namespacify.call(this, 'page'),
-          pageDataTag = this.utils.datatagify.call(this, pageNamespace);
+          pageDataTag = typeof this.setup.pageName === 'string' ?
+                        this.utils.datatagify.call(this, pageNamespace, this.setup.pageName) :
+                        this.utils.datatagify.call(this, pageNamespace);
 
-      // Need notion of body. It's called elem at the moment.
-      this.$elem = $('body');
-      this.elem = this.$elem[0];
-
-      // Need notion of page
-      var pageContainer = $(pageDataTag);
-      this.$pageContainer = pageContainer.length > 0 ? pageContainer : null;
-      this.pageContainer = this.$pageContainer ? this.$pageContainer[0] : null;
+      this.$page = $(pageDataTag);
+      if (this.$page.length === 0) {
+        this.utils.log('No page container defined. Page load failed.');
+        return false;
+      }
 
       this._assets = this.setup.assets;
       this._sections = [];
@@ -179,7 +178,7 @@ var Immerse = function() {};
     kill: function() {
 
 
-      this.$elem.off('immInit sectionChanged'); // Kill all events attached to Immerse init event or sectionChanged
+      this.$page.off('immInit sectionChanged'); // Kill all events attached to Immerse init event or sectionChanged
       $.Immerse.sectionController.kill(this); // Kill all events attached to section controller
       $.Immerse.audioController.kill(this); // Kill all audio
       $.Immerse.focusController.kill(); // Return focus to body

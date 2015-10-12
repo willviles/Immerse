@@ -374,7 +374,7 @@
         obj._run = function(e) {
           setTimeout(function() {
             that.imm.utils.log(that.imm, 'Updating ' + registration.type + " '" + registration.name + "' to '" + obj.value + "'");
-            that.imm.$elem.trigger(registration.name, obj.value);
+            that.imm.$page.trigger(registration.name, obj.value);
           }, obj.delay);
         }
 

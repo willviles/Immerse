@@ -54,18 +54,17 @@ var Immerse = function() {};
 
     init: function() {
 
-      // If elem not defined, find namespaced -scroll-container class
+      // Set the page
       var pageNamespace = this.utils.namespacify.call(this, 'page'),
-          pageDataTag = this.utils.datatagify.call(this, pageNamespace);
+          pageDataTag = typeof this.setup.pageName === 'string' ?
+                        this.utils.datatagify.call(this, pageNamespace, this.setup.pageName) :
+                        this.utils.datatagify.call(this, pageNamespace);
 
-      // Need notion of body. It's called elem at the moment.
-      this.$elem = $('body');
-      this.elem = this.$elem[0];
-
-      // Need notion of page
-      var pageContainer = $(pageDataTag);
-      this.$pageContainer = pageContainer.length > 0 ? pageContainer : null;
-      this.pageContainer = this.$pageContainer ? this.$pageContainer[0] : null;
+      this.$page = $(pageDataTag);
+      if (this.$page.length === 0) {
+        this.utils.log('No page container defined. Page load failed.');
+        return false;
+      }
 
       this._assets = this.setup.assets;
       this._sections = [];
@@ -179,7 +178,7 @@ var Immerse = function() {};
     kill: function() {
 
 
-      this.$elem.off('immInit sectionChanged'); // Kill all events attached to Immerse init event or sectionChanged
+      this.$page.off('immInit sectionChanged'); // Kill all events attached to Immerse init event or sectionChanged
       $.Immerse.sectionController.kill(this); // Kill all events attached to section controller
       $.Immerse.audioController.kill(this); // Kill all audio
       $.Immerse.focusController.kill(); // Return focus to body
@@ -596,7 +595,7 @@ var Immerse = function() {};
         obj._run = function(e) {
           setTimeout(function() {
             that.imm.utils.log(that.imm, 'Updating ' + registration.type + " '" + registration.name + "' to '" + obj.value + "'");
-            that.imm.$elem.trigger(registration.name, obj.value);
+            that.imm.$page.trigger(registration.name, obj.value);
           }, obj.delay);
         }
 
@@ -780,13 +779,13 @@ var Immerse = function() {};
       this.imm = imm;
 
       // If element initiated on is body, set the scroll target to window
-      this.imm._scrollContainer = ($(this.imm.elem)[0] === $('body')[0]) ? $(window) : $(this.imm.elem);
+      this.imm._scrollContainer = (this.imm.page === $('body')[0]) ? $(window) : this.imm.$page;
       // Test for corresponding mousewheelEvent for browser
       this.imm._mousewheelEvent = (/Firefox/i.test(navigator.userAgent))? 'DOMMouseScroll wheel' : 'mousewheel wheel';
       // Get bound/unbound status of first section
       this.imm._scrollUnbound = this.utils.isScrollUnbound.call(this, this.imm, this.imm._currentSection);
       // Manage binding or unbind of scroll on sectionChange
-      this.imm.$elem.on('immInit sectionChanged', function(e, d) {
+      this.imm.$page.on('immInit sectionChanged', function(e, d) {
         if (e.type === 'sectionChanged') {
           that.imm._scrollUnbound = that.utils.isScrollUnbound.call(that, that.imm, d.current);
         }
@@ -801,29 +800,29 @@ var Immerse = function() {};
 
     events: {
       scroll: function() {
-        this.imm._scrollContainer.off( this.imm._mousewheelEvent, this.handlers.scroll.detect)
+        this.imm.$page.off( this.imm._mousewheelEvent, this.handlers.scroll.detect)
                                  .on( this.imm._mousewheelEvent, this.handlers.scroll.detect.bind(this));
       },
 
       keys: function() {
-        $(document).off('keydown keyup');
-        $(document).on('keydown', this.handlers.keys.down.bind(this));
-        $(document).on('keyup', this.handlers.keys.up.bind(this));
+        this.imm.$page.off('keydown keyup');
+        this.imm.$page.on('keydown', this.handlers.keys.down.bind(this));
+        this.imm.$page.on('keyup', this.handlers.keys.up.bind(this));
       },
 
       touch: function() {
         if (this.imm._isDesktop) { return false; };
         if (this.imm._htmlScrollLocked) { return };
 
-        $(document).off('touchstart touchmove touchend');
+        this.imm.$page.off('touchstart touchmove touchend');
 
         if (this.imm._scrollUnbound) {
-          $(document).on('touchmove', this.unbound.bind(this));
+          this.imm.$page.on('touchmove', this.unbound.bind(this));
         } else {
-          $(document).on('touchstart', this.handlers.touch.start.bind(this));
+          this.imm.$page.on('touchstart', this.handlers.touch.start.bind(this));
         }
 
-        $(document)
+        this.imm.$page
           .off('swipedown swipeup')
           .on('swipedown swipeup', this.handlers.touch.detect.bind(this));
       }
@@ -936,7 +935,7 @@ var Immerse = function() {};
           if (this.imm._htmlScrollLocked) { return; };
 
           // If body isn't the active element, just behave normally
-          if (document.activeElement !== $('body')[0]) { return; }
+          if (document.activeElement !== this.imm.$page[0]) { return; }
 
           if (!this.imm._scrollUnbound && this.imm._lastKey && this.imm._lastKey.which == e.which) {
             e.preventDefault();
@@ -991,7 +990,7 @@ var Immerse = function() {};
             coords: [ data.pageX, data.pageY ]
           };
 
-          $(document)
+          this.imm.$page
             .on('touchmove', this.handlers.touch.move.bind(this))
             .one('touchend', this.handlers.touch.end.bind(this));
         },
@@ -1011,13 +1010,13 @@ var Immerse = function() {};
         },
 
         end: function(e) {
-          $(document).off('touchmove', this.handlers.touch.move);
+          this.imm.$page.off('touchmove', this.handlers.touch.move);
           if (this.imm._touchStartData && this.imm._touchStopData) {
             if (this.imm._touchStopData.time - this.imm._touchStartData.time < 1000 &&
                 Math.abs(this.imm._touchStartData.coords[1] - this.imm._touchStopData.coords[1]) > 30 &&
                 Math.abs(this.imm._touchStartData.coords[0] - this.imm._touchStopData.coords[0]) < 75) {
                   var direction = this.imm._touchStartData.coords[1] > this.imm._touchStopData.coords[1] ? 'swipeup' : 'swipedown';
-                  $(document).trigger(direction);
+                  this.imm.$page.trigger(direction);
             }
           }
           this.imm._touchStartData = this.imm._touchStopData = undefined;
@@ -1156,14 +1155,14 @@ var Immerse = function() {};
         that.imm._currentSection = opts.nextSection;
 
         // Set new section as current section
-        that.imm.$elem.trigger('sectionChanged', [{
+        that.imm.$page.trigger('sectionChanged', [{
           last: that.imm._lastSection,
           current: that.imm._currentSection,
           below: that.imm._sectionBelow,
           above: that.imm._sectionAbove
         }]);
 
-        TweenLite.to(window, dur, {
+        TweenLite.to(that.imm.$page, dur, {
           scrollTo: { y: dist, autoKill: false },
           ease: easing,
           onComplete: function() {
@@ -1194,7 +1193,7 @@ var Immerse = function() {};
         this.imm._lastSection = opts.currentSection;
         this.imm._currentSection = opts.nextSection;
         // We're done, so set new section as current section
-        this.imm.$elem.trigger('sectionChanged', [{
+        this.imm.$page.trigger('sectionChanged', [{
           last: that.imm._lastSection,
           current: that.imm._currentSection,
           below: that.imm._sectionBelow,
@@ -1250,8 +1249,8 @@ var Immerse = function() {};
     detectAbove: function() {
       if (this.imm._sectionAbove === undefined) { return false; }
       return isAbove = this.imm._isTouch ?
-                      this.imm._scrollContainer.scrollTop() < this.imm._currentSection.scrollOffset :
-                      this.imm._scrollContainer.scrollTop() <= this.imm._currentSection.scrollOffset;
+                      this.imm.$page.scrollTop() < this.imm._currentSection.scrollOffset :
+                      this.imm.$page.scrollTop() <= this.imm._currentSection.scrollOffset;
     },
 
     detectBelow: function() {
@@ -1264,21 +1263,23 @@ var Immerse = function() {};
                      this.imm._sectionBelow.scrollOffset;
 
       return isBelow = this.imm._isTouch ?
-                      this.imm._scrollContainer.scrollTop() > belowVal :
-                      this.imm._scrollContainer.scrollTop() >= belowVal;
+                      this.imm.$page.scrollTop() > belowVal :
+                      this.imm.$page.scrollTop() >= belowVal;
     },
 
     sectionOffset: {
-      set: function(s) {
-        s.scrollOffset = $(s.element).offset().top;
+      set: function(s, st) {
+        s.scrollOffset = st + $(s.element).position().top;
       },
 
       update: function(imm) {
         this.imm = (this.imm === undefined) ? imm : this.imm;
-        var that = this;
+
+        var st = this.imm.$page.scrollTop();
+
         $.each(this.imm._sections, function(i, s) {
-          that.sectionOffset.set.call(that, s);
-        });
+          this.sectionOffset.set.call(this, s, st);
+        }.bind(this));
 
       }
     },
@@ -1287,7 +1288,7 @@ var Immerse = function() {};
       this.imm = (this.imm === undefined) ? imm : this.imm;
       if (!this.imm._scrollUnbound) {
         var t = this.imm._currentSection.scrollOffset;
-        this.imm._scrollContainer.scrollTop(t);
+        this.imm.$page.scrollTop(t);
       }
     },
 
@@ -1359,11 +1360,11 @@ var Immerse = function() {};
     kill: function(imm) {
       this.imm = (this.imm === undefined) ? imm : this.imm;
       // Remove all Immerse scroll event handlers
-      $(document).off('keydown keyup touchmove touchstart swipedown swipeup');
+      this.imm.$page.off('keydown keyup touchmove touchstart swipedown swipeup');
       // Remove all events attached to the mousewheel and wheel events
-      this.imm._scrollContainer.off(this.imm._mousewheelEvent);
+      this.imm.$page.off(this.imm._mousewheelEvent);
       // Ensure default behaviour is restored
-      this.imm._scrollContainer.on(this.imm._mousewheelEvent, function(e) {
+      this.imm.$page.on(this.imm._mousewheelEvent, function(e) {
         window.onmousewheel = document.onmousewheel = null;
         window.onwheel = null;
         window.ontouchmove = null;
@@ -1462,7 +1463,7 @@ var Immerse = function() {};
       // Setup audio for initial section
       this.handleChange.call(this, this, this.imm._currentSection.audio);
       // Setup audio change when a section changes
-      this.imm.$elem.on('sectionChanged', function(e, d) {
+      this.imm.$page.on('sectionChanged', function(e, d) {
         that.handleChange.call(that, that, d.current.audio);
       });
       // Handle muting when window is closed
@@ -1549,7 +1550,7 @@ var Immerse = function() {};
             that = this;
 
         // Get a handle on all mute buttons
-        this.imm._$muteBtns = this.imm.$elem.find('.' + muteClass);
+        this.imm._$muteBtns = $('.' + muteClass, 'body');
 
         // Set initial value based on state
         if (this.imm.utils.cookies.get('immAudioState') === 'muted') {
@@ -1737,7 +1738,7 @@ var Immerse = function() {};
 
     sectionChange: function() {
       var that = this;
-      this.imm.$elem.on('sectionChanged', function(e, d) {
+      this.imm.$page.on('sectionChanged', function(e, d) {
         var navItem = $(that.navListDataTag + ' a[data-' + that.sectionDataTag + '="' + d.current.id + '"]');
         that.update.call(that, navItem);
       });
@@ -1911,7 +1912,7 @@ var Immerse = function() {};
           sourceStr = sourceStr + '<source src="' + a.path + '.' + ft +'" type="audio/' + ft + '">';
         });
 
-        this.imm.$elem.append('<audio id="' + n + '" class="' + audioClass + '" ' + l + '>' + sourceStr + '</audio>');
+        this.imm.$page.append('<audio id="' + n + '" class="' + audioClass + '" ' + l + '>' + sourceStr + '</audio>');
         this.imm._allAudio.push(n);
         return true;
       },
@@ -1926,7 +1927,7 @@ var Immerse = function() {};
         };
 
         var videoDataTag = this.imm.utils.namespacify.call(this.imm, 'video'),
-            $wrapper = this.imm.$elem.find('[data-' + videoDataTag + '="' + n + '"]'),
+            $wrapper = this.imm.$page.find('[data-' + videoDataTag + '="' + n + '"]'),
             fileTypes = ($.isArray(o.fileTypes)) ? o.fileTypes : ['mp4', 'ogv', 'webm'],
             loop = (o.loop === false) ? '' : 'loop="loop" ',
             sourceStr = '';
@@ -1970,30 +1971,28 @@ var Immerse = function() {};
         function(s) {
 
           // Calculate remaining load time to meet min load time
-          var remainingLoad = minLoadingTime - that._loadingTime,
+          var remainingLoad = minLoadingTime - this._loadingTime,
               remainingLoad = (remainingLoad >= 0) ? remainingLoad : 0;
 
           clearInterval(timeSinceInit);
 
           setTimeout(function() {
             // Run init on all sections
-            $.each(that.imm._sections, function(i, s) {
+            $.each(this.imm._sections, function(i, s) {
               $(s.element).trigger('init');
             });
             // Trigger init of whole plugin
-            that.imm.$elem.trigger('immInit');
-            that.imm._isInitialized = true;
+            this.imm.$page.trigger('immInit');
+            this.imm._isInitialized = true;
             // Hide loading
             $(loadingDataTag).addClass(loadedNamespace);
-            if (that.imm.pageContainer) {
-              that.imm.$pageContainer.addClass(loadedNamespace);
-            }
-          }, remainingLoad);
+            this.imm.$page.addClass(loadedNamespace);
+          }.bind(this), remainingLoad);
 
-        },
+        }.bind(this),
         function(s) {
           alert('Asset loading failed');
-        }
+        }.bind(this)
       );
 
     }
@@ -2256,7 +2255,7 @@ var Immerse = function() {};
       }
 
       // Set up hash handling on section change
-      this.imm.$elem.on('sectionChanged', function(e, d) {
+      this.imm.$page.on('sectionChanged', function(e, d) {
         that.hashChange.call(that, d);
       });
 
@@ -2279,7 +2278,7 @@ var Immerse = function() {};
         this.imm._sectionAbove = this.imm._sections[this.imm._currentSection.scrollIndex - 1];
       }
 
-      this.imm.$elem.on('immInit', function(e) {
+      this.imm.$page.on('immInit', function(e) {
         that.imm._scrollContainer.scrollTop(that.imm._currentSection.scrollOffset);
         that.imm._currentSection.element.trigger('enteringDown');
         that.imm._currentSection.element.trigger('enteredDown');
@@ -2340,9 +2339,13 @@ var Immerse = function() {};
     init: function(imm) {
       this.imm = imm;
       var that = this;
-      this.imm.$elem.on('sectionChanged', function(e, d) {
-        that.returnFocusToBody();
-      });
+
+      this.imm.$page.attr('tabindex', -1);
+      this.returnFocusToPage.call(this);
+
+      this.imm.$page.on('sectionChanged', function(e, d) {
+        this.returnFocusToPage.call(this);
+      }.bind(this));
       return this;
     },
 
@@ -2397,14 +2400,14 @@ var Immerse = function() {};
       return this;
     },
 
-    returnFocusToBody: function() {
-      if (document.activeElement !== $('body')[0]) {
-        $(document.activeElement).blur();
+    returnFocusToPage: function() {
+      if (document.activeElement !== this.imm.page) {
+        this.imm.$page.focus();
       }
     },
 
     kill: function() {
-      this.returnFocusToBody();
+      this.returnFocusToPage.call(this);
     }
 
   // End of controller
@@ -2505,7 +2508,7 @@ var Immerse = function() {};
 
       var that = this;
 
-      this.imm.$elem.on('immInit sectionChanged', function(e, d) {
+      this.imm.$page.on('immInit sectionChanged', function(e, d) {
 
         var opts;
 
@@ -2879,7 +2882,7 @@ new Immerse().component({
     this.pluginName = this.name;
 
     // Create modals container
-    this.imm.$elem.append(this.$modalsContainer);
+    this.imm.$page.append(this.$modalsContainer);
 
   },
 
@@ -3493,7 +3496,7 @@ new Immerse().component({
 
   onResize: function(imm) {
     var that = this;
-    $.each(imm.$elem.find('[data-' + this.videoDataTag + ']'), function(i, wrapper) {
+    $.each(imm.$page.find('[data-' + this.videoDataTag + ']'), function(i, wrapper) {
       that.doResize(wrapper);
     });
 
