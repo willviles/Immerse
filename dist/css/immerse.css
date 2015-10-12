@@ -1,8 +1,4 @@
 /* Scaffold */
-body::-webkit-scrollbar {
-  width: 0 !important;
-}
-
 [data-imm-page] {
   position: absolute;
   top: 0;

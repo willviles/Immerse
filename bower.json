@@ -12,7 +12,8 @@
   "license": "MIT",
   "devDependencies": {
     "gsap": "*",
-    "jquery": "*"
+    "jquery": "*",
+    "iscroll": "*"
   },
   "main": [
     "dist/min/immerse.min.js",

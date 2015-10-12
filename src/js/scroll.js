@@ -23,9 +23,6 @@
 
       // Get a handle on the Immerse object
       this.imm = imm;
-
-      // If element initiated on is body, set the scroll target to window
-      this.imm._scrollContainer = (this.imm.page === $('body')[0]) ? $(window) : this.imm.$page;
       // Test for corresponding mousewheelEvent for browser
       this.imm._mousewheelEvent = (/Firefox/i.test(navigator.userAgent))? 'DOMMouseScroll wheel' : 'mousewheel wheel';
       // Get bound/unbound status of first section
@@ -47,7 +44,7 @@
     events: {
       scroll: function() {
         this.imm.$page.off( this.imm._mousewheelEvent, this.handlers.scroll.detect)
-                                 .on( this.imm._mousewheelEvent, this.handlers.scroll.detect.bind(this));
+                      .on( this.imm._mousewheelEvent, this.handlers.scroll.detect.bind(this));
       },
 
       keys: function() {
@@ -63,7 +60,7 @@
         this.imm.$page.off('touchstart touchmove touchend');
 
         if (this.imm._scrollUnbound) {
-          this.imm.$page.on('touchmove', this.unbound.bind(this));
+          this.imm.$page.on('touchstart', this.handlers.touch.manage.bind(this))
         } else {
           this.imm.$page.on('touchstart', this.handlers.touch.start.bind(this));
         }
@@ -229,6 +226,14 @@
       // Scroll Touch Handler
       touch: {
 
+        checking: false,
+
+        manage: function(e) {
+          if (this.handlers.touch.checking) { return; }
+          this.handlers.touch.checkInterval = setInterval(this.unbound.bind(this, e), 20);
+          this.handlers.touch.checking = true;
+        },
+
         start: function(e) {
           var data = e.originalEvent.touches ? e.originalEvent.touches[ 0 ] : e;
           this.imm._touchStartData = {
@@ -269,7 +274,7 @@
         },
 
         detect: function(e) {
-          if (this.imm._scrollUnbound) { return false; }
+          if (this.imm._scrollUnbound) { return; }
           switch(e.type) {
             case 'swipedown':
               this.ifCanThenGo.call(this, this.imm, 'UP');
@@ -281,6 +286,17 @@
 
             default: return;
           }
+        },
+
+        killInertiaThenGo: function(dir) {
+          clearInterval(this.handlers.touch.checkInterval);
+          this.handlers.touch.checking = false;
+          this.imm.$page[0].style.overflow = 'hidden';
+          setTimeout(function() {
+            this.imm.$page[0].style.overflow = '';
+            this.imm._scrollUnbound = false;
+            this.ifCanThenGo.call(this, this.imm, dir);
+          }.bind(this), 10);
         }
       }
     },
@@ -467,14 +483,24 @@
         // If above section is not unbound, do a scroll
         } else {
           e.preventDefault();
-          this.imm._scrollUnbound = false;
-          this.ifCanThenGo.call(this, this.imm, 'UP');
+
+          if (this.utils.isTouchEvent(e)) {
+            // Kill inertia then go
+            this.handlers.touch.killInertiaThenGo.call(this, 'UP');
+
+          } else {
+            // Set scroll unbound to false
+            this.imm._scrollUnbound = false;
+            this.ifCanThenGo.call(this, this.imm, 'UP');
+          }
         }
 
       // If scrollTop is above current section
 
       } else if (isBelow) {
-
+        // Clear interval
+        clearInterval(this.handlers.touch.checkInterval);
+        this.handlers.touch.checking = false;
         // If it's a scroll event and we're not scrolling download (i.e, we're just at the bottom end of the section)
         if (this.utils.isScrollEvent(e) && this.utils.getScrollDirection(e) !== 'DOWN') { return; }
         // If it's a keydown event and we're not pressing upwards
@@ -486,8 +512,16 @@
         // If below section is not unbound, do a scroll
         } else {
           e.preventDefault();
-          this.imm._scrollUnbound = false;
-          this.ifCanThenGo.call(this, this.imm, 'DOWN');
+
+          if (this.utils.isTouchEvent(e)) {
+            // Kill inertia then go
+            this.handlers.touch.killInertiaThenGo.call(this, 'DOWN');
+
+          } else {
+            // Set scroll unbound to false
+            this.imm._scrollUnbound = false;
+            this.ifCanThenGo.call(this, this.imm, 'DOWN');
+          }
         }
       }
     },
@@ -541,6 +575,10 @@
     utils: {
       isScrollEvent: function(e) {
         return e.type === 'wheel' || e.type === 'DOMMouseScroll' || e.type === 'mousewheel';
+      },
+
+      isTouchEvent: function(e) {
+        return e.type === 'touch' || e.type === 'touchstart' || e.type === 'touchend' || e.type === 'touchmove';
       },
 
       getScrollDirection: function(e) {

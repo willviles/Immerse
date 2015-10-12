@@ -76,7 +76,6 @@
     ///////////////////////////////////////////////////////
 
     setSection: function(o) {
-      var that = this;
 
       if (o === 'first') {
         this.imm._currentSection = this.imm._sections[0];
@@ -88,10 +87,10 @@
       }
 
       this.imm.$page.on('immInit', function(e) {
-        that.imm._scrollContainer.scrollTop(that.imm._currentSection.scrollOffset);
-        that.imm._currentSection.element.trigger('enteringDown');
-        that.imm._currentSection.element.trigger('enteredDown');
-      });
+        this.imm.$page.scrollTop(this.imm._currentSection.scrollOffset);
+        this.imm._currentSection.element.trigger('enteringDown');
+        this.imm._currentSection.element.trigger('enteredDown');
+      }.bind(this));
     },
 
     // Find Section
